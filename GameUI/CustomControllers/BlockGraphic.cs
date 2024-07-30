@@ -3,6 +3,12 @@ using IImage = Microsoft.Maui.Graphics.IImage;
 
 namespace GameUI.CustomControllers;
 
+public enum ETileTexture : byte
+{
+    Color,
+    Image,
+}
+
 public enum ETile : byte
 {
     None,
@@ -116,6 +122,7 @@ public sealed class Drawable : IDrawable
     private static readonly Dictionary<ETile, IImage> Images = [];
 
     public ETile Tile { get; set; }
+    public static ETileTexture TileTexture { get; set; }
 
     static Drawable()
     {
@@ -142,6 +149,25 @@ public sealed class Drawable : IDrawable
         if (Tile is ETile.None || Images.Count <= 0) return;
 
         canvas.Antialias = true;
-        canvas.DrawImage(Images[Tile], 0, 0, 32, 32);
+
+        if (TileTexture is ETileTexture.Image)
+        {
+            canvas.FillColor = Colors.Transparent;
+            canvas.DrawImage(Images[Tile], 0, 0, 32, 32);
+        }
+
+        if (TileTexture is ETileTexture.Color)
+        {
+            canvas.FillColor = Tile switch
+            {
+                ETile.Grass => Colors.DarkSeaGreen,
+                ETile.Ground => Colors.SandyBrown,
+                ETile.Road => Colors.LightGray,
+                ETile.Water => Colors.CornflowerBlue,
+                ETile.Desert => Colors.Beige,
+                _ => Colors.Transparent,
+            };
+            canvas.FillRectangle(0, 0, 32, 32);
+        }
     }
 }
