@@ -97,7 +97,7 @@ public sealed class BlockGraphic : GraphicsView, IBlock, IDisposable
         {
             Draw();
             Invalidate();
-            await Task.Delay(Aux.random.Next(2000));
+            await Task.Delay(AuxFun.random.Next(2000));
         }
     }
 
