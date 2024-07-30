@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GameUI.Views.MapView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:customController="clr-namespace:GameUI.CustomControllers"
+    xmlns:vm="clr-namespace:GameUI.ViewModels"
+    Title="Map"
+    x:DataType="vm:MapViewModel">
+
+    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+
+        <FlexLayout Direction="Row" HorizontalOptions="Center">
+            <Button
+                Command="{Binding LoadCommand}"
+                CommandParameter="F"
+                Text="Region F" />
+            <Button
+                Command="{Binding LoadCommand}"
+                CommandParameter="E"
+                Text="Region E" />
+        </FlexLayout>
+
+        <FlexLayout Direction="Row">
+            <customController:BlockGraphic Tile="{Binding Row01[0], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row01[1], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row01[2], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row01[3], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row01[4], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row01[5], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row01[6], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row01[7], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row01[8], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row01[9], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row01[10], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row01[11], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row01[12], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row01[13], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row01[14], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row01[15], Mode=TwoWay}" />
+        </FlexLayout>
+        <FlexLayout Direction="Row">
+            <customController:BlockGraphic Tile="{Binding Row02[0], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row02[1], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row02[2], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row02[3], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row02[4], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row02[5], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row02[6], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row02[7], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row02[8], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row02[9], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row02[10], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row02[11], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row02[12], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row02[13], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row02[14], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row02[15], Mode=TwoWay}" />
+        </FlexLayout>
+        <FlexLayout Direction="Row">
+            <customController:BlockGraphic Tile="{Binding Row03[0], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row03[1], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row03[2], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row03[3], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row03[4], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row03[5], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row03[6], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row03[7], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row03[8], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row03[9], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row03[10], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row03[11], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row03[12], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row03[13], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row03[14], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row03[15], Mode=TwoWay}" />
+        </FlexLayout>
+        <FlexLayout Direction="Row">
+            <customController:BlockGraphic Tile="{Binding Row04[0], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row04[1], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row04[2], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row04[3], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row04[4], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row04[5], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row04[6], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row04[7], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row04[8], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row04[9], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row04[10], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row04[11], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row04[12], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row04[13], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row04[14], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row04[15], Mode=TwoWay}" />
+        </FlexLayout>
+        <FlexLayout Direction="Row">
+            <customController:BlockGraphic Tile="{Binding Row05[0], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row05[1], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row05[2], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row05[3], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row05[4], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row05[5], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row05[6], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row05[7], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row05[8], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row05[9], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row05[10], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row05[11], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row05[12], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row05[13], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row05[14], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row05[15], Mode=TwoWay}" />
+        </FlexLayout>
+        <FlexLayout Direction="Row">
+            <customController:BlockGraphic Tile="{Binding Row06[0], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row06[1], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row06[2], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row06[3], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row06[4], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row06[5], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row06[6], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row06[7], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row06[8], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row06[9], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row06[10], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row06[11], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row06[12], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row06[13], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row06[14], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row06[15], Mode=TwoWay}" />
+        </FlexLayout>
+        <FlexLayout Direction="Row">
+            <customController:BlockGraphic Tile="{Binding Row07[0], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row07[1], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row07[2], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row07[3], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row07[4], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row07[5], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row07[6], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row07[7], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row07[8], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row07[9], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row07[10], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row07[11], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row07[12], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row07[13], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row07[14], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row07[15], Mode=TwoWay}" />
+        </FlexLayout>
+        <FlexLayout Direction="Row">
+            <customController:BlockGraphic Tile="{Binding Row08[0], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row08[1], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row08[2], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row08[3], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row08[4], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row08[5], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row08[6], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row08[7], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row08[8], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row08[9], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row08[10], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row08[11], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row08[12], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row08[13], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row08[14], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row08[15], Mode=TwoWay}" />
+        </FlexLayout>
+        <FlexLayout Direction="Row">
+            <customController:BlockGraphic Tile="{Binding Row09[0], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row09[1], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row09[2], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row09[3], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row09[4], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row09[5], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row09[6], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row09[7], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row09[8], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row09[9], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row09[10], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row09[11], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row09[12], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row09[13], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row09[14], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row09[15], Mode=TwoWay}" />
+        </FlexLayout>
+        <FlexLayout Direction="Row">
+            <customController:BlockGraphic Tile="{Binding Row10[0], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row10[1], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row10[2], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row10[3], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row10[4], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row10[5], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row10[6], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row10[7], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row10[8], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row10[9], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row10[10], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row10[11], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row10[12], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row10[13], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row10[14], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row10[15], Mode=TwoWay}" />
+        </FlexLayout>
+        <FlexLayout Direction="Row">
+            <customController:BlockGraphic Tile="{Binding Row11[0], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row11[1], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row11[2], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row11[3], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row11[4], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row11[5], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row11[6], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row11[7], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row11[8], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row11[9], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row11[10], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row11[11], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row11[12], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row11[13], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row11[14], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row11[15], Mode=TwoWay}" />
+        </FlexLayout>
+        <FlexLayout Direction="Row">
+            <customController:BlockGraphic Tile="{Binding Row12[0], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row12[1], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row12[2], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row12[3], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row12[4], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row12[5], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row12[6], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row12[7], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row12[8], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row12[9], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row12[10], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row12[11], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row12[12], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row12[13], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row12[14], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row12[15], Mode=TwoWay}" />
+        </FlexLayout>
+        <FlexLayout Direction="Row">
+            <customController:BlockGraphic Tile="{Binding Row13[0], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row13[1], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row13[2], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row13[3], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row13[4], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row13[5], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row13[6], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row13[7], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row13[8], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row13[9], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row13[10], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row13[11], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row13[12], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row13[13], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row13[14], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row13[15], Mode=TwoWay}" />
+        </FlexLayout>
+        <FlexLayout Direction="Row">
+            <customController:BlockGraphic Tile="{Binding Row14[0], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row14[1], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row14[2], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row14[3], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row14[4], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row14[5], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row14[6], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row14[7], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row14[8], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row14[9], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row14[10], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row14[11], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row14[12], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row14[13], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row14[14], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row14[15], Mode=TwoWay}" />
+        </FlexLayout>
+        <FlexLayout Direction="Row">
+            <customController:BlockGraphic Tile="{Binding Row15[0], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row15[1], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row15[2], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row15[3], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row15[4], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row15[5], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row15[6], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row15[7], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row15[8], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row15[9], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row15[10], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row15[11], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row15[12], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row15[13], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row15[14], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row15[15], Mode=TwoWay}" />
+        </FlexLayout>
+        <FlexLayout Direction="Row">
+            <customController:BlockGraphic Tile="{Binding Row16[0], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row16[1], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row16[2], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row16[3], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row16[4], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row16[5], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row16[6], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row16[7], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row16[8], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row16[9], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row16[10], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row16[11], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row16[12], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row16[13], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row16[14], Mode=TwoWay}" />
+            <customController:BlockGraphic Tile="{Binding Row16[15], Mode=TwoWay}" />
+        </FlexLayout>
+
+    </VerticalStackLayout>
+</ContentPage>
