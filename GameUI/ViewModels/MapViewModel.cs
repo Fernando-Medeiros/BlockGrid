@@ -13,30 +13,30 @@ public sealed partial class MapViewModel : BaseViewModel
     }
 
     #region Property
-    public ObservableCollection<ETile> Row01 { get; set; } = [];
-    public ObservableCollection<ETile> Row02 { get; set; } = [];
-    public ObservableCollection<ETile> Row03 { get; set; } = [];
-    public ObservableCollection<ETile> Row04 { get; set; } = [];
-    public ObservableCollection<ETile> Row05 { get; set; } = [];
-    public ObservableCollection<ETile> Row06 { get; set; } = [];
-    public ObservableCollection<ETile> Row07 { get; set; } = [];
-    public ObservableCollection<ETile> Row08 { get; set; } = [];
-    public ObservableCollection<ETile> Row09 { get; set; } = [];
-    public ObservableCollection<ETile> Row10 { get; set; } = [];
-    public ObservableCollection<ETile> Row11 { get; set; } = [];
-    public ObservableCollection<ETile> Row12 { get; set; } = [];
-    public ObservableCollection<ETile> Row13 { get; set; } = [];
-    public ObservableCollection<ETile> Row14 { get; set; } = [];
-    public ObservableCollection<ETile> Row15 { get; set; } = [];
-    public ObservableCollection<ETile> Row16 { get; set; } = [];
-    public ObservableCollection<ETile> Row17 { get; set; } = [];
-    public ObservableCollection<ETile> Row18 { get; set; } = [];
-    public ObservableCollection<ETile> Row19 { get; set; } = [];
-    public ObservableCollection<ETile> Row20 { get; set; } = [];
-    public ObservableCollection<ETile> Row21 { get; set; } = [];
-    public ObservableCollection<ETile> Row22 { get; set; } = [];
-    public ObservableCollection<ETile> Row23 { get; set; } = [];
-    public ObservableCollection<ETile> Row24 { get; set; } = [];
+    public IList<ETile> Row01 { get; set; } = [];
+    public IList<ETile> Row02 { get; set; } = [];
+    public IList<ETile> Row03 { get; set; } = [];
+    public IList<ETile> Row04 { get; set; } = [];
+    public IList<ETile> Row05 { get; set; } = [];
+    public IList<ETile> Row06 { get; set; } = [];
+    public IList<ETile> Row07 { get; set; } = [];
+    public IList<ETile> Row08 { get; set; } = [];
+    public IList<ETile> Row09 { get; set; } = [];
+    public IList<ETile> Row10 { get; set; } = [];
+    public IList<ETile> Row11 { get; set; } = [];
+    public IList<ETile> Row12 { get; set; } = [];
+    public IList<ETile> Row13 { get; set; } = [];
+    public IList<ETile> Row14 { get; set; } = [];
+    public IList<ETile> Row15 { get; set; } = [];
+    public IList<ETile> Row16 { get; set; } = [];
+    public IList<ETile> Row17 { get; set; } = [];
+    public IList<ETile> Row18 { get; set; } = [];
+    public IList<ETile> Row19 { get; set; } = [];
+    public IList<ETile> Row20 { get; set; } = [];
+    public IList<ETile> Row21 { get; set; } = [];
+    public IList<ETile> Row22 { get; set; } = [];
+    public IList<ETile> Row23 { get; set; } = [];
+    public IList<ETile> Row24 { get; set; } = [];
     #endregion
 
     #region Command
@@ -56,7 +56,7 @@ public sealed partial class MapViewModel : BaseViewModel
         reader.Close();
 
         Tier tier = JsonSerializer.Deserialize<Tier>(contents);
-
+        
         Row01 = [.. tier.Matriz[0]]; Row02 = [.. tier.Matriz[1]]; Row03 = [.. tier.Matriz[2]];
         Row04 = [.. tier.Matriz[3]]; Row05 = [.. tier.Matriz[4]]; Row06 = [.. tier.Matriz[5]];
         Row07 = [.. tier.Matriz[6]]; Row08 = [.. tier.Matriz[7]]; Row09 = [.. tier.Matriz[8]];
@@ -81,7 +81,7 @@ public sealed partial class MapViewModel : BaseViewModel
     private void TextureChanged(object sender)
     {
         if (IsBusy()) return;
-        Drawable.TileTexture = sender switch
+        TileCanvas.TileTexture = sender switch
         {
             "0" => ETileTexture.Color,
             "1" => ETileTexture.Image,
