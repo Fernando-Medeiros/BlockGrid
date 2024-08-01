@@ -4,15 +4,24 @@ using IImage = Microsoft.Maui.Graphics.IImage;
 
 namespace GameUI.CustomControllers;
 
+#region Structure
+public class Global
+{
+    public const byte MAX_ROW = 24;
+    public const byte MAX_COLUMN = 44;
+    public const byte VECTOR = 32;
+}
+
 public enum ETileTexture : byte
 {
+    ASCII,
     Color,
     Image,
+    Mono,
 }
 
 public enum ETile : byte
 {
-    None,
     Ground,
     Grass,
     Road,
@@ -22,37 +31,45 @@ public enum ETile : byte
 
 public interface ITile
 {
+    public byte Row { get; }
     public ETile Tile { get; set; }
-    public bool IsRunning { get; set; }
-    public void LoadContents();
-    public void LoadListerners();
+    public bool Running { get; set; }
+    public TileCanvas Canvas { get; }
     public void Draw();
     public Task Update();
-    public void Dispose();
-    public void OnLoaded(object sender, EventArgs e);
-    public void OnUnloaded(object sender, EventArgs e);
+    public void OnSelect(object? sender, TouchEventArgs e);
 }
+#endregion
 
-public sealed class TileGraphic : GraphicsView, ITile, IDisposable
+public sealed class TileGraphic : GraphicsView, ITile
 {
-    #region Linked Tile
-    private static TileGraphic? SelectedTile;
-    #endregion
-
-    #region CTO
     public TileGraphic()
     {
-        LoadContents();
-        LoadListerners();
+        Row = Total;
+        Node[Row].Add(this);
+
+        if (Node[Row].Count >= Global.MAX_COLUMN) Total++;
+
+        Drawable = Canvas;
+        Opacity = 0.8;
+        WidthRequest = Global.VECTOR;
+        HeightRequest = Global.VECTOR;
+
+        StartInteraction += OnSelect;
+
+        Dispatcher.DispatchAsync(Update);
     }
 
-    ~TileGraphic() => Handler?.DisconnectHandler();
+    #region Linked
+    private static byte Total;
+    private static TileGraphic? SelectedTile;
+    private static readonly IList<IList<TileGraphic>> Node = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []];
     #endregion
 
     #region Property
-    public bool IsRunning { get; set; }
-
-    private readonly TileCanvas Canvas = new();
+    public byte Row { get; }
+    public bool Running { get; set; } = true;
+    public TileCanvas Canvas { get; } = new();
     #endregion
 
     #region Bindable Property
@@ -68,62 +85,43 @@ public sealed class TileGraphic : GraphicsView, ITile, IDisposable
     #endregion
 
     #region Event
-    public void OnLoaded(object sender, EventArgs e) => IsRunning = true;
-    public void OnUnloaded(object sender, EventArgs e) => IsRunning = false;
-    public void OnStartInteraction(object sender, TouchEventArgs e)
+    public void OnSelect(object? sender, TouchEventArgs e)
     {
-        if (SelectedTile is TileGraphic) SelectedTile.Scale = 1;
-
+        SelectedTile?.FadeTo(0.8);
         SelectedTile = sender as TileGraphic;
-        SelectedTile.Scale = 0.97;
+        SelectedTile?.FadeTo(1);
     }
     #endregion
 
     #region Action
-    public void LoadContents()
-    {
-        Drawable = Canvas;
-        WidthRequest = 32;
-        HeightRequest = 32;
-    }
-
-    public void LoadListerners()
-    {
-        Loaded += OnLoaded;
-        Unloaded += OnUnloaded;
-        StartInteraction += OnStartInteraction;
-
-        Dispatcher.DispatchAsync(Update);
-    }
-
     public async Task Update()
     {
-        while (Tile is ETile.None) await Task.Delay(2000);
-
-        while (IsRunning)
+        while (Running)
         {
             Draw();
             Invalidate();
-            await Task.Delay(AuxFun.random.Next(2000));
+            await Task.Delay(AuxFun.random.Next(3000));
         }
     }
 
     public void Draw()
     {
-        Opacity += Opacity >= 0.95 ? -0.05 : 0.05;
+        if (Opacity <= 0.8)
+            Opacity += Opacity == 0.8 ? -0.02 : 0.02;
+
         Canvas.Tile = Tile;
     }
     #endregion
-
-    public void Dispose() => GC.SuppressFinalize(this);
 }
 
 public sealed class TileCanvas : IDrawable
 {
     #region Linked
-    private static readonly Dictionary<ETile, Color> TileColor = [];
-    private static readonly Dictionary<ETile, IImage> TileImage = [];
-    public static ETileTexture TileTexture { get; set; }
+    private static readonly Dictionary<ETile, string> ASCIIResource = [];
+    private static readonly Dictionary<ETile, Color> MonoResource = [];
+    private static readonly Dictionary<ETile, Color> ColorResource = [];
+    private static readonly Dictionary<ETile, IImage> ImageResource = [];
+    public static ETileTexture Texture { get; set; }
     #endregion
 
     #region Property
@@ -138,13 +136,29 @@ public sealed class TileCanvas : IDrawable
             {
                 foreach (ETile tile in Enum.GetValues<ETile>())
                 {
-                    if (tile is ETile.None) continue;
-
                     string name = $"{Enum.GetName(tile)}.png".ToLower();
 
                     using var stream = await FileSystem.OpenAppPackageFileAsync(name);
 
-                    var color = tile switch
+                    var tileAscii = tile switch
+                    {
+                        ETile.Grass => ";;.;;;;.;;.",
+                        ETile.Ground => "|||||||",
+                        ETile.Road => "]]]]]]]]]",
+                        ETile.Water => "~~~~~~~",
+                        ETile.Desert => "::::::::",
+                        _ => ".",
+                    };
+                    var tileMono = tile switch
+                    {
+                        ETile.Grass => Colors.Gray,
+                        ETile.Ground => Colors.LightSlateGray,
+                        ETile.Road => Colors.GhostWhite,
+                        ETile.Water => Colors.AntiqueWhite,
+                        ETile.Desert => Colors.LightGray,
+                        _ => Colors.Transparent,
+                    };
+                    var tileColor = tile switch
                     {
                         ETile.Grass => Colors.DarkSeaGreen,
                         ETile.Ground => Colors.SandyBrown,
@@ -154,8 +168,11 @@ public sealed class TileCanvas : IDrawable
                         _ => Colors.Transparent,
                     };
 
-                    TileColor.Add(tile, color);
-                    TileImage.Add(tile, PlatformImage.FromStream(stream));
+                    ASCIIResource.Add(tile, tileAscii);
+                    MonoResource.Add(tile, tileMono);
+                    ColorResource.Add(tile, tileColor);
+                    ImageResource.Add(tile, PlatformImage.FromStream(stream));
+
                     stream.Close();
                 }
             });
@@ -163,20 +180,31 @@ public sealed class TileCanvas : IDrawable
 
     public void Draw(ICanvas canvas, RectF rect)
     {
-        if (Tile is ETile.None || TileImage.Count <= 0 || TileColor.Count <= 0) return;
+        if (ImageResource.Count <= 0 || ColorResource.Count <= 0) return;
+
+        if (Texture is ETileTexture.ASCII)
+        {
+            canvas.FontColor = ColorResource[Tile];
+            canvas.DrawString(ASCIIResource[Tile], rect.Center.X, rect.Center.Y, HorizontalAlignment.Justified);
+        }
+
+        if (Texture is ETileTexture.Image)
+        {
+            canvas.DrawImage(ImageResource[Tile], rect.X, rect.Y, rect.Width, rect.Height);
+        }
+
+        if (Texture is ETileTexture.Color)
+        {
+            canvas.FillColor = ColorResource[Tile];
+            canvas.FillRoundedRectangle(rect, 2f);
+        }
+
+        if (Texture is ETileTexture.Mono)
+        {
+            canvas.FillColor = MonoResource[Tile];
+            canvas.FillRoundedRectangle(rect, 2f);
+        }
 
         canvas.Antialias = true;
-
-        if (TileTexture is ETileTexture.Image)
-        {
-            canvas.FillColor = Colors.Transparent;
-            canvas.DrawImage(TileImage[Tile], 0, 0, 32, 32);
-        }
-
-        if (TileTexture is ETileTexture.Color)
-        {
-            canvas.FillColor = TileColor[Tile];
-            canvas.FillRectangle(0, 0, 32, 32);
-        }
     }
 }

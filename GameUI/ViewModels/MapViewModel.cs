@@ -56,7 +56,7 @@ public sealed partial class MapViewModel : BaseViewModel
         reader.Close();
 
         Tier tier = JsonSerializer.Deserialize<Tier>(contents);
-        
+
         Row01 = [.. tier.Matriz[0]]; Row02 = [.. tier.Matriz[1]]; Row03 = [.. tier.Matriz[2]];
         Row04 = [.. tier.Matriz[3]]; Row05 = [.. tier.Matriz[4]]; Row06 = [.. tier.Matriz[5]];
         Row07 = [.. tier.Matriz[6]]; Row08 = [.. tier.Matriz[7]]; Row09 = [.. tier.Matriz[8]];
@@ -81,10 +81,12 @@ public sealed partial class MapViewModel : BaseViewModel
     private void TextureChanged(object sender)
     {
         if (IsBusy()) return;
-        TileCanvas.TileTexture = sender switch
+        TileCanvas.Texture = sender switch
         {
-            "0" => ETileTexture.Color,
-            "1" => ETileTexture.Image,
+            "1" => ETileTexture.ASCII,
+            "2" => ETileTexture.Color,
+            "3" => ETileTexture.Image,
+            "4" => ETileTexture.Mono,
         };
         NotBusy();
     }

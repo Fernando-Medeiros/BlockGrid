@@ -14,13 +14,23 @@
             <Button
                 BackgroundColor="DarkSeaGreen"
                 Command="{Binding TextureCommand}"
-                CommandParameter="0"
+                CommandParameter="1"
+                Text="ASCII Texture" />
+            <Button
+                BackgroundColor="DarkSeaGreen"
+                Command="{Binding TextureCommand}"
+                CommandParameter="2"
                 Text="Color Texture" />
             <Button
                 BackgroundColor="DarkSeaGreen"
                 Command="{Binding TextureCommand}"
-                CommandParameter="1"
+                CommandParameter="3"
                 Text="Image Texture" />
+            <Button
+                BackgroundColor="DarkSeaGreen"
+                Command="{Binding TextureCommand}"
+                CommandParameter="4"
+                Text="Mono Texture" />
 
             <Button
                 Command="{Binding LoadCommand}"
