@@ -89,4 +89,8 @@
 	  </MauiXaml>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Core\Enums\" />
+	</ItemGroup>
+
 </Project>

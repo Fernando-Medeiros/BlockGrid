@@ -81,7 +81,7 @@ public sealed partial class MapViewModel : BaseViewModel
     private void TextureChanged(object sender)
     {
         if (IsBusy()) return;
-        TileCanvas.Texture = sender switch
+        NodeCanvas.Texture = sender switch
         {
             "1" => ETileTexture.ASCII,
             "2" => ETileTexture.Color,
