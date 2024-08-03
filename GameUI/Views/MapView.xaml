@@ -21,8 +21,54 @@
                 Text="Region E" />
         </Grid>
 
-        <!--  [][]NodeGraphic: (24 * 44) = 1056 Tile  -->
-        <!--  Tile: 108MB + BASE: 35MB  -->
+        <!--  [][]NodeGraphic: (24 * 44) = 1056 Nodes  -->
+        <!--  Nodes: 108MB + BASE: 35MB  -->
+        <FlexLayout Direction="Row">
+            <nodes:NodeGraphic Tile="{Binding Row00[0], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[1], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[2], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[3], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[4], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[5], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[6], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[7], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[8], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[9], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[10], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[11], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[12], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[13], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[14], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[15], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[16], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[17], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[18], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[19], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[20], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[21], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[22], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[23], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[24], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[25], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[26], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[27], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[28], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[29], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[30], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[31], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[32], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[33], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[34], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[35], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[36], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[37], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[38], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[39], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[40], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[41], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[42], Mode=TwoWay}" />
+            <nodes:NodeGraphic Tile="{Binding Row00[43], Mode=TwoWay}" />
+        </FlexLayout>
         <FlexLayout Direction="Row">
             <nodes:NodeGraphic Tile="{Binding Row01[0], Mode=TwoWay}" />
             <nodes:NodeGraphic Tile="{Binding Row01[1], Mode=TwoWay}" />
@@ -1080,52 +1126,6 @@
             <nodes:NodeGraphic Tile="{Binding Row23[41], Mode=TwoWay}" />
             <nodes:NodeGraphic Tile="{Binding Row23[42], Mode=TwoWay}" />
             <nodes:NodeGraphic Tile="{Binding Row23[43], Mode=TwoWay}" />
-        </FlexLayout>
-        <FlexLayout Direction="Row">
-            <nodes:NodeGraphic Tile="{Binding Row24[0], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[1], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[2], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[3], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[4], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[5], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[6], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[7], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[8], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[9], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[10], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[11], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[12], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[13], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[14], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[15], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[16], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[17], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[18], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[19], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[20], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[21], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[22], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[23], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[24], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[25], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[26], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[27], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[28], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[29], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[30], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[31], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[32], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[33], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[34], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[35], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[36], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[37], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[38], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[39], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[40], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[41], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[42], Mode=TwoWay}" />
-            <nodes:NodeGraphic Tile="{Binding Row24[43], Mode=TwoWay}" />
         </FlexLayout>
 
     </VerticalStackLayout>

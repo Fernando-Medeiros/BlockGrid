@@ -1,16 +1,15 @@
-﻿using GameUI.Core.Shaders;
-
-namespace GameUI.Core.Nodes;
+﻿namespace GameUI.Core.Nodes;
 
 public sealed class NodeGraphic : GraphicsView, INode
 {
     public NodeGraphic()
     {
         Running = true;
-        NodeTree = new NodeTree(this);
-        Drawable = Canvas = new NodeCanva();
+        NodeCanva = new NodeCanva();
+        NodeNavigation = new NodeNavigation(this);
         WidthRequest = GameEnvironment.VECTOR;
         HeightRequest = GameEnvironment.VECTOR;
+        Drawable = NodeCanva;
 
         StartInteraction += OnSelected;
 
@@ -20,8 +19,8 @@ public sealed class NodeGraphic : GraphicsView, INode
     #region Property
     public ISprite? Sprite { get; set; }
     public IShader? Shader { get; set; }
-    public NodeTree NodeTree { get; }
-    public NodeCanva Canvas { get; }
+    public NodeNavigation NodeNavigation { get; }
+    public NodeCanva NodeCanva { get; }
     public bool Running { get; set; }
     #endregion
 
@@ -50,9 +49,9 @@ public sealed class NodeGraphic : GraphicsView, INode
     {
         while (Running)
         {
-            Canvas.Tile = Tile;
-            Canvas.Sprite = Sprite;
-            Canvas.Shader = Shader;
+            NodeCanva.Tile = Tile;
+            NodeCanva.Sprite = Sprite;
+            NodeCanva.Shader = Shader;
             Invalidate();
             await Task.Delay(AuxFunction.random.Next(1000, 3000));
         }

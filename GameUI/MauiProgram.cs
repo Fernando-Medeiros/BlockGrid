@@ -1,4 +1,6 @@
-﻿namespace GameUI;
+﻿using Microsoft.Extensions.Logging;
+
+namespace GameUI;
 
 public static class MauiProgram
 {

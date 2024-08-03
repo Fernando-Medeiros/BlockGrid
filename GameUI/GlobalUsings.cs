@@ -3,6 +3,7 @@ global using GameUI.Core;
 global using GameUI.Core.Enums;
 global using GameUI.Core.Interfaces;
 global using GameUI.Core.Nodes;
+global using GameUI.Core.Shaders;
 global using GameUI.Core.Sprites;
 global using GameUI.ViewModels;
 global using GameUI.Views;

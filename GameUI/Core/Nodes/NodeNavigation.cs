@@ -1,11 +1,11 @@
 ﻿namespace GameUI.Core.Nodes;
 
-public sealed class NodeTree
+public sealed class NodeNavigation
 {
-    public NodeTree(NodeGraphic nodeGraphic)
+    public NodeNavigation(INode node)
     {
         Position = (_row, _column);
-        _nodes[_row].Add(nodeGraphic);
+        _nodes[_row].Add(node);
 
         _column++;
         if (_column >= GameEnvironment.MAX_COLUMN) { _row++; _column = 0; };
@@ -16,20 +16,20 @@ public sealed class NodeTree
     #region Linked
     private static byte _row;
     private static byte _column;
-    private static readonly IReadOnlyList<IList<NodeGraphic>> _nodes =
+    private static readonly IReadOnlyList<IList<INode>> _nodes =
         [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []];
     #endregion
 
     #region Property
     public (byte Row, byte Column) Position { get; }
-    public NodeGraphic? TopLeft { get; private set; }
-    public NodeGraphic? Top { get; private set; }
-    public NodeGraphic? TopRight { get; private set; }
-    public NodeGraphic? Left { get; private set; }
-    public NodeGraphic? Right { get; private set; }
-    public NodeGraphic? BottomLeft { get; private set; }
-    public NodeGraphic? Bottom { get; private set; }
-    public NodeGraphic? BottomRight { get; private set; }
+    public INode? TopLeft { get; private set; }
+    public INode? Top { get; private set; }
+    public INode? TopRight { get; private set; }
+    public INode? Left { get; private set; }
+    public INode? Right { get; private set; }
+    public INode? BottomLeft { get; private set; }
+    public INode? Bottom { get; private set; }
+    public INode? BottomRight { get; private set; }
     #endregion
 
     private void Mount()
