@@ -2,68 +2,98 @@
 
 public sealed class ResourceContainer
 {
-    private readonly Dictionary<ETile, string> ASCIIResource = [];
-    private readonly Dictionary<ETile, GraphicsColor> MonoResource = [];
-    private readonly Dictionary<ETile, GraphicsColor> ColorResource = [];
-    private readonly Dictionary<ETile, GraphicsImage> ImageResource = [];
+    private readonly Dictionary<Tile, string> ASCIIResource = [];
+    private readonly Dictionary<Tile, GraphicsColor> ColorResource = [];
+    private readonly Dictionary<Tile, GraphicsImage> TileImageResource = [];
+    private readonly Dictionary<Sprite, GraphicsImage> SpriteImageResource = [];
+    private readonly Dictionary<Shader, GraphicsImage> ShaderImageResource = [];
 
-    public bool Available { get; private set; }
-
-    public object GetResource(ETileTexture texture, ETile tile)
+    #region Action
+    public object GetResource(Sprite sprite) => SpriteImageResource[sprite];
+    public object GetResource(Shader shader) => ShaderImageResource[shader];
+    public object GetResource(TileTexture texture, Tile tile) => texture switch
     {
-        return texture switch
-        {
-            ETileTexture.Mono => MonoResource[tile],
-            ETileTexture.ASCII => ASCIIResource[tile],
-            ETileTexture.Color => ColorResource[tile],
-            ETileTexture.Image => ImageResource[tile],
-            _ => throw new ArgumentException(nameof(GetResource))
-        };
-    }
-
+        TileTexture.ASCII => ASCIIResource[tile],
+        TileTexture.Color => ColorResource[tile],
+        TileTexture.Image => TileImageResource[tile],
+        _ => GetResource(texture, tile)
+    };
     public async Task LoadResourcesAsync()
     {
-        foreach (ETile tile in Enum.GetValues<ETile>())
+        await Task.WhenAll([LoadSprites(), LoadShaders(), LoadTiles()]);
+
+        Invoke(Event.LoadResource, true);
+    }
+    #endregion
+
+    #region Event
+    public event EventHandler<EventArgs?>? OnLoadResource;
+    public void Invoke(Event @event, object? args)
+    {
+        if (@event is Event.LoadResource)
+            OnLoadResource?.Invoke(args, default);
+    }
+    #endregion
+
+    #region Load
+    private async Task LoadSprites()
+    {
+        foreach (var sprite in Enum.GetValues<Sprite>())
+        {
+            string name = $"{Enum.GetName(sprite)}.png".ToLower();
+
+            using var stream = await FileSystem.OpenAppPackageFileAsync(name);
+
+            SpriteImageResource.Add(sprite, PlatformImage.FromStream(stream));
+            stream.Close();
+        }
+    }
+
+    private async Task LoadShaders()
+    {
+        foreach (var shader in Enum.GetValues<Shader>())
+        {
+            string name = $"{Enum.GetName(shader)}.png".ToLower();
+
+            using var stream = await FileSystem.OpenAppPackageFileAsync(name);
+
+            ShaderImageResource.Add(shader, PlatformImage.FromStream(stream));
+            stream.Close();
+        }
+    }
+
+    private async Task LoadTiles()
+    {
+        foreach (Tile tile in Enum.GetValues<Tile>())
         {
             string name = $"{Enum.GetName(tile)}.png".ToLower();
 
             using var stream = await FileSystem.OpenAppPackageFileAsync(name);
 
-            var tileAscii = tile switch
+            var ascii = tile switch
             {
-                ETile.Grass => ";;.;;;;.;;.",
-                ETile.Ground => "|||||||",
-                ETile.Road => "]]]]]]]]]",
-                ETile.Water => "~~~~~~~",
-                ETile.Desert => "::::::::",
+                Tile.Grass => ";;.;;;;.;;.",
+                Tile.House => "|||||||",
+                Tile.Road => "]]]]]]]]]",
+                Tile.Water => "~~~~~~~",
+                Tile.Desert => "::::::::",
                 _ => ".",
             };
-            var tileMono = tile switch
+            var color = tile switch
             {
-                ETile.Grass => Colors.Gray,
-                ETile.Ground => Colors.LightSlateGray,
-                ETile.Road => Colors.GhostWhite,
-                ETile.Water => Colors.AntiqueWhite,
-                ETile.Desert => Colors.LightGray,
-                _ => Colors.Transparent,
-            };
-            var tileColor = tile switch
-            {
-                ETile.Grass => Colors.DarkSeaGreen,
-                ETile.Ground => Colors.SandyBrown,
-                ETile.Road => Colors.LightGray,
-                ETile.Water => Colors.CornflowerBlue,
-                ETile.Desert => Colors.Beige,
+                Tile.Grass => Colors.DarkSeaGreen,
+                Tile.House => Colors.SandyBrown,
+                Tile.Road => Colors.LightGray,
+                Tile.Water => Colors.CornflowerBlue,
+                Tile.Desert => Colors.Beige,
                 _ => Colors.Transparent,
             };
 
-            ASCIIResource.Add(tile, tileAscii);
-            MonoResource.Add(tile, tileMono);
-            ColorResource.Add(tile, tileColor);
-            ImageResource.Add(tile, PlatformImage.FromStream(stream));
-
+            ASCIIResource.Add(tile, ascii);
+            ColorResource.Add(tile, color);
+            TileImageResource.Add(tile, PlatformImage.FromStream(stream));
             stream.Close();
         }
-        Available = true;
     }
+    #endregion
 }

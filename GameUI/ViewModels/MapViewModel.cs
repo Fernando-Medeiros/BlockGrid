@@ -1,47 +1,43 @@
-﻿using System.Windows.Input;
+﻿namespace GameUI.ViewModels;
 
-namespace GameUI.ViewModels;
-
-public sealed record Tier(IList<IList<ETile>> Matriz);
+public sealed record Tier(IList<IList<Tile>> Matriz);
 
 public sealed partial class MapViewModel : BaseViewModel
 {
     public MapViewModel()
     {
         LoadCommand = new Command(LoadChanged);
-        TextureCommand = new Command(TextureChanged);
     }
 
     #region Property
-    public IList<ETile> Row01 { get; set; } = [];
-    public IList<ETile> Row02 { get; set; } = [];
-    public IList<ETile> Row03 { get; set; } = [];
-    public IList<ETile> Row04 { get; set; } = [];
-    public IList<ETile> Row05 { get; set; } = [];
-    public IList<ETile> Row06 { get; set; } = [];
-    public IList<ETile> Row07 { get; set; } = [];
-    public IList<ETile> Row08 { get; set; } = [];
-    public IList<ETile> Row09 { get; set; } = [];
-    public IList<ETile> Row10 { get; set; } = [];
-    public IList<ETile> Row11 { get; set; } = [];
-    public IList<ETile> Row12 { get; set; } = [];
-    public IList<ETile> Row13 { get; set; } = [];
-    public IList<ETile> Row14 { get; set; } = [];
-    public IList<ETile> Row15 { get; set; } = [];
-    public IList<ETile> Row16 { get; set; } = [];
-    public IList<ETile> Row17 { get; set; } = [];
-    public IList<ETile> Row18 { get; set; } = [];
-    public IList<ETile> Row19 { get; set; } = [];
-    public IList<ETile> Row20 { get; set; } = [];
-    public IList<ETile> Row21 { get; set; } = [];
-    public IList<ETile> Row22 { get; set; } = [];
-    public IList<ETile> Row23 { get; set; } = [];
-    public IList<ETile> Row24 { get; set; } = [];
+    public IList<Tile> Row01 { get; set; } = [];
+    public IList<Tile> Row02 { get; set; } = [];
+    public IList<Tile> Row03 { get; set; } = [];
+    public IList<Tile> Row04 { get; set; } = [];
+    public IList<Tile> Row05 { get; set; } = [];
+    public IList<Tile> Row06 { get; set; } = [];
+    public IList<Tile> Row07 { get; set; } = [];
+    public IList<Tile> Row08 { get; set; } = [];
+    public IList<Tile> Row09 { get; set; } = [];
+    public IList<Tile> Row10 { get; set; } = [];
+    public IList<Tile> Row11 { get; set; } = [];
+    public IList<Tile> Row12 { get; set; } = [];
+    public IList<Tile> Row13 { get; set; } = [];
+    public IList<Tile> Row14 { get; set; } = [];
+    public IList<Tile> Row15 { get; set; } = [];
+    public IList<Tile> Row16 { get; set; } = [];
+    public IList<Tile> Row17 { get; set; } = [];
+    public IList<Tile> Row18 { get; set; } = [];
+    public IList<Tile> Row19 { get; set; } = [];
+    public IList<Tile> Row20 { get; set; } = [];
+    public IList<Tile> Row21 { get; set; } = [];
+    public IList<Tile> Row22 { get; set; } = [];
+    public IList<Tile> Row23 { get; set; } = [];
+    public IList<Tile> Row24 { get; set; } = [];
     #endregion
 
     #region Command
     public ICommand LoadCommand { get; }
-    public ICommand TextureCommand { get; }
     #endregion
 
     #region Action
@@ -75,19 +71,6 @@ public sealed partial class MapViewModel : BaseViewModel
         OnPropertyChanged(nameof(Row19)); OnPropertyChanged(nameof(Row20)); OnPropertyChanged(nameof(Row21));
         OnPropertyChanged(nameof(Row22)); OnPropertyChanged(nameof(Row23)); OnPropertyChanged(nameof(Row24));
 
-        NotBusy();
-    }
-
-    private void TextureChanged(object sender)
-    {
-        if (IsBusy()) return;
-        NodeCanvas.Texture = sender switch
-        {
-            "1" => ETileTexture.ASCII,
-            "2" => ETileTexture.Color,
-            "3" => ETileTexture.Image,
-            "4" => ETileTexture.Mono,
-        };
         NotBusy();
     }
     #endregion
