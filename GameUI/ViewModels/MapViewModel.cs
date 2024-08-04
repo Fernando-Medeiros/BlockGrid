@@ -71,6 +71,8 @@ public sealed partial class MapViewModel : BaseViewModel
         OnPropertyChanged(nameof(Row18)); OnPropertyChanged(nameof(Row19)); OnPropertyChanged(nameof(Row20));
         OnPropertyChanged(nameof(Row21)); OnPropertyChanged(nameof(Row22)); OnPropertyChanged(nameof(Row23));
 
+        App.Invoke(Event.LoadScene, default);
+
         NotBusy();
     }
     #endregion

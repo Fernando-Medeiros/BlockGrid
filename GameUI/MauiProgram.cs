@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿#if DEBUG
+using Microsoft.Extensions.Logging;
+#endif
 
 namespace GameUI;
 
@@ -13,6 +15,12 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+            })
+            .ConfigureMauiHandlers(handlers =>
+            {
+#if WINDOWS
+                handlers.AddHandler(typeof(Page), typeof(BasePageHandler));
+#endif
             });
 
         #region Views
@@ -26,6 +34,7 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
+
         return builder.Build();
     }
 }

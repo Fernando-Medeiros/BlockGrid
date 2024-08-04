@@ -2,7 +2,9 @@
 
 public enum Event : byte
 {
-    GameStarted,
-    TileTexture,
+    LoadScene,
     LoadResource,
+    KeyUp,
+    KeyDown,
+    TileTexture,
 }

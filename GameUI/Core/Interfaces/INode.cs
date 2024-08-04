@@ -7,7 +7,6 @@ public interface INode
     public IShader? Shader { get; set; }
     public NodeCanva NodeCanva { get; }
     public NodeNavigation NodeNavigation { get; }
-    public bool Running { get; set; }
-    public Task Draw();
+    public void ReDraw();
     public void OnSelected(object? sender, TouchEventArgs e);
 }

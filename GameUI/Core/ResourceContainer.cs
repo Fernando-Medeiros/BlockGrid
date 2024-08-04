@@ -18,20 +18,12 @@ public sealed class ResourceContainer
         TileTexture.Image => TileImageResource[tile],
         _ => GetResource(texture, tile)
     };
+
     public async Task LoadResourcesAsync()
     {
         await Task.WhenAll([LoadSprites(), LoadShaders(), LoadTiles()]);
 
-        Invoke(Event.LoadResource, true);
-    }
-    #endregion
-
-    #region Event
-    public event EventHandler<EventArgs?>? OnLoadResource;
-    public void Invoke(Event @event, object? args)
-    {
-        if (@event is Event.LoadResource)
-            OnLoadResource?.Invoke(args, default);
+        App.Invoke(Event.LoadResource, true);
     }
     #endregion
 

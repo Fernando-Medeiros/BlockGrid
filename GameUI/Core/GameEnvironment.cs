@@ -1,21 +1,46 @@
 ﻿namespace GameUI.Core;
 
+public readonly struct Key
+{
+    public const string A = "A";
+    public const string D = "D";
+    public const string S = "S";
+    public const string W = "W";
+    public const string Up = "Up";
+    public const string Left = "Left";
+    public const string Right = "Right";
+    public const string Down = "Down";
+}
+
 public sealed class GameEnvironment
 {
     public const byte VECTOR = 32;
     public const byte MAX_ROW = 24;
     public const byte MAX_COLUMN = 44;
 
-    #region Property
-    private TileTexture TileTexture { get; set; }
-    #endregion
-
     #region Event
-    public event EventHandler<EventArgs?>? OnTileTexture;
-    public void Invoke(Event gameEvent, object? sender)
+    private event EventHandler<EventArgs?>? OnKeyUp;
+    private event EventHandler<EventArgs?>? OnKeyDown;
+    private event EventHandler<EventArgs?>? OnTileTexture;
+    private event EventHandler<EventArgs?>? OnLoadScene;
+    private event EventHandler<EventArgs?>? OnLoadResource;
+
+    public void Subscribe(Event e, Action<object?> routine)
     {
-        if (gameEvent is Event.TileTexture && sender is TileTexture texture)
-            OnTileTexture?.Invoke(TileTexture = texture, default);
+        if (e is Event.KeyUp) OnKeyUp += (args, _) => routine(args);
+        if (e is Event.KeyDown) OnKeyDown += (args, _) => routine(args);
+        if (e is Event.TileTexture) OnTileTexture += (args, _) => routine(args);
+        if (e is Event.LoadScene) OnLoadScene += (args, _) => routine(args);
+        if (e is Event.LoadResource) OnLoadResource += (args, _) => routine(args);
+    }
+
+    public void Invoke(Event e, object? args)
+    {
+        if (e is Event.KeyUp) OnKeyUp?.Invoke(args, default);
+        if (e is Event.KeyDown) OnKeyDown?.Invoke(args, default);
+        if (e is Event.TileTexture) OnTileTexture?.Invoke(args, default);
+        if (e is Event.LoadScene) OnLoadScene?.Invoke(args, default);
+        if (e is Event.LoadResource) OnLoadResource?.Invoke(args, default);
     }
     #endregion
 }

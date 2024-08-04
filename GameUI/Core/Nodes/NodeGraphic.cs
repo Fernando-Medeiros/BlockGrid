@@ -4,7 +4,6 @@ public sealed class NodeGraphic : GraphicsView, INode
 {
     public NodeGraphic()
     {
-        Running = true;
         NodeCanva = new NodeCanva();
         NodeNavigation = new NodeNavigation(this);
         WidthRequest = GameEnvironment.VECTOR;
@@ -13,24 +12,21 @@ public sealed class NodeGraphic : GraphicsView, INode
 
         StartInteraction += OnSelected;
 
-        App.Subscribe(Event.LoadResource, (_) => Dispatcher.DispatchAsync(Draw));
+        App.Subscribe(Event.LoadScene, (_) => ReDraw());
     }
 
     #region Property
-    public ISprite? Sprite { get; set; }
-    public IShader? Shader { get; set; }
-    public NodeNavigation NodeNavigation { get; }
+    private ISprite? sprite;
+    private IShader? shader;
+
+    public Tile Tile { get => (Tile)GetValue(TileProperty); set { SetValue(TileProperty, value); } }
+    public ISprite? Sprite { get => sprite; set { sprite = value; ReDraw(); } }
+    public IShader? Shader { get => shader; set { shader = value; ReDraw(); } }
     public NodeCanva NodeCanva { get; }
-    public bool Running { get; set; }
+    public NodeNavigation NodeNavigation { get; }
     #endregion
 
     #region Bindable Property
-    public Tile Tile
-    {
-        get { return (Tile)GetValue(TileProperty); }
-        set { SetValue(TileProperty, value); }
-    }
-
     internal static readonly BindableProperty TileProperty = BindableProperty.Create(
         nameof(Tile), typeof(Tile), typeof(NodeGraphic), default(Tile),
         propertyChanged: (BindableObject tile, object old, object value) => tile.SetValue(TileProperty, (Tile)value));
@@ -39,22 +35,18 @@ public sealed class NodeGraphic : GraphicsView, INode
     #region Event
     public void OnSelected(object? sender, TouchEventArgs e)
     {
-        Sprite = new StaticSprite();
+        Sprite = new PlayableSprite(this);
         Shader = new StaticShader();
     }
     #endregion
 
     #region Action
-    public async Task Draw()
+    public void ReDraw()
     {
-        while (Running)
-        {
-            NodeCanva.Tile = Tile;
-            NodeCanva.Sprite = Sprite;
-            NodeCanva.Shader = Shader;
-            Invalidate();
-            await Task.Delay(AuxFunction.random.Next(1000, 3000));
-        }
+        NodeCanva.Tile = Tile;
+        NodeCanva.Sprite = Sprite;
+        NodeCanva.Shader = Shader;
+        Invalidate();
     }
     #endregion
 }

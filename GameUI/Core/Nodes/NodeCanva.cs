@@ -4,9 +4,8 @@ public sealed class NodeCanva : IDrawable
 {
     static NodeCanva()
     {
-        App.Subscribe(Event.TileTexture, (args) => Texture = (TileTexture)args!);
-
         App.Subscribe(Event.LoadResource, (_) => Running = true);
+        App.Subscribe(Event.TileTexture, (args) => Texture = (TileTexture)args!);
     }
 
     #region Linked
@@ -26,23 +25,23 @@ public sealed class NodeCanva : IDrawable
 
         canvas.Antialias = true;
         DrawSurface(canvas, rect);
-
-        if (Sprite is null) return;
         DrawSprite(canvas, rect);
-
-        if (Shader is null) return;
         DrawShader(canvas, rect);
     }
 
     #region Layer
     public void DrawShader(ICanvas canvas, RectF rect)
     {
+        if (Shader is null) return;
+
         var resource = App.ResourceContainer.GetResource(Shader.Image);
         canvas.DrawImage((GraphicsImage)resource, rect.X, rect.Y, rect.Width, rect.Height);
     }
 
     public void DrawSprite(ICanvas canvas, RectF rect)
     {
+        if (Sprite is null) return;
+
         var resource = App.ResourceContainer.GetResource(Sprite.Image);
         canvas.DrawImage((GraphicsImage)resource, rect.X, rect.Y, rect.Width, rect.Height);
     }
