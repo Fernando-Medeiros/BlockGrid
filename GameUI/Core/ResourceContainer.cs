@@ -2,88 +2,37 @@
 
 public sealed class ResourceContainer
 {
-    private readonly Dictionary<Tile, string> ASCIIResource = [];
-    private readonly Dictionary<Tile, GraphicsColor> ColorResource = [];
-    private readonly Dictionary<Tile, GraphicsImage> TileImageResource = [];
-    private readonly Dictionary<Sprite, GraphicsImage> SpriteImageResource = [];
-    private readonly Dictionary<Shader, GraphicsImage> ShaderImageResource = [];
+    private readonly Dictionary<Tile, GraphicsImage> TileResources = [];
+    private readonly Dictionary<Sprite, GraphicsImage> SpriteResources = [];
+    private readonly Dictionary<Shader, GraphicsImage> ShaderResources = [];
 
     #region Action
-    public object GetResource(Sprite sprite) => SpriteImageResource[sprite];
-    public object GetResource(Shader shader) => ShaderImageResource[shader];
-    public object GetResource(TileTexture texture, Tile tile) => texture switch
-    {
-        TileTexture.ASCII => ASCIIResource[tile],
-        TileTexture.Color => ColorResource[tile],
-        TileTexture.Image => TileImageResource[tile],
-        _ => GetResource(texture, tile)
-    };
+    public GraphicsImage GetResource(Tile tile) => TileResources[tile];
+    public GraphicsImage GetResource(Sprite sprite) => SpriteResources[sprite];
+    public GraphicsImage GetResource(Shader shader) => ShaderResources[shader];
 
     public async Task LoadResourcesAsync()
     {
-        await Task.WhenAll([LoadSprites(), LoadShaders(), LoadTiles()]);
+        await Task.WhenAll([
+            Load(TileResources),
+            Load(SpriteResources),
+            Load(ShaderResources),
+        ]);
 
         App.Invoke(Event.LoadResource, true);
     }
     #endregion
 
-    #region Load
-    private async Task LoadSprites()
+    #region Build
+    private async Task Load<T>(Dictionary<T, GraphicsImage> container) where T : Enum
     {
-        foreach (var sprite in Enum.GetValues<Sprite>())
+        foreach (T key in Enum.GetValues(typeof(T)))
         {
-            string name = $"{Enum.GetName(sprite)}.png".ToLower();
+            string name = $"{Enum.GetName(typeof(T), key)}.png".ToLower();
 
             using var stream = await FileSystem.OpenAppPackageFileAsync(name);
 
-            SpriteImageResource.Add(sprite, PlatformImage.FromStream(stream));
-            stream.Close();
-        }
-    }
-
-    private async Task LoadShaders()
-    {
-        foreach (var shader in Enum.GetValues<Shader>())
-        {
-            string name = $"{Enum.GetName(shader)}.png".ToLower();
-
-            using var stream = await FileSystem.OpenAppPackageFileAsync(name);
-
-            ShaderImageResource.Add(shader, PlatformImage.FromStream(stream));
-            stream.Close();
-        }
-    }
-
-    private async Task LoadTiles()
-    {
-        foreach (Tile tile in Enum.GetValues<Tile>())
-        {
-            string name = $"{Enum.GetName(tile)}.png".ToLower();
-
-            using var stream = await FileSystem.OpenAppPackageFileAsync(name);
-
-            var ascii = tile switch
-            {
-                Tile.Grass => ";;.;;;;.;;.",
-                Tile.House => "|||||||",
-                Tile.Road => "]]]]]]]]]",
-                Tile.Water => "~~~~~~~",
-                Tile.Desert => "::::::::",
-                _ => ".",
-            };
-            var color = tile switch
-            {
-                Tile.Grass => Colors.DarkSeaGreen,
-                Tile.House => Colors.SandyBrown,
-                Tile.Road => Colors.LightGray,
-                Tile.Water => Colors.CornflowerBlue,
-                Tile.Desert => Colors.Beige,
-                _ => Colors.Transparent,
-            };
-
-            ASCIIResource.Add(tile, ascii);
-            ColorResource.Add(tile, color);
-            TileImageResource.Add(tile, PlatformImage.FromStream(stream));
+            container.Add(key, PlatformImage.FromStream(stream));
             stream.Close();
         }
     }

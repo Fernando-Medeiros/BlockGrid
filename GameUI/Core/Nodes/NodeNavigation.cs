@@ -11,6 +11,11 @@ public sealed class NodeNavigation
         if (_column >= GameEnvironment.MAX_COLUMN) { _row++; _column = 0; };
 
         App.Subscribe(Event.LoadResource, (_) => Mount());
+
+
+        // TESTs
+        if (_row == 11 && _column == 31) node.Sprite = new StaticSprite(node);
+        if (_row == 11 && _column == 21) node.Sprite = new PlayableSprite(node);
     }
 
     #region Linked
@@ -30,6 +35,32 @@ public sealed class NodeNavigation
     public INode? BottomLeft { get; private set; }
     public INode? Bottom { get; private set; }
     public INode? BottomRight { get; private set; }
+    #endregion
+
+    #region Common
+    public INode? GetBy(object? key)
+    {
+        return key switch
+        {
+            Key.W or Key.Up => Top,
+            Key.A or Key.Left => Left,
+            Key.D or Key.Right => Right,
+            Key.S or Key.Down => Bottom,
+            _ => null
+        };
+    }
+
+    public void VisibilityTo(double opacity)
+    {
+        Top?.FadeTo(opacity);
+        Left?.FadeTo(opacity);
+        Right?.FadeTo(opacity);
+        Bottom?.FadeTo(opacity);
+        TopLeft?.FadeTo(opacity);
+        TopRight?.FadeTo(opacity);
+        BottomLeft?.FadeTo(opacity);
+        BottomRight?.FadeTo(opacity);
+    }
     #endregion
 
     private void Mount()

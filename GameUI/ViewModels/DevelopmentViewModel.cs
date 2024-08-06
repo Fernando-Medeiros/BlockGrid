@@ -18,10 +18,6 @@ public sealed partial class DevelopmentViewModel : BaseViewModel
     private void TextureChanged(object sender)
     {
         if (IsBusy()) return;
-
-        var texture = (TileTexture)Convert.ToByte(sender);
-        App.Invoke(Event.TileTexture, texture);
-
         NotBusy();
     }
     #endregion

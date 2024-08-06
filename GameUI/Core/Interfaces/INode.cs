@@ -8,5 +8,5 @@ public interface INode
     public NodeCanva NodeCanva { get; }
     public NodeNavigation NodeNavigation { get; }
     public void ReDraw();
-    public void OnSelected(object? sender, TouchEventArgs e);
+    public void FadeTo(double opacity);
 }

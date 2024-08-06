@@ -6,5 +6,4 @@ public enum Event : byte
     LoadResource,
     KeyUp,
     KeyDown,
-    TileTexture,
 }

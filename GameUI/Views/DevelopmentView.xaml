@@ -14,14 +14,6 @@
             <Button
                 Command="{Binding TextureCommand}"
                 CommandParameter="0"
-                Text="ASCII" />
-            <Button
-                Command="{Binding TextureCommand}"
-                CommandParameter="1"
-                Text="Color" />
-            <Button
-                Command="{Binding TextureCommand}"
-                CommandParameter="2"
                 Text="Image" />
         </VerticalStackLayout>
     </ScrollView>

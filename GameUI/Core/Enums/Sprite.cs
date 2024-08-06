@@ -2,5 +2,6 @@
 
 public enum Sprite : byte
 {
+    Aracne,
     Spider,
 }

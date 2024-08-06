@@ -4,29 +4,20 @@ public sealed class PlayableSprite : ISprite
 {
     public PlayableSprite(INode node)
     {
-        Node = node;
+        node.FadeTo(1);
+        Image = Sprite.Aracne;
 
-        App.Subscribe(Event.KeyDown, MoveTo);
-    }
+        Movement = new MovementComponent();
 
-    public Sprite Image { get; set; }
-    public INode Node { get; set; }
-
-    public void MoveTo(object? key)
-    {
-        INode? node = key switch
+        App.Subscribe(Event.KeyDown, (key) =>
         {
-            Key.W or Key.Up => Node.NodeNavigation.Top,
-            Key.A or Key.Left => Node.NodeNavigation.Left,
-            Key.D or Key.Right => Node.NodeNavigation.Right,
-            Key.S or Key.Down => Node.NodeNavigation.Bottom,
-            _ => null
-        };
-
-        if (node is null || node.Sprite != null) return;
-
-        Node.Sprite = null;
-        Node = node;
-        Node.Sprite = this;
+            Movement?.PushTo(ref node, key);
+            Movement?.MoveTo(ref node, key);
+        });
     }
+
+    #region Property
+    public Sprite Image { get; set; }
+    public IMovementComponent? Movement { get; set; }
+    #endregion
 }

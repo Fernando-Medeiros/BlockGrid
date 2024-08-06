@@ -21,7 +21,6 @@ public sealed class GameEnvironment
     #region Event
     private event EventHandler<EventArgs?>? OnKeyUp;
     private event EventHandler<EventArgs?>? OnKeyDown;
-    private event EventHandler<EventArgs?>? OnTileTexture;
     private event EventHandler<EventArgs?>? OnLoadScene;
     private event EventHandler<EventArgs?>? OnLoadResource;
 
@@ -29,7 +28,6 @@ public sealed class GameEnvironment
     {
         if (e is Event.KeyUp) OnKeyUp += (args, _) => routine(args);
         if (e is Event.KeyDown) OnKeyDown += (args, _) => routine(args);
-        if (e is Event.TileTexture) OnTileTexture += (args, _) => routine(args);
         if (e is Event.LoadScene) OnLoadScene += (args, _) => routine(args);
         if (e is Event.LoadResource) OnLoadResource += (args, _) => routine(args);
     }
@@ -38,7 +36,6 @@ public sealed class GameEnvironment
     {
         if (e is Event.KeyUp) OnKeyUp?.Invoke(args, default);
         if (e is Event.KeyDown) OnKeyDown?.Invoke(args, default);
-        if (e is Event.TileTexture) OnTileTexture?.Invoke(args, default);
         if (e is Event.LoadScene) OnLoadScene?.Invoke(args, default);
         if (e is Event.LoadResource) OnLoadResource?.Invoke(args, default);
     }
