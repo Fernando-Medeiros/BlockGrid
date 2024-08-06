@@ -11,24 +11,35 @@ public sealed class NodeGraphic : GraphicsView, INode
         HeightRequest = GameEnvironment.VECTOR;
         Drawable = NodeCanva;
 
-        App.Subscribe(Event.LoadScene, (_) => ReDraw());
+        App.Subscribe(Event.LoadScene, (args) =>
+        {
+            Unpack(args);
+            ReDraw();
+        });
     }
 
     #region Property
-    private ISprite? sprite;
-    private IShader? shader;
+    private Tile _tile;
+    private ISprite? _sprite;
+    private IShader? _shader;
 
     public NodeCanva NodeCanva { get; }
     public NodeNavigation NodeNavigation { get; }
-    public ISprite? Sprite { get => sprite; set { sprite = value; ReDraw(); } }
-    public IShader? Shader { get => shader; set { shader = value; ReDraw(); } }
-    public Tile Tile { get => (Tile)GetValue(TileProperty); set { SetValue(TileProperty, value); } }
+    public Tile Tile { get => _tile; set { _tile = value; ReDraw(); } }
+    public ISprite? Sprite { get => _sprite; set { _sprite = value; ReDraw(); } }
+    public IShader? Shader { get => _shader; set { _shader = value; ReDraw(); } }
     #endregion
 
-    #region Bindable Property
-    internal static readonly BindableProperty TileProperty = BindableProperty.Create(
-        nameof(Tile), typeof(Tile), typeof(NodeGraphic), default(Tile),
-        propertyChanged: (BindableObject tile, object old, object value) => tile.SetValue(TileProperty, (Tile)value));
+    #region Build
+    private void Unpack(object? args)
+    {
+        if (args is null) return;
+
+        var package = (ScenePackage)args;
+        var (row, column) = NodeNavigation.Position;
+
+        _tile = package.Surface?.ElementAtOrDefault(row)?.ElementAtOrDefault(column) ?? default;
+    }
     #endregion
 
     #region Action

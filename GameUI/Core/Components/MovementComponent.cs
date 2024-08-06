@@ -3,7 +3,7 @@
 public sealed class MovementComponent : IMovementComponent
 {
     /// <summary>
-    /// Empura o sprite do proximo bloco para a mesma direção.
+    /// Empura o _sprite do proximo bloco para a mesma direção.
     /// </summary>
     /// <param name="node">Referência ao node atual.</param>
     /// <param name="key">Tecla pressionada tipo string e uppercase.</param>
@@ -17,7 +17,7 @@ public sealed class MovementComponent : IMovementComponent
     }
 
     /// <summary>
-    /// Movimenta o sprite atual para o proximo Node caso ele esteja vazio e a acessibilidade seja livre.
+    /// Movimenta o _sprite atual para o proximo Node caso ele esteja vazio e a acessibilidade seja livre.
     /// </summary>
     /// <param name="node">Referência ao node atual.</param>
     /// <param name="key">Tecla pressionada tipo string e uppercase.</param>
