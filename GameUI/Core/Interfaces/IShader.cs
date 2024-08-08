@@ -2,5 +2,5 @@
 
 public interface IShader
 {
-    public Shader Image { get; set; }
+    Shader Image { get; set; }
 }

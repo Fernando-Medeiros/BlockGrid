@@ -2,6 +2,8 @@
 
 public interface ISprite
 {
-    public Sprite Image { get; set; }
-    public IMovementComponent? Movement { get; set; }
+    Sprite Image { get; set; }
+    IActionComponent? Action { get; }
+    IHealthComponent? Health { get; }
+    IMovementComponent? Movement { get; }
 }

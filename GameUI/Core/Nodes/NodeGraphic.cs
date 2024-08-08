@@ -33,12 +33,11 @@ public sealed class NodeGraphic : GraphicsView, INode
     #region Build
     private void Unpack(object? args)
     {
-        if (args is null) return;
+        if (args is null || args is not ScenePackage) return;
 
-        var package = (ScenePackage)args;
         var (row, column) = NodeNavigation.Position;
 
-        _tile = package.Surface?.ElementAtOrDefault(row)?.ElementAtOrDefault(column) ?? default;
+        _tile = ((ScenePackage)args).Surface?.ElementAtOrDefault(row)?.ElementAtOrDefault(column) ?? default;
     }
     #endregion
 

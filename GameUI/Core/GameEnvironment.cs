@@ -10,11 +10,15 @@ public readonly struct Key
     public const string Left = "Left";
     public const string Right = "Right";
     public const string Down = "Down";
+    public const string Space = "Space";
+
+    public static readonly IReadOnlyList<string> Actions = [Space];
+    public static readonly IReadOnlyList<string> Positions = [Up, Down, Left, Right];
 }
 
 public sealed class GameEnvironment
 {
-    public const byte VECTOR = 32;
+    public const byte VECTOR = 38;
     public const byte MAX_ROW = 24;
     public const byte MAX_COLUMN = 44;
 

@@ -24,6 +24,7 @@ public sealed class NodeCanva : IDrawable
         canvas.Antialias = true;
         DrawSurface(canvas, rect);
         DrawSprite(canvas, rect);
+        DrawAction(canvas, rect);
         DrawShader(canvas, rect);
     }
 
@@ -34,6 +35,17 @@ public sealed class NodeCanva : IDrawable
 
         var image = App.ResourceContainer.GetResource(Shader.Image);
         image?.Draw(canvas, rect);
+    }
+
+    public void DrawAction(ICanvas canvas, RectF rect)
+    {
+        if (Sprite is null || Sprite?.Health?.HasUpdate() is false) return;
+
+        string damage = $"{Sprite?.Health?.GetHealth()}";
+
+        canvas.FontSize = 18;
+        canvas.FontColor = Colors.White;
+        canvas.DrawString(damage, rect.Center.X, rect.Center.Y, HorizontalAlignment.Justified);
     }
 
     public void DrawSprite(ICanvas canvas, RectF rect)

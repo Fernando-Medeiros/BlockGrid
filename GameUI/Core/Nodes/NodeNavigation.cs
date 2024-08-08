@@ -38,7 +38,7 @@ public sealed class NodeNavigation
     #endregion
 
     #region Common
-    public INode? GetBy(object? key)
+    public INode? GetBy(ref object? key)
     {
         return key switch
         {
