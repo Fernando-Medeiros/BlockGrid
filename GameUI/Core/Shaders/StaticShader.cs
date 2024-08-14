@@ -2,5 +2,5 @@
 
 public sealed class StaticShader : IShader
 {
-    public Shader Image { get; set; }
+    public Shader2D Sprite { get; set; }
 }

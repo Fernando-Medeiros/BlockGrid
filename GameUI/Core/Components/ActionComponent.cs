@@ -2,22 +2,21 @@
 
 public sealed class ActionComponent : IActionComponent
 {
-    public void DamageTo(ref INode node, ref object? key)
+    public void DamageTo(IBody2D body, object? key)
     {
         if (Key.Actions.Contains(key) is false) return;
 
-        INode? next = default;
+        INode2D? node = default;
 
-        foreach (object pos in Key.Positions)
+        foreach (var position in Key.Positions)
         {
-            var positionKey = pos;
-            next = node.NodeNavigation.GetBy(ref positionKey);
+            node = body.Node?.Navigate.GetNode(position);
 
-            if (next?.Sprite is not null) break;
+            if (Is.Type<IBody2D>(node?.Body)) break;
         }
 
-        if (next is null || next.Sprite is null || TileAccess.ItsBlocked(next.Tile)) return;
+        if (Is.Null(node) || Is.Null(node?.Body) || Is.Blocked(node?.Tile)) return;
 
-        next.Sprite?.Health?.ReceiveTo(ref next, 1);
+        node?.Body?.Health?.ReceiveTo(node.Body, 1);
     }
 }

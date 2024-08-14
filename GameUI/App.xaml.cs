@@ -36,6 +36,14 @@ public sealed partial class App : Application
     }
 
     /// <summary>
+    /// Libera a rotina inscrita.
+    /// </summary>
+    public static void UnSubscribe(Event e, Action<object?> routine)
+    {
+        GameEnvironment.UnSubscribe(e, routine);
+    }
+
+    /// <summary>
     /// Invoca um evento global passando argumentos.
     /// </summary>
     public static void Invoke(Event e, object? args)

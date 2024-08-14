@@ -12,8 +12,8 @@ public sealed class NodeCanva : IDrawable
     #endregion
 
     #region Property
-    public Tile Tile { get; set; }
-    public ISprite? Sprite { get; set; }
+    public Tile2D Tile { get; set; }
+    public IBody2D? Body { get; set; }
     public IShader? Shader { get; set; }
     #endregion
 
@@ -31,17 +31,17 @@ public sealed class NodeCanva : IDrawable
     #region Layer
     public void DrawShader(ICanvas canvas, RectF rect)
     {
-        if (Shader is null) return;
+        if (Is.Null(Shader)) return;
 
-        var image = App.ResourceContainer.GetResource(Shader.Image);
+        var image = App.ResourceContainer.GetResource(Shader.Sprite);
         image?.Draw(canvas, rect);
     }
 
     public void DrawAction(ICanvas canvas, RectF rect)
     {
-        if (Sprite is null || Sprite?.Health?.HasUpdate() is false) return;
+        if (Is.Null(Body) || Body?.Health?.HasUpdate() is false) return;
 
-        string damage = $"{Sprite?.Health?.GetHealth()}";
+        string damage = $"{Body?.Health?.GetHealth()}";
 
         canvas.FontSize = 18;
         canvas.FontColor = Colors.White;
@@ -50,9 +50,9 @@ public sealed class NodeCanva : IDrawable
 
     public void DrawSprite(ICanvas canvas, RectF rect)
     {
-        if (Sprite is null) return;
+        if (Is.Null(Body?.Sprite)) return;
 
-        var image = App.ResourceContainer.GetResource(Sprite.Image);
+        var image = App.ResourceContainer.GetResource((Sprite2D)Body.Sprite);
         image?.Draw(canvas, rect);
     }
 

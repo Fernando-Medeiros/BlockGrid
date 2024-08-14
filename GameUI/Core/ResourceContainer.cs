@@ -2,14 +2,14 @@
 
 public sealed class ResourceContainer
 {
-    private readonly Dictionary<Tile, GraphicsImage> TileResources = [];
-    private readonly Dictionary<Sprite, GraphicsImage> SpriteResources = [];
-    private readonly Dictionary<Shader, GraphicsImage> ShaderResources = [];
+    private readonly Dictionary<Tile2D, GraphicsImage> TileResources = [];
+    private readonly Dictionary<Sprite2D, GraphicsImage> SpriteResources = [];
+    private readonly Dictionary<Shader2D, GraphicsImage> ShaderResources = [];
 
     #region Action
-    public GraphicsImage GetResource(Tile tile) => TileResources[tile];
-    public GraphicsImage GetResource(Sprite sprite) => SpriteResources[sprite];
-    public GraphicsImage GetResource(Shader shader) => ShaderResources[shader];
+    public GraphicsImage GetResource(Tile2D tile) => TileResources[tile];
+    public GraphicsImage GetResource(Sprite2D sprite) => SpriteResources[sprite];
+    public GraphicsImage GetResource(Shader2D shader) => ShaderResources[shader];
 
     public async Task LoadResourcesAsync()
     {
@@ -24,7 +24,7 @@ public sealed class ResourceContainer
     #endregion
 
     #region Build
-    private async Task Load<T>(Dictionary<T, GraphicsImage> container) where T : Enum
+    private static async Task Load<T>(Dictionary<T, GraphicsImage> container) where T : Enum
     {
         foreach (T key in Enum.GetValues(typeof(T)))
         {

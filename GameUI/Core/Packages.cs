@@ -1,3 +1,3 @@
 ﻿namespace GameUI.Core;
 
-public sealed record ScenePackage(IList<IList<Tile>> Surface);
+public sealed record ScenePackage(IList<IList<Tile2D>> Surface);

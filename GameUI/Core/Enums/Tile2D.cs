@@ -1,6 +1,6 @@
 ﻿namespace GameUI.Core.Enums;
 
-public enum Tile : byte
+public enum Tile2D : byte
 {
     House,
     Grass,
@@ -18,9 +18,9 @@ public enum TileTexture : byte
 
 public readonly struct TileAccess
 {
-    public static IReadOnlyList<Tile> BlockedTiles { get; } = [
-        Tile.Water, Tile.House
+    public static IReadOnlyList<Tile2D> BlockedTiles { get; } = [
+        Tile2D.Water, Tile2D.House
         ];
 
-    public static bool ItsBlocked(Tile tile) => BlockedTiles.Contains(tile);
+    public static bool ItsBlocked(Tile2D tile) => BlockedTiles.Contains(tile);
 }

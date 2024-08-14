@@ -1,6 +1,6 @@
 ﻿namespace GameUI.Core.Enums;
 
-public enum Shader : byte
+public enum Shader2D : byte
 {
     Cloudy,
 }

@@ -2,5 +2,5 @@
 
 public interface IShader
 {
-    Shader Image { get; set; }
+    Shader2D Sprite { get; set; }
 }

@@ -2,43 +2,54 @@
 
 public sealed class NodeNavigation
 {
-    public NodeNavigation(INode node)
+    static NodeNavigation()
+    {
+        App.Subscribe(Event.LoadResource, (_) =>
+        {
+            for (byte row = 0; row < GameEnvironment.MAX_ROW; row++)
+            {
+                for (byte column = 0; column < GameEnvironment.MAX_COLUMN; column++)
+                {
+                    _nodes[row][column].Navigate.Mount();
+
+                    // TESTs
+                    if (row == 11 && column == 21) _nodes[row][column].Body = new PlayerBody2D(_nodes[row][column]);
+                    else if (row % 3 == 0 && column % 3 == 0) _nodes[row][column].Body = new EnemyBody2D(_nodes[row][column]);
+                }
+            }
+        });
+    }
+
+    public NodeNavigation(INode2D node)
     {
         Position = (_row, _column);
         _nodes[_row].Add(node);
 
         _column++;
         if (_column >= GameEnvironment.MAX_COLUMN) { _row++; _column = 0; };
-
-        App.Subscribe(Event.LoadResource, (_) => Mount());
-
-
-        // TESTs
-        if (_row == 11 && _column == 31) node.Sprite = new StaticSprite(node);
-        if (_row == 11 && _column == 21) node.Sprite = new PlayableSprite(node);
     }
 
     #region Linked
     private static byte _row;
     private static byte _column;
-    private static readonly IReadOnlyList<IList<INode>> _nodes =
+    private static readonly IReadOnlyList<IList<INode2D>> _nodes =
         [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []];
     #endregion
 
     #region Property
     public (byte Row, byte Column) Position { get; }
-    public INode? TopLeft { get; private set; }
-    public INode? Top { get; private set; }
-    public INode? TopRight { get; private set; }
-    public INode? Left { get; private set; }
-    public INode? Right { get; private set; }
-    public INode? BottomLeft { get; private set; }
-    public INode? Bottom { get; private set; }
-    public INode? BottomRight { get; private set; }
+    public INode2D? TopLeft { get; private set; }
+    public INode2D? Top { get; private set; }
+    public INode2D? TopRight { get; private set; }
+    public INode2D? Left { get; private set; }
+    public INode2D? Right { get; private set; }
+    public INode2D? BottomLeft { get; private set; }
+    public INode2D? Bottom { get; private set; }
+    public INode2D? BottomRight { get; private set; }
     #endregion
 
     #region Common
-    public INode? GetBy(ref object? key)
+    public INode2D? GetNode(object? key)
     {
         return key switch
         {

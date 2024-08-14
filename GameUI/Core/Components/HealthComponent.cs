@@ -10,12 +10,12 @@ public sealed class HealthComponent : IHealthComponent
     public float GetHealth() => _health;
     public float GetMaxHealth() => _maxHealth;
 
-    public void ReceiveTo(ref INode node, float value)
+    public void ReceiveTo(IBody2D body, float value)
     {
         _health -= value;
         _hasUpdate = true;
-        node.ReDraw();
+        body?.Node?.Draw();
 
-        if (_health <= 0) node.Sprite = null;
+        if (_health <= 0) body?.Dispose();
     }
 }

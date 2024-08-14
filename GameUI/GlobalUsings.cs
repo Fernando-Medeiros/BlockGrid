@@ -4,7 +4,7 @@ global using GameUI.Core.Components;
 global using GameUI.Core.Enums;
 global using GameUI.Core.Interfaces;
 global using GameUI.Core.Nodes;
-global using GameUI.Core.Sprites;
+global using GameUI.Core.Entities;
 global using GameUI.ViewModels;
 global using GameUI.Views;
 global using Microsoft.Maui.Graphics.Platform;
