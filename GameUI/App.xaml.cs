@@ -7,7 +7,10 @@ public sealed partial class App : Application
         InitializeComponent();
 
         Dispatcher.DispatchAsync(() => ResourceContainer.LoadResourcesAsync());
+
+#if DEBUG
         Dispatcher.DispatchAsync(() => OpenWindow(new DevelopmentWindow()));
+#endif
 
         MainPage = new AppShell();
     }

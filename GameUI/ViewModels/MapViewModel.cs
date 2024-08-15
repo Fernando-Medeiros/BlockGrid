@@ -5,9 +5,12 @@ public sealed partial class MapViewModel : BaseViewModel
     public MapViewModel()
     {
         LoadCommand = new Command(LoadChanged);
+
+        App.Subscribe(Event.Camera, CameraChanged);
     }
 
     #region Property
+    public ScrollView? _scrollView { get; set; }
     #endregion
 
     #region Command
@@ -15,6 +18,18 @@ public sealed partial class MapViewModel : BaseViewModel
     #endregion
 
     #region Action
+    private void CameraChanged(object? sender)
+    {
+        if (Is.Not<Position2D>(sender)) return;
+
+        var (row, column) = (Position2D)sender!;
+
+        double scrollY = (row * GameEnvironment.VECTOR) - (_scrollView!.Height / 2);
+        double scrollX = (column * GameEnvironment.VECTOR) - (_scrollView!.Width / 2);
+
+        _scrollView.ScrollToAsync(scrollX, scrollY, false);
+    }
+
     private async void LoadChanged(object sender)
     {
         if (IsBusy()) return;

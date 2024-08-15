@@ -2,6 +2,7 @@
 
 public enum Event : byte
 {
+    Camera,
     LoadScene,
     LoadResource,
     KeyUp,

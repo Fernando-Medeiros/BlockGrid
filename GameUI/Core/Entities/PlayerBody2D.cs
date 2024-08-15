@@ -30,6 +30,8 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
         Movement?.PushTo(this, key);
         Movement?.MoveTo(this, key);
         Action?.DamageTo(this, key);
+
+        App.Invoke(Event.Camera, Node?.Navigate.Position);
     }
 
     public void SetSprite(Sprite2D? x) => Sprite = x;

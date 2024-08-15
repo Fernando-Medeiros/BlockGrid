@@ -22,7 +22,7 @@ public sealed class NodeNavigation
 
     public NodeNavigation(INode2D node)
     {
-        Position = (_row, _column);
+        Position = new(_row, _column);
         _nodes[_row].Add(node);
 
         _column++;
@@ -33,11 +33,11 @@ public sealed class NodeNavigation
     private static byte _row;
     private static byte _column;
     private static readonly IReadOnlyList<IList<INode2D>> _nodes =
-        [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []];
+        [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []];
     #endregion
 
     #region Property
-    public (byte Row, byte Column) Position { get; }
+    public Position2D Position { get; }
     public INode2D? TopLeft { get; private set; }
     public INode2D? Top { get; private set; }
     public INode2D? TopRight { get; private set; }

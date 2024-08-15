@@ -19,10 +19,11 @@ public readonly struct Key
 public sealed class GameEnvironment
 {
     public const byte VECTOR = 38;
-    public const byte MAX_ROW = 24;
+    public const byte MAX_ROW = 44;
     public const byte MAX_COLUMN = 44;
 
     #region Event
+    private event EventHandler<EventArgs?>? OnCamera;
     private event EventHandler<EventArgs?>? OnKeyUp;
     private event EventHandler<EventArgs?>? OnKeyDown;
     private event EventHandler<EventArgs?>? OnLoadScene;
@@ -30,6 +31,7 @@ public sealed class GameEnvironment
 
     public void Subscribe(Event e, Action<object?> routine)
     {
+        if (e is Event.Camera) OnCamera += (args, _) => routine(args);
         if (e is Event.KeyUp) OnKeyUp += (args, _) => routine(args);
         if (e is Event.KeyDown) OnKeyDown += (args, _) => routine(args);
         if (e is Event.LoadScene) OnLoadScene += (args, _) => routine(args);
@@ -38,6 +40,7 @@ public sealed class GameEnvironment
 
     public void UnSubscribe(Event e, Action<object?> routine)
     {
+        if (e is Event.Camera) OnCamera -= (args, _) => routine(args);
         if (e is Event.KeyUp) OnKeyUp -= (args, _) => routine(args);
         if (e is Event.KeyDown) OnKeyDown -= (args, _) => routine(args);
         if (e is Event.LoadScene) OnLoadScene -= (args, _) => routine(args);
@@ -46,6 +49,7 @@ public sealed class GameEnvironment
 
     public void Invoke(Event e, object? args)
     {
+        if (e is Event.Camera) OnCamera?.Invoke(args, default);
         if (e is Event.KeyUp) OnKeyUp?.Invoke(args, default);
         if (e is Event.KeyDown) OnKeyDown?.Invoke(args, default);
         if (e is Event.LoadScene) OnLoadScene?.Invoke(args, default);
