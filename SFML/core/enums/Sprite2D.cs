@@ -1,0 +1,7 @@
+﻿namespace SFMLGame.Core.Enums;
+
+public enum Sprite2D : byte
+{
+    Aracne,
+    Spider,
+}
