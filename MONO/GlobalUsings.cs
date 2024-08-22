@@ -1,0 +1,14 @@
+﻿global using Microsoft.Xna.Framework;
+global using Microsoft.Xna.Framework.Graphics;
+global using Microsoft.Xna.Framework.Input;
+global using MONOGame;
+global using MONOGame.Common;
+global using MONOGame.Core;
+global using MONOGame.Core.Components;
+global using MONOGame.Core.Entities;
+global using MONOGame.Core.Enums;
+global using MONOGame.Core.Interfaces;
+global using MONOGame.Core.Nodes;
+global using System;
+global using System.Collections.Generic;
+global using System.Text.Json;
