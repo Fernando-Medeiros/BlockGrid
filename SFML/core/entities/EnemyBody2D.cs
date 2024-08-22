@@ -6,7 +6,6 @@ public sealed class EnemyBody2D : IBody2D, IDisposable
     {
         Node = node;
         Sprite = Sprite2D.Spider;
-
         Health = new HealthComponent();
         Movement = new MovementComponent();
     }
@@ -20,13 +19,13 @@ public sealed class EnemyBody2D : IBody2D, IDisposable
     #endregion
 
     #region Action
-    public void Execute(object? key)
+    public void Execute(object? keyCode)
     {
     }
 
-    public void SetSprite(Sprite2D? x) => Sprite = x;
-    public void SetNode(INode2D? x) => Node = x;
-    public void SetBody(IBody2D? x) { if (Node is not null) Node.Body = x; }
+    public void SetSprite(Sprite2D? sprite) => Sprite = sprite;
+    public void SetNode(INode2D? node) => Node = node;
+    public void SetBody(IBody2D? body) { if (Node is not null) Node.Body = body; }
     #endregion
 
     public void Dispose()

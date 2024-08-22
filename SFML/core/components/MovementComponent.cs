@@ -2,28 +2,22 @@
 
 public sealed class MovementComponent : IMovementComponent
 {
-    public void PushTo(IBody2D body, object? key)
+    public void PushTo(IBody2D body, object? keyCode)
     {
-        var node = body.Node?.GetNode(key);
+        var node = body.Node?.GetNode(keyCode);
 
         if (Is.Null(node) || Is.Null(node?.Body)) return;
 
-        node?.Body?.Movement?.MoveTo(node.Body, key);
+        node?.Body?.Movement?.MoveTo(node.Body, keyCode);
     }
 
-    public void MoveTo(IBody2D body, object? key)
+    public void MoveTo(IBody2D body, object? keyCode)
     {
-        var node = body.Node?.GetNode(key);
+        var node = body.Node?.GetNode(keyCode);
 
         if (Is.Null(node) || Is.Type<IBody2D>(node?.Body) || Is.Blocked(node?.Surface)) return;
 
-        node?.VisibilityTo(0.2);
-
         MoveBy(body, node);
-
-        node?.FadeTo(1.0);
-
-        node?.VisibilityTo(1.0);
     }
 
     public void MoveBy(IBody2D body, INode2D? node)

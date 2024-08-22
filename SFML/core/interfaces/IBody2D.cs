@@ -9,8 +9,8 @@ public interface IBody2D
     IMovementComponent? Movement { get; }
 
     void Dispose();
-    void Execute(object? args);
-    public void SetSprite(Sprite2D? x);
-    public void SetNode(INode2D? x);
-    public void SetBody(IBody2D? x);
+    void Execute(object? sender);
+    public void SetSprite(Sprite2D? sprite);
+    public void SetNode(INode2D? node);
+    public void SetBody(IBody2D? body);
 }

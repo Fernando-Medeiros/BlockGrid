@@ -4,17 +4,13 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
 {
     public PlayerBody2D(INode2D node)
     {
-        node.FadeTo(1);
-
         Node = node;
         Sprite = Sprite2D.Aracne;
-
         Action = new ActionComponent();
         Health = new HealthComponent();
         Movement = new MovementComponent();
 
         App.Global.Subscribe(CoreEvent.KeyPressed, Execute);
-        App.Global.Invoke(CoreEvent.Camera, Node?.Position);
     }
 
     #region Property
@@ -26,18 +22,18 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
     #endregion
 
     #region Action
-    public void Execute(object? key)
+    public void Execute(object? keyCode)
     {
-        Movement?.PushTo(this, key);
-        Movement?.MoveTo(this, key);
-        Action?.DamageTo(this, key);
+        Movement?.PushTo(this, keyCode);
+        Movement?.MoveTo(this, keyCode);
+        Action?.DamageTo(this, keyCode);
 
         App.Global.Invoke(CoreEvent.Camera, Node?.Position);
     }
 
-    public void SetSprite(Sprite2D? x) => Sprite = x;
-    public void SetNode(INode2D? x) => Node = x;
-    public void SetBody(IBody2D? x) { if (Node is not null) Node.Body = x; }
+    public void SetSprite(Sprite2D? sprite) => Sprite = sprite;
+    public void SetNode(INode2D? node) => Node = node;
+    public void SetBody(IBody2D? body) { if (Node is not null) Node.Body = body; }
     #endregion
 
     public void Dispose()

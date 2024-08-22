@@ -31,13 +31,13 @@ public sealed class Node2D : INode2D
     #endregion
 
     #region Build
-    private void Load(object? args)
+    private void Load(object? sender)
     {
-        if (Is.Null(args) || Is.Not<ScenePackage>(args)) return;
+        if (Is.Null(sender) || Is.Not<ScenePackage>(sender)) return;
 
         var (row, column, _, _) = Position;
 
-        _surface = ((ScenePackage)args!).Surface?.ElementAtOrDefault(row)?.ElementAtOrDefault(column) ?? default;
+        _surface = ((ScenePackage)sender!).Surface?.ElementAtOrDefault(row)?.ElementAtOrDefault(column) ?? default;
 
         Draw();
     }
@@ -50,13 +50,6 @@ public sealed class Node2D : INode2D
         Canva.Surface = Surface;
     }
 
-    public void FadeTo(double opacity)
-    {
-        //await this.FadeTo(opacity, 150, Easing.Linear);
-    }
-    #endregion
-
-    #region Common
     public INode2D? GetNode(object? key)
     {
         return key switch
@@ -68,37 +61,25 @@ public sealed class Node2D : INode2D
             _ => null
         };
     }
-
-    public void VisibilityTo(double opacity)
-    {
-        Top?.FadeTo(opacity);
-        Left?.FadeTo(opacity);
-        Right?.FadeTo(opacity);
-        Bottom?.FadeTo(opacity);
-        TopLeft?.FadeTo(opacity);
-        TopRight?.FadeTo(opacity);
-        BottomLeft?.FadeTo(opacity);
-        BottomRight?.FadeTo(opacity);
-    }
     #endregion
 
-    public void Mount(IReadOnlyList<IList<INode2D>> _nodes)
+    public void Mount(IReadOnlyList<IList<INode2D>> nodes)
     {
         var (row, column, _, _) = Position;
 
-        Left ??= _nodes.ElementAtOrDefault(row)?.ElementAtOrDefault(column - 1);
-        Right ??= _nodes.ElementAtOrDefault(row)?.ElementAtOrDefault(column + 1);
+        Left ??= nodes.ElementAtOrDefault(row)?.ElementAtOrDefault(column - 1);
+        Right ??= nodes.ElementAtOrDefault(row)?.ElementAtOrDefault(column + 1);
 
-        Top ??= _nodes.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column);
-        TopLeft ??= _nodes.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column - 1);
-        TopRight ??= _nodes.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column + 1);
+        Top ??= nodes.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column);
+        TopLeft ??= nodes.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column - 1);
+        TopRight ??= nodes.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column + 1);
 
-        Bottom ??= _nodes.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column);
-        BottomLeft ??= _nodes.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column - 1);
-        BottomRight ??= _nodes.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column + 1);
+        Bottom ??= nodes.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column);
+        BottomLeft ??= nodes.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column - 1);
+        BottomRight ??= nodes.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column + 1);
 
         // Tests 
-        if (row == 21 && column == 21) _nodes[row][column].Body = new PlayerBody2D(_nodes[row][column]);
-        else if (row % 3 == 0 && column % 3 == 0) _nodes[row][column].Body = new EnemyBody2D(_nodes[row][column]);
+        if (row == 21 && column == 21) nodes[row][column].Body = new PlayerBody2D(nodes[row][column]);
+        else if (row % 3 == 0 && column % 3 == 0) nodes[row][column].Body = new EnemyBody2D(nodes[row][column]);
     }
 }

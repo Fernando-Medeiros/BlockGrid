@@ -2,9 +2,9 @@
 
 public sealed class ActionComponent : IActionComponent
 {
-    public void DamageTo(IBody2D body, object? key)
+    public void DamageTo(IBody2D body, object? keyCode)
     {
-        if (Key.Actions.Contains(key) is false) return;
+        if (Key.Actions.Contains(keyCode) is false) return;
 
         INode2D? node = default;
 

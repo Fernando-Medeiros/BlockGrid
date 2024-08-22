@@ -14,7 +14,6 @@ public sealed class HealthComponent : IHealthComponent
     {
         _health -= value;
         _hasUpdate = true;
-        body?.Node?.Draw();
 
         if (_health <= 0) body?.Dispose();
     }

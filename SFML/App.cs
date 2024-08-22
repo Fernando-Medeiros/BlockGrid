@@ -13,16 +13,13 @@ internal sealed class App
 
     public App()
     {
-        var mode = new VideoMode(1200, 720);
+        var mode = new VideoMode(1280, 960);
 
         Camera = new View(new FloatRect(0, 0, mode.Width, mode.Height));
 
         Window = new RenderWindow(mode, "2D Game", Styles.Titlebar | Styles.Close);
 
         Window.SetFramerateLimit(30);
-
-        Window.KeyPressed += (_, e) => Global.Invoke(CoreEvent.KeyPressed, Enum.GetName(e.Code));
-        Window.KeyReleased += (_, e) => Global.Invoke(CoreEvent.KeyReleased, Enum.GetName(e.Code));
     }
 
     public void ConfigureResources()
@@ -53,6 +50,10 @@ internal sealed class App
 
     public void ConfigureListeners()
     {
+        Window.Closed += (_, _) => Window.Close();
+        Window.KeyPressed += (_, e) => Global.Invoke(CoreEvent.KeyPressed, Enum.GetName(e.Code));
+        Window.KeyReleased += (_, e) => Global.Invoke(CoreEvent.KeyReleased, Enum.GetName(e.Code));
+
         Global.Subscribe(CoreEvent.Camera, CameraChanged);
     }
 

@@ -10,12 +10,12 @@ public interface IHealthComponent
 
 public interface IActionComponent
 {
-    void DamageTo(IBody2D body, object? key);
+    void DamageTo(IBody2D body, object? keyCode);
 }
 
 public interface IMovementComponent
 {
-    void PushTo(IBody2D body, object? key);
-    void MoveTo(IBody2D body, object? key);
-    public void MoveBy(IBody2D body, INode2D node);
+    void PushTo(IBody2D body, object? keyCode);
+    void MoveTo(IBody2D body, object? keyCode);
+    void MoveBy(IBody2D body, INode2D node);
 }
