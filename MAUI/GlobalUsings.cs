@@ -1,0 +1,14 @@
+﻿global using MAUIGame.Common;
+global using MAUIGame.Core;
+global using MAUIGame.Core.Components;
+global using MAUIGame.Core.Enums;
+global using MAUIGame.Core.Interfaces;
+global using MAUIGame.Core.Nodes;
+global using MAUIGame.Core.Entities;
+global using MAUIGame.ViewModels;
+global using MAUIGame.Views;
+global using Microsoft.Maui.Graphics.Platform;
+global using System.Text.Json;
+global using System.Windows.Input;
+global using GraphicsColor = Microsoft.Maui.Graphics.Color;
+global using GraphicsImage = Microsoft.Maui.Graphics.IImage;

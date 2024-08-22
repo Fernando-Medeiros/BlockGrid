@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MAUIGame.Views.DevelopmentView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:enums="clr-namespace:MAUIGame.Core.Enums"
+    xmlns:vm="clr-namespace:MAUIGame.ViewModels"
+    x:DataType="vm:DevelopmentViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout HorizontalOptions="Center" Spacing="3">
+
+            <Label FontSize="Caption" Text="Texturas" />
+            <Button
+                Command="{Binding TextureCommand}"
+                CommandParameter="0"
+                Text="Image" />
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
