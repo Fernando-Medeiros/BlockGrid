@@ -19,8 +19,8 @@ public readonly struct Key
 public sealed class Global
 {
     public const byte RECT = 32;
-    public const byte MAX_ROW = 44;
-    public const byte MAX_COLUMN = 44;
+    public const byte MAX_ROW = 132;
+    public const byte MAX_COLUMN = 132;
 
     #region Event
     private event EventHandler<EventArgs?>? OnCamera;
