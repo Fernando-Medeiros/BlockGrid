@@ -1,8 +1,10 @@
-﻿namespace SFMLGame;
+﻿using SFMLGame.core;
+
+namespace SFMLGame;
 
 internal sealed class App
 {
-    private View Camera { get; }
+    private Camera2D Camera { get; }
     private RenderWindow Window { get; }
 
     public static Global Global { get; } = new();
@@ -22,7 +24,7 @@ internal sealed class App
     {
         var mode = new VideoMode(1280, 960);
 
-        Camera = new View(new FloatRect(0, 0, mode.Width, mode.Height));
+        Camera = new(new FloatRect(0, 0, mode.Width, mode.Height));
 
         Window = new RenderWindow(mode, "2D Game", Styles.Titlebar | Styles.Close);
 
@@ -60,8 +62,9 @@ internal sealed class App
         Window.Closed += (_, _) => Window.Close();
         Window.KeyPressed += (_, e) => Global.Invoke(CoreEvent.KeyPressed, Enum.GetName(e.Code));
         Window.KeyReleased += (_, e) => Global.Invoke(CoreEvent.KeyReleased, Enum.GetName(e.Code));
+        Window.MouseWheelScrolled += Camera.OnZoomChanged;
 
-        Global.Subscribe(CoreEvent.Camera, CameraChanged);
+        Global.Subscribe(CoreEvent.Camera, Camera.OnCenterChanged);
     }
 
     public void Start()
@@ -84,25 +87,5 @@ internal sealed class App
 
             Window.Display();
         }
-    }
-
-    private void CameraChanged(object? sender)
-    {
-        if (Is.Not<Position2D>(sender)) return;
-
-        var (_, _, posX, posY) = (Position2D)sender!;
-
-        var (width, height) = (Camera.Size.X, Camera.Size.Y);
-
-        float maxHeight = Global.MAX_ROW * Global.RECT;
-        float maxWidth = Global.MAX_COLUMN * Global.RECT;
-
-        float scrollX = posX - (width / 2);
-        float scrollY = posY - (height / 2);
-
-        scrollX = Math.Max(0, Math.Min(scrollX, maxWidth - width));
-        scrollY = Math.Max(0, Math.Min(scrollY, maxHeight - height));
-
-        Camera.Center = new Vector2f(scrollX + (width / 2), scrollY + (height / 2));
     }
 }
