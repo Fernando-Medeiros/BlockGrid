@@ -13,6 +13,11 @@ public interface IActionComponent
     void DamageTo(IBody2D body, object? keyCode);
 }
 
+public interface ILightComponent
+{
+    void VisibilityTo(INode2D node, Opacity opacity);
+}
+
 public interface IMovementComponent
 {
     void PushTo(IBody2D body, object? keyCode);

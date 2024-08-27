@@ -30,6 +30,33 @@ public sealed class Node2D : INode2D
     private INode2D? BottomRight { get; set; }
     #endregion
 
+    #region Action
+    public void SetBody(IBody2D? body) => Body = body;
+    public void SetOpacity(Opacity opacity) => Canva.Opacity = opacity;
+
+    public INode2D? Get(object? keyCode) => keyCode switch
+    {
+        Key.W or Key.Up => Top,
+        Key.A or Key.Left => Left,
+        Key.D or Key.Right => Right,
+        Key.S or Key.Down => Bottom,
+        _ => null
+    };
+
+    public INode2D? Get(Direction direction) => direction switch
+    {
+        Direction.Top => Top,
+        Direction.Left => Left,
+        Direction.Right => Right,
+        Direction.Bottom => Bottom,
+        Direction.TopLeft => TopLeft,
+        Direction.TopRight => TopRight,
+        Direction.BottomLeft => BottomLeft,
+        Direction.BottomRight => BottomRight,
+        _ => null
+    };
+    #endregion
+
     #region Build
     private void Load(object? sender)
     {
@@ -41,27 +68,12 @@ public sealed class Node2D : INode2D
 
         Draw();
     }
-    #endregion
 
-    #region Action
-    public void Draw()
+    private void Draw()
     {
         Canva.Body = Body;
         Canva.Surface = Surface;
     }
-
-    public INode2D? GetNode(object? key)
-    {
-        return key switch
-        {
-            Key.W or Key.Up => Top,
-            Key.A or Key.Left => Left,
-            Key.D or Key.Right => Right,
-            Key.S or Key.Down => Bottom,
-            _ => null
-        };
-    }
-    #endregion
 
     public void Mount(IReadOnlyList<IList<INode2D>> nodes)
     {
@@ -79,7 +91,8 @@ public sealed class Node2D : INode2D
         BottomRight ??= nodes.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column + 1);
 
         // Tests 
-        if (row == 21 && column == 21) nodes[row][column].Body = new PlayerBody2D(nodes[row][column]);
-        else if (row % 3 == 0 && column % 3 == 0) nodes[row][column].Body = new EnemyBody2D(nodes[row][column]);
+        if (row == 21 && column == 21) nodes[row][column].SetBody(new PlayerBody2D(nodes[row][column]));
+        else if (row % 3 == 0 && column % 3 == 0) nodes[row][column].SetBody(new EnemyBody2D(nodes[row][column]));
     }
+    #endregion
 }

@@ -4,8 +4,11 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
 {
     public PlayerBody2D(INode2D node)
     {
+        node.SetOpacity(Opacity.Light);
+
         Node = node;
         Sprite = Sprite2D.Aracne;
+        Light = new LightComponent();
         Action = new ActionComponent();
         Health = new HealthComponent();
         Movement = new MovementComponent();
@@ -16,6 +19,7 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
     #region Property
     public INode2D? Node { get; private set; }
     public Sprite2D? Sprite { get; private set; }
+    public ILightComponent? Light { get; private set; }
     public IActionComponent? Action { get; private set; }
     public IHealthComponent? Health { get; private set; }
     public IMovementComponent? Movement { get; private set; }
@@ -25,19 +29,26 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
     public void Execute(object? keyCode)
     {
         Movement?.PushTo(this, keyCode);
+
+        Light?.VisibilityTo(Node, Opacity.Regular);
+
         Movement?.MoveTo(this, keyCode);
+
+        Light?.VisibilityTo(Node, Opacity.Light);
+
         Action?.DamageTo(this, keyCode);
 
         App.Global.Invoke(CoreEvent.Camera, Node?.Position);
     }
 
-    public void SetSprite(Sprite2D? sprite) => Sprite = sprite;
     public void SetNode(INode2D? node) => Node = node;
-    public void SetBody(IBody2D? body) { if (Node is not null) Node.Body = body; }
+    public void SetSprite(Sprite2D? sprite) => Sprite = sprite;
+    public void SetBody(IBody2D? body) => Node?.SetBody(body);
     #endregion
 
     public void Dispose()
     {
+        Light = null;
         Action = null;
         Health = null;
         Movement = null;

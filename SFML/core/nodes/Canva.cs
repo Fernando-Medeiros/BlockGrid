@@ -4,6 +4,7 @@ public sealed class Canva(Position2D position2D)
 {
     private Vector2f Position { get; } = new(position2D.PosX, position2D.PosY);
 
+    public Opacity Opacity { get; set; }
     public IBody2D? Body { get; set; }
     public Surface2D Surface { get; set; }
 
@@ -19,6 +20,17 @@ public sealed class Canva(Position2D position2D)
     {
         var sprite = App.Resources.GetResource(Surface);
         sprite.Position = Position;
+        sprite.Color = new(255, 255, 255, Convert.ToByte(Opacity));
+        window.Draw(sprite);
+    }
+
+    public void DrawSprite(RenderWindow window)
+    {
+        if (Body?.Sprite is null) return;
+
+        var sprite = App.Resources.GetResource((Sprite2D)Body.Sprite);
+        sprite.Position = Position;
+        sprite.Color = new(255, 255, 255, Convert.ToByte(Opacity));
         window.Draw(sprite);
     }
 
@@ -32,19 +44,10 @@ public sealed class Canva(Position2D position2D)
         {
 
             Position = Position,
-            FillColor = new Color(Color.Red),
+            FillColor = new Color(Color.Black),
             Font = App.Resources.GetResource(Fonte.OpenSansSemibold),
         };
         window.Draw(text);
-    }
-
-    public void DrawSprite(RenderWindow window)
-    {
-        if (Is.Null(Body?.Sprite)) return;
-
-        var sprite = App.Resources.GetResource((Sprite2D)Body.Sprite);
-        sprite.Position = Position;
-        window.Draw(sprite);
     }
     #endregion
 }

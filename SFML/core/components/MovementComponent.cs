@@ -4,7 +4,7 @@ public sealed class MovementComponent : IMovementComponent
 {
     public void PushTo(IBody2D body, object? keyCode)
     {
-        var node = body.Node?.GetNode(keyCode);
+        var node = body.Node?.Get(keyCode);
 
         if (Is.Null(node) || Is.Null(node?.Body)) return;
 
@@ -13,7 +13,7 @@ public sealed class MovementComponent : IMovementComponent
 
     public void MoveTo(IBody2D body, object? keyCode)
     {
-        var node = body.Node?.GetNode(keyCode);
+        var node = body.Node?.Get(keyCode);
 
         if (Is.Null(node) || Is.Type<IBody2D>(node?.Body) || Is.Blocked(node?.Surface)) return;
 
