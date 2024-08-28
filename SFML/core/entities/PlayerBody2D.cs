@@ -4,14 +4,15 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
 {
     public PlayerBody2D(INode2D node)
     {
-        node.SetOpacity(Opacity.Light);
-
         Node = node;
         Sprite = Sprite2D.Aracne;
         Light = new LightComponent();
         Action = new ActionComponent();
         Health = new HealthComponent();
+        Metadata = new MetadataComponent();
         Movement = new MovementComponent();
+
+        Light.VisibilityTo(Node, Opacity.Light);
 
         App.Global.Subscribe(CoreEvent.KeyPressed, Execute);
     }
@@ -22,12 +23,15 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
     public ILightComponent? Light { get; private set; }
     public IActionComponent? Action { get; private set; }
     public IHealthComponent? Health { get; private set; }
+    public IMetadataComponent? Metadata { get; private set; }
     public IMovementComponent? Movement { get; private set; }
     #endregion
 
     #region Action
     public void Execute(object? keyCode)
     {
+        Metadata?.FlipTo(keyCode);
+
         Movement?.PushTo(this, keyCode);
 
         Light?.VisibilityTo(Node, Opacity.Regular);
@@ -51,6 +55,7 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
         Light = null;
         Action = null;
         Health = null;
+        Metadata = null;
         Movement = null;
         SetSprite(null);
         SetBody(null);

@@ -16,6 +16,7 @@ public sealed class EnemyBody2D : IBody2D, IDisposable
     public ILightComponent? Light { get; private set; }
     public IActionComponent? Action { get; private set; }
     public IHealthComponent? Health { get; private set; }
+    public IMetadataComponent? Metadata { get; private set; }
     public IMovementComponent? Movement { get; private set; }
     #endregion
 
@@ -34,6 +35,7 @@ public sealed class EnemyBody2D : IBody2D, IDisposable
         Light = null;
         Action = null;
         Health = null;
+        Metadata = null;
         Movement = null;
         SetSprite(null);
         SetBody(null);

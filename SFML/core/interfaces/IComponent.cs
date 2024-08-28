@@ -1,5 +1,11 @@
 ﻿namespace SFMLGame.Core.Interfaces;
 
+public interface IMetadataComponent
+{
+    bool IsFlipped();
+    void FlipTo(object? keyCode);
+}
+
 public interface IHealthComponent
 {
     bool HasUpdate();

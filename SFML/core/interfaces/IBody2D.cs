@@ -7,6 +7,7 @@ public interface IBody2D
     ILightComponent? Light { get; }
     IActionComponent? Action { get; }
     IHealthComponent? Health { get; }
+    IMetadataComponent? Metadata { get; }
     IMovementComponent? Movement { get; }
 
     void Dispose();
