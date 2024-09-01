@@ -1,4 +1,4 @@
-﻿namespace SFMLGame.Core.Components;
+﻿namespace SFMLGame.core.components;
 
 public sealed class ActionComponent : IActionComponent
 {

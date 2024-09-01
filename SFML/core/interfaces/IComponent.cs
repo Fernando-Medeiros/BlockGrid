@@ -1,4 +1,4 @@
-﻿namespace SFMLGame.Core.Interfaces;
+﻿namespace SFMLGame.core.interfaces;
 
 public interface IMetadataComponent
 {
@@ -21,7 +21,7 @@ public interface IActionComponent
 
 public interface ILightComponent
 {
-    void VisibilityTo(INode2D node, Opacity opacity);
+    void VisibilityTo(INode2D node, EOpacity opacity);
 }
 
 public interface IMovementComponent

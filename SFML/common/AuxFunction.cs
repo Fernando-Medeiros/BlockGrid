@@ -1,4 +1,4 @@
-﻿namespace SFMLGame.Common;
+﻿namespace SFMLGame.common;
 
 public static class Is
 {

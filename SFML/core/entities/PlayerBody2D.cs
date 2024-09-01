@@ -1,4 +1,4 @@
-﻿namespace SFMLGame.Core.Entities;
+﻿namespace SFMLGame.core.entities;
 
 public sealed class PlayerBody2D : IBody2D, IDisposable
 {
@@ -12,9 +12,9 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
         Metadata = new MetadataComponent();
         Movement = new MovementComponent();
 
-        Light.VisibilityTo(Node, Opacity.Light);
+        Light.VisibilityTo(Node, EOpacity.Light);
 
-        App.Global.Subscribe(CoreEvent.KeyPressed, Execute);
+        Global.Subscribe(EEvent.KeyPressed, Execute);
     }
 
     #region Property
@@ -34,18 +34,20 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
 
         Movement?.PushTo(this, keyCode);
 
-        Light?.VisibilityTo(Node, Opacity.Regular);
+        Light?.VisibilityTo(Node, EOpacity.Regular);
 
         Movement?.MoveTo(this, keyCode);
 
-        Light?.VisibilityTo(Node, Opacity.Light);
+        Light?.VisibilityTo(Node, EOpacity.Light);
 
         Action?.DamageTo(this, keyCode);
-
-        App.Global.Invoke(CoreEvent.Camera, Node?.Position);
     }
 
-    public void SetNode(INode2D? node) => Node = node;
+    public void SetNode(INode2D? node)
+    {
+        Node = node;
+        Global.Invoke(EEvent.Camera, Node?.Position);
+    }
     public void SetSprite(Sprite2D? sprite) => Sprite = sprite;
     public void SetBody(IBody2D? body) => Node?.SetBody(body);
     #endregion
@@ -61,6 +63,6 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
         SetBody(null);
         SetNode(null);
 
-        App.Global.UnSubscribe(CoreEvent.KeyPressed, Execute);
+        Global.UnSubscribe(EEvent.KeyPressed, Execute);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace SFMLGame.Core.Enums;
+﻿namespace SFMLGame.core.enums;
 
 public enum Surface2D : byte
 {

@@ -1,4 +1,4 @@
-﻿namespace SFMLGame.Core.Interfaces;
+﻿namespace SFMLGame.core.interfaces;
 
 public interface IBody2D
 {

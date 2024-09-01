@@ -1,23 +1,26 @@
 ﻿using System.Text.Json;
 
-namespace SFMLGame.Core;
+namespace SFMLGame.core;
 
-public sealed class Resources
+public static class Content
 {
-    private readonly Dictionary<Fonte, Font> FontResources = [];
-    private readonly Dictionary<Sprite2D, Sprite> SpriteResources = [];
-    private readonly Dictionary<Surface2D, Sprite> SurfaceResources = [];
+    private static bool _started;
+    private static readonly Dictionary<Fonte, Font> FontResources = [];
+    private static readonly Dictionary<Sprite2D, Sprite> SpriteResources = [];
+    private static readonly Dictionary<Surface2D, Sprite> SurfaceResources = [];
 
     #region Action
-    public Font GetResource(Fonte font) => FontResources[font];
-    public Sprite GetResource(Sprite2D sprite) => SpriteResources[sprite];
-    public Sprite GetResource(Surface2D surface) => SurfaceResources[surface];
+    public static Font GetResource(Fonte font) => FontResources[font];
+    public static Sprite GetResource(Sprite2D sprite) => SpriteResources[sprite];
+    public static Sprite GetResource(Surface2D surface) => SurfaceResources[surface];
 
-    public void LoadResources()
+    public static void LoadResources()
     {
+        if (_started) return;
         Load(FontResources);
         Load(SpriteResources);
         Load(SurfaceResources);
+        _started = true;
     }
     #endregion
 
@@ -42,7 +45,7 @@ public sealed class Resources
         }
     }
 
-    public async void LoadScene()
+    public static async void LoadScene()
     {
         string filePath = "./resources/raw/TierE.json";
 
@@ -51,7 +54,7 @@ public sealed class Resources
             var jsonString = await File.ReadAllTextAsync(filePath);
             var scenePackage = JsonSerializer.Deserialize<ScenePackage>(jsonString);
 
-            App.Global.Invoke(CoreEvent.LoadScene, scenePackage);
+            Global.Invoke(EEvent.LoadScene, scenePackage);
         }
     }
     #endregion

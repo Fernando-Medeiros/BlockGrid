@@ -1,6 +1,6 @@
-﻿namespace SFMLGame.Core.Enums;
+﻿namespace SFMLGame.core.enums;
 
-public enum Direction : byte
+public enum EDirection : byte
 {
     Top,
     Left,

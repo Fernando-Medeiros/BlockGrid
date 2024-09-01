@@ -1,4 +1,4 @@
-﻿namespace SFMLGame.Core;
+﻿namespace SFMLGame.core;
 
 public readonly struct Key
 {
@@ -16,44 +16,44 @@ public readonly struct Key
     public static readonly IReadOnlyList<string> Positions = [Up, Down, Left, Right];
 }
 
-public sealed class Global
+public static class Global
 {
     public const byte RECT = 32;
     public const byte MAX_ROW = 132;
     public const byte MAX_COLUMN = 132;
 
     #region Event
-    private event EventHandler<EventArgs?>? OnCamera;
-    private event EventHandler<EventArgs?>? OnKeyPressed;
-    private event EventHandler<EventArgs?>? OnKeyReleased;
-    private event EventHandler<EventArgs?>? OnLoadScene;
-    private event EventHandler<EventArgs?>? OnLoadResource;
+    private static event EventHandler<EventArgs?>? OnLogger;
+    private static event EventHandler<EventArgs?>? OnCamera;
+    private static event EventHandler<EventArgs?>? OnLoadScene;
+    private static event EventHandler<EventArgs?>? OnKeyPressed;
+    private static event EventHandler<EventArgs?>? OnKeyReleased;
 
-    public void Subscribe(CoreEvent e, Action<object?> routine)
+    public static void Subscribe(EEvent e, Action<object?> routine)
     {
-        if (e is CoreEvent.Camera) OnCamera += (args, _) => routine(args);
-        if (e is CoreEvent.KeyPressed) OnKeyPressed += (args, _) => routine(args);
-        if (e is CoreEvent.KeyReleased) OnKeyReleased += (args, _) => routine(args);
-        if (e is CoreEvent.LoadScene) OnLoadScene += (args, _) => routine(args);
-        if (e is CoreEvent.LoadResource) OnLoadResource += (args, _) => routine(args);
+        if (e is EEvent.Logger) OnLogger += (args, _) => routine(args);
+        if (e is EEvent.Camera) OnCamera += (args, _) => routine(args);
+        if (e is EEvent.LoadScene) OnLoadScene += (args, _) => routine(args);
+        if (e is EEvent.KeyPressed) OnKeyPressed += (args, _) => routine(args);
+        if (e is EEvent.KeyReleased) OnKeyReleased += (args, _) => routine(args);
     }
 
-    public void UnSubscribe(CoreEvent e, Action<object?> routine)
+    public static void UnSubscribe(EEvent e, Action<object?> routine)
     {
-        if (e is CoreEvent.Camera) OnCamera -= (args, _) => routine(args);
-        if (e is CoreEvent.KeyPressed) OnKeyPressed -= (args, _) => routine(args);
-        if (e is CoreEvent.KeyReleased) OnKeyReleased -= (args, _) => routine(args);
-        if (e is CoreEvent.LoadScene) OnLoadScene -= (args, _) => routine(args);
-        if (e is CoreEvent.LoadResource) OnLoadResource -= (args, _) => routine(args);
+        if (e is EEvent.Logger) OnLogger -= (args, _) => routine(args);
+        if (e is EEvent.Camera) OnCamera -= (args, _) => routine(args);
+        if (e is EEvent.LoadScene) OnLoadScene -= (args, _) => routine(args);
+        if (e is EEvent.KeyPressed) OnKeyPressed -= (args, _) => routine(args);
+        if (e is EEvent.KeyReleased) OnKeyReleased -= (args, _) => routine(args);
     }
 
-    public void Invoke(CoreEvent e, object? args)
+    public static void Invoke(EEvent e, object? args)
     {
-        if (e is CoreEvent.Camera) OnCamera?.Invoke(args, default);
-        if (e is CoreEvent.KeyPressed) OnKeyPressed?.Invoke(args, default);
-        if (e is CoreEvent.KeyReleased) OnKeyReleased?.Invoke(args, default);
-        if (e is CoreEvent.LoadScene) OnLoadScene?.Invoke(args, default);
-        if (e is CoreEvent.LoadResource) OnLoadResource?.Invoke(args, default);
+        if (e is EEvent.Logger) OnLogger?.Invoke(args, default);
+        if (e is EEvent.Camera) OnCamera?.Invoke(args, default);
+        if (e is EEvent.LoadScene) OnLoadScene?.Invoke(args, default);
+        if (e is EEvent.KeyPressed) OnKeyPressed?.Invoke(args, default);
+        if (e is EEvent.KeyReleased) OnKeyReleased?.Invoke(args, default);
     }
     #endregion
 }

@@ -1,4 +1,4 @@
-﻿namespace SFMLGame.Core.Components;
+﻿namespace SFMLGame.core.components;
 
 public sealed class HealthComponent : IHealthComponent
 {
@@ -14,6 +14,8 @@ public sealed class HealthComponent : IHealthComponent
     {
         _health -= value;
         _hasUpdate = true;
+
+        Global.Invoke(EEvent.Logger, new Logger(ELogger.General, $"Attack :: {body.Sprite} take {value} damage!"));
 
         if (_health <= 0) body?.Dispose();
     }

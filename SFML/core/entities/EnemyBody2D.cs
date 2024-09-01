@@ -1,4 +1,4 @@
-﻿namespace SFMLGame.Core.Entities;
+﻿namespace SFMLGame.core.entities;
 
 public sealed class EnemyBody2D : IBody2D, IDisposable
 {
@@ -32,6 +32,8 @@ public sealed class EnemyBody2D : IBody2D, IDisposable
 
     public void Dispose()
     {
+        Global.Invoke(EEvent.Logger, new Logger(ELogger.General, $"Victory :: {Sprite} is dead!"));
+
         Light = null;
         Action = null;
         Health = null;
