@@ -26,6 +26,8 @@ public sealed class Canva(INode2D node)
     {
         if (Node.Body?.Sprite is null) return;
 
+        if (Node.Opacity is EOpacity.Regular && Node.Body is EnemyBody2D) return;
+
         var sprite = Content.GetResource((Sprite2D)Node.Body.Sprite);
         sprite.Color = new(255, 255, 255, Convert.ToByte(Node.Opacity));
         sprite.Position = position;
