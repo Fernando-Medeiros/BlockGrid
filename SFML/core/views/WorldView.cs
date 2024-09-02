@@ -1,45 +1,40 @@
-﻿using System.Xml.Linq;
-
-namespace SFMLGame.core.views;
+﻿namespace SFMLGame.core.views;
 
 public sealed class WorldView(FloatRect rect) : View(rect)
 {
-    private readonly FloatRect _viewRect = rect;
-    private readonly IList<IList<INode2D>> _nodes = [];
-
-    private const float _worldHeight = Global.MAX_ROW * Global.RECT;
-    private const float _worldWidth = Global.MAX_COLUMN * Global.RECT;
+    private FloatRect Rect { get; } = rect;
+    private IList<IList<INode2D>> Collection { get; } = [];
 
     #region Build
     public void ConfigureNodes()
     {
         for (byte row = 0; row < Global.MAX_ROW; row++)
         {
-            _nodes.Add([]);
+            Collection.Add([]);
 
             for (byte column = 0; column < Global.MAX_COLUMN; column++)
             {
                 var position2D = new Position2D(row, column, column * Global.RECT, row * Global.RECT);
 
-                _nodes[row].Add(new Node2D(position2D));
+                Collection[row].Add(new Node2D(position2D));
             }
         }
 
-        foreach (var nodeList in _nodes)
+        foreach (var nodeList in Collection)
             foreach (var node in nodeList)
             {
                 var (row, column, _, _) = node.Position;
 
-                node.Navigation[EDirection.Left] = _nodes.ElementAtOrDefault(row)?.ElementAtOrDefault(column - 1);
-                node.Navigation[EDirection.Right] = _nodes.ElementAtOrDefault(row)?.ElementAtOrDefault(column + 1);
+                node.Navigation[EDirection.Left] = Collection.ElementAtOrDefault(row)?.ElementAtOrDefault(column - 1);
+                node.Navigation[EDirection.Right] = Collection.ElementAtOrDefault(row)?.ElementAtOrDefault(column + 1);
 
-                node.Navigation[EDirection.Top] = _nodes.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column);
-                node.Navigation[EDirection.TopLeft] = _nodes.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column - 1);
-                node.Navigation[EDirection.TopRight] = _nodes.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column + 1);
+                node.Navigation[EDirection.Top] = Collection.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column);
+                node.Navigation[EDirection.TopLeft] = Collection.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column - 1);
+                node.Navigation[EDirection.TopRight] = Collection.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column + 1);
 
-                node.Navigation[EDirection.Bottom] = _nodes.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column);
-                node.Navigation[EDirection.BottomLeft] = _nodes.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column - 1);
-                node.Navigation[EDirection.BottomRight] = _nodes.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column + 1);
+                node.Navigation[EDirection.Bottom] = Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column);
+                node.Navigation[EDirection.BottomLeft] = Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column - 1);
+                node.Navigation[EDirection.BottomRight] = Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column + 1);
 
                 // Tests 
                 if (row == 21 && column == 21)
@@ -58,7 +53,9 @@ public sealed class WorldView(FloatRect rect) : View(rect)
 
     public void Draw(RenderWindow window)
     {
-        foreach (var nodeList in _nodes)
+        window.SetView(this);
+
+        foreach (var nodeList in Collection)
             foreach (var node in nodeList)
             {
                 var (posX, posY, width, height) = (node.Position.X, node.Position.Y, Size.X / 2, Size.Y / 2);
@@ -78,7 +75,7 @@ public sealed class WorldView(FloatRect rect) : View(rect)
     {
         if (e.Delta == 1)
         {
-            if (Size.X <= _viewRect.Width / 2) return;
+            if (Size.X <= Rect.Width / 2) return;
             Zoom(0.9f);
 
             Global.Invoke(EEvent.Logger, new Logger(ELogger.General, $"Zoom changed :: +1.."));
@@ -86,7 +83,7 @@ public sealed class WorldView(FloatRect rect) : View(rect)
 
         if (e.Delta == -1)
         {
-            if (Size.Y >= _viewRect.Height) return;
+            if (Size.Y >= Rect.Height) return;
             Zoom(1.1f);
 
             Global.Invoke(EEvent.Logger, new Logger(ELogger.General, $"Zoom changed :: -1.."));
@@ -104,8 +101,8 @@ public sealed class WorldView(FloatRect rect) : View(rect)
             float scrollX = posX - (width / 2);
             float scrollY = posY - (height / 2);
 
-            scrollX = Math.Max(0, Math.Min(scrollX, _worldWidth - width));
-            scrollY = Math.Max(0, Math.Min(scrollY, _worldHeight - height));
+            scrollX = Math.Max(0, Math.Min(scrollX, Global.WORLD_WIDTH - width));
+            scrollY = Math.Max(0, Math.Min(scrollY, Global.WORLD_HEIGHT - height));
 
             Center = new Vector2f(scrollX + (width / 2), scrollY + (height / 2));
 

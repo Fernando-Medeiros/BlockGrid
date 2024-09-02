@@ -2,16 +2,19 @@
 
 internal sealed class App
 {
+    private FloatRect Size { get; }
     private WorldView WorldView { get; }
-    private LoggerBox LoggerBox { get; }
+    private WorldUIView WorldUIView { get; }
     private RenderWindow Window { get; }
 
     public App()
     {
-        LoggerBox = new LoggerBox();
-        WorldView = new WorldView(new FloatRect(0, 0, 1280, 960));
+        Size = new(0, 0, Global.WINDOW_WIDTH, Global.WINDOW_HEIGHT);
 
-        Window = new RenderWindow(new VideoMode(1280, 960), "2D Game", Styles.Titlebar | Styles.Close);
+        WorldView = new(Size);
+        WorldUIView = new(Size);
+
+        Window = new(new(Global.WINDOW_WIDTH, Global.WINDOW_HEIGHT), Global.TITLE, Styles.Titlebar);
         Window.SetFramerateLimit(30);
         Window.SetVerticalSyncEnabled(true);
     }
@@ -20,14 +23,17 @@ internal sealed class App
     {
         Content.LoadResources();
         WorldView.ConfigureNodes();
+        WorldUIView.Add(new LoggerBoxShape());
     }
 
     public void ConfigureListeners()
     {
         WorldView.ConfigureListeners(Window);
-        LoggerBox.ConfigureListeners(Window);
+        WorldUIView.ConfigureListeners(Window);
 
         Window.Closed += (_, _) => Window.Close();
+        Window.KeyPressed += (_, e) => { if (e.Code == Keyboard.Key.Escape) Window.Close(); };
+
         Window.KeyPressed += (_, e) => Global.Invoke(EEvent.KeyPressed, Enum.GetName(e.Code));
         Window.KeyReleased += (_, e) => Global.Invoke(EEvent.KeyReleased, Enum.GetName(e.Code));
     }
@@ -39,12 +45,10 @@ internal sealed class App
         while (Window.IsOpen)
         {
             Window.DispatchEvents();
-            Window.SetView(WorldView);
-
             Window.Clear();
 
             WorldView.Draw(Window);
-            LoggerBox.Draw(Window);
+            WorldUIView.Draw(Window);
 
             Window.Display();
         }

@@ -4,47 +4,38 @@
 // TODO :: Adicionar maximo de 50 logs na lista;
 // TODO :: Ajustar o tamanho da caixa para ser responsivo com o zoom da view;
 
-public sealed class LoggerBox : RectangleShape
+public sealed class LoggerBoxShape : RectangleShape, IBoxShape
 {
-    Vector2i _position = new(10, 820);
-    ELogger _guide = ELogger.General;
+    private ELogger Guide { get; set; } = ELogger.General;
+    private Dictionary<ELogger, List<string>> Loggers { get; } = [];
 
-    readonly Dictionary<ELogger, List<string>> _loggers = [];
-
-    public LoggerBox()
+    public LoggerBoxShape()
     {
-        foreach (var key in Enum.GetValues<ELogger>())
-            _loggers.Add(key, []);
+        foreach (var key in Enum.GetValues<ELogger>()) Loggers.Add(key, []);
 
-        Size = new Vector2f(200, 130);
-        FillColor = new Color(222, 184, 135, 128);
+        Size = new(200, 130);
+        Position = new(10, 820);
+        FillColor = new(222, 184, 135, 128);
     }
 
     public void ConfigureListeners(RenderWindow window)
     {
-        window.MouseButtonPressed += (sender, e) =>
+        window.MouseButtonPressed += (_, e) =>
         {
-            if (e.Button == Mouse.Button.Left)
+            if (GetGlobalBounds().Contains(e.X, e.Y))
             {
-                var (posX, posY, width, height) = (_position.X, _position.Y, Size.X, Size.Y);
-                
-                if (posX < e.X - width || posX > e.X + width)
-                    return;
-                if (posY < e.Y - height || posY > e.Y + height)
-                    return;
-                _guide = _guide == 0 ? ELogger.Debug : (byte)_guide == 1 ? ELogger.General : ELogger.Dialog;
+                Guide = Guide == 0 ? ELogger.Debug : (byte)Guide == 1 ? ELogger.General : ELogger.Dialog;
             }
         };
 
         Global.Subscribe(EEvent.Logger, (sender) =>
         {
-            if (sender is Logger x) _loggers[x.Guide].Add(x.Message);
+            if (sender is Logger x) Loggers[x.Guide].Add(x.Message);
         });
     }
 
     public void Draw(RenderWindow window)
     {
-        Position = window.MapPixelToCoords(_position);
         window.Draw(this);
 
         int horizontal = 10;
@@ -52,7 +43,7 @@ public sealed class LoggerBox : RectangleShape
         {
             var text = new Text($"{guide}", Content.GetResource(Fonte.OpenSansSemibold), 12)
             {
-                FillColor =  guide == _guide ? Color.Green : Color.Black,
+                FillColor = guide == Guide ? Color.Green : Color.Black,
                 Position = Position + new Vector2f(horizontal, 01),
             };
             horizontal += 67;
@@ -60,7 +51,7 @@ public sealed class LoggerBox : RectangleShape
         }
 
         int vertical = 18;
-        foreach (var logger in _loggers[_guide].Take(^10..))
+        foreach (var logger in Loggers[Guide].Take(^10..))
         {
             var text = new Text(logger, Content.GetResource(Fonte.OpenSansRegular), 9)
             {
