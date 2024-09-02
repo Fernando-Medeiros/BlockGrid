@@ -31,31 +31,31 @@ public static class Global
     private static event EventHandler<EventArgs?>? OnKeyPressed;
     private static event EventHandler<EventArgs?>? OnKeyReleased;
 
-    public static void Subscribe(EEvent e, Action<object?> routine)
+    public static void Subscribe(EEvent e, Action<object?> action)
     {
-        if (e is EEvent.Logger) OnLogger += (args, _) => routine(args);
-        if (e is EEvent.Camera) OnCamera += (args, _) => routine(args);
-        if (e is EEvent.LoadScene) OnLoadScene += (args, _) => routine(args);
-        if (e is EEvent.KeyPressed) OnKeyPressed += (args, _) => routine(args);
-        if (e is EEvent.KeyReleased) OnKeyReleased += (args, _) => routine(args);
+        if (e is EEvent.Logger) OnLogger += (args, _) => action(args);
+        if (e is EEvent.Camera) OnCamera += (args, _) => action(args);
+        if (e is EEvent.LoadScene) OnLoadScene += (args, _) => action(args);
+        if (e is EEvent.KeyPressed) OnKeyPressed += (args, _) => action(args);
+        if (e is EEvent.KeyReleased) OnKeyReleased += (args, _) => action(args);
     }
 
-    public static void UnSubscribe(EEvent e, Action<object?> routine)
+    public static void UnSubscribe(EEvent e, Action<object?> action)
     {
-        if (e is EEvent.Logger) OnLogger -= (args, _) => routine(args);
-        if (e is EEvent.Camera) OnCamera -= (args, _) => routine(args);
-        if (e is EEvent.LoadScene) OnLoadScene -= (args, _) => routine(args);
-        if (e is EEvent.KeyPressed) OnKeyPressed -= (args, _) => routine(args);
-        if (e is EEvent.KeyReleased) OnKeyReleased -= (args, _) => routine(args);
+        if (e is EEvent.Logger) OnLogger -= (args, _) => action(args);
+        if (e is EEvent.Camera) OnCamera -= (args, _) => action(args);
+        if (e is EEvent.LoadScene) OnLoadScene -= (args, _) => action(args);
+        if (e is EEvent.KeyPressed) OnKeyPressed -= (args, _) => action(args);
+        if (e is EEvent.KeyReleased) OnKeyReleased -= (args, _) => action(args);
     }
 
-    public static void Invoke(EEvent e, object? args)
+    public static void Invoke(EEvent e, object? sender)
     {
-        if (e is EEvent.Logger) OnLogger?.Invoke(args, default);
-        if (e is EEvent.Camera) OnCamera?.Invoke(args, default);
-        if (e is EEvent.LoadScene) OnLoadScene?.Invoke(args, default);
-        if (e is EEvent.KeyPressed) OnKeyPressed?.Invoke(args, default);
-        if (e is EEvent.KeyReleased) OnKeyReleased?.Invoke(args, default);
+        if (e is EEvent.Logger) OnLogger?.Invoke(sender, EventArgs.Empty);
+        if (e is EEvent.Camera) OnCamera?.Invoke(sender, EventArgs.Empty);
+        if (e is EEvent.LoadScene) OnLoadScene?.Invoke(sender, EventArgs.Empty);
+        if (e is EEvent.KeyPressed) OnKeyPressed?.Invoke(sender, EventArgs.Empty);
+        if (e is EEvent.KeyReleased) OnKeyReleased?.Invoke(sender, EventArgs.Empty);
     }
     #endregion
 }
