@@ -1,8 +1,6 @@
 ﻿namespace SFMLGame.core.views;
 
 // TODO :: Alterar o design da caixa de logs;
-// TODO :: Adicionar maximo de 50 logs na lista;
-// TODO :: Ajustar o tamanho da caixa para ser responsivo com o zoom da view;
 
 public sealed class LoggerBoxShape : RectangleShape, IBoxShape
 {
@@ -30,7 +28,13 @@ public sealed class LoggerBoxShape : RectangleShape, IBoxShape
 
         Global.Subscribe(EEvent.Logger, (sender) =>
         {
-            if (sender is Logger x) Loggers[x.Guide].Add(x.Message);
+            if (sender is Logger x)
+            {
+                if (Loggers[x.Guide].Count >= 50)
+                    Loggers[x.Guide].RemoveRange(0, 25);
+
+                Loggers[x.Guide].Add(x.Message);
+            }
         });
     }
 
