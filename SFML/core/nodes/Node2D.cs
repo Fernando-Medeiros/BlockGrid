@@ -25,16 +25,17 @@ public sealed class Node2D : INode2D
 
     #region Action
     public void SetBody(IBody2D? body) => Body = body;
+
     public void SetOpacity(EOpacity opacity) => Opacity = opacity;
 
     public INode2D? Get(EDirection direction) => Navigation[direction];
-    public INode2D? Get(object? keyCode) => keyCode switch
+
+    public INode2D? Get(params EDirection[] directions)
     {
-        Key.W or Key.Up => Navigation[EDirection.Top],
-        Key.A or Key.Left => Navigation[EDirection.Left],
-        Key.D or Key.Right => Navigation[EDirection.Right],
-        Key.S or Key.Down => Navigation[EDirection.Bottom],
-        _ => null
-    };
+        INode2D? node = this;
+        foreach (var direction in directions)
+            node = node?.Get(direction);
+        return node;
+    }
     #endregion
 }

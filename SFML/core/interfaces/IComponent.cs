@@ -2,8 +2,9 @@
 
 public interface IMetadataComponent
 {
-    bool IsFlipped();
-    void FlipTo(object? keyCode);
+    EDirection GetDirection();
+    void DirectionTo(object? keyCode);
+    INode2D? ResolveDirection(IBody2D body, object? keyCode);
 }
 
 public interface IHealthComponent
@@ -21,12 +22,10 @@ public interface IActionComponent
 
 public interface ILightComponent
 {
-    void VisibilityTo(INode2D node, EOpacity opacity);
+    void VisibilityTo(IBody2D body, EOpacity opacity);
 }
 
 public interface IMovementComponent
 {
-    void PushTo(IBody2D body, object? keyCode);
     void MoveTo(IBody2D body, object? keyCode);
-    void MoveBy(IBody2D body, INode2D node);
 }

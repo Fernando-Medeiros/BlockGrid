@@ -10,7 +10,7 @@ public sealed class ActionComponent : IActionComponent
 
         foreach (var position in Key.Positions)
         {
-            node = body.Node?.Get(position);
+            node = body.Metadata?.ResolveDirection(body, position);
 
             if (Is.Type<IBody2D>(node?.Body)) break;
         }

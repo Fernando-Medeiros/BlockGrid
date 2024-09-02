@@ -5,6 +5,8 @@ public readonly struct Key
     public const string A = "A";
     public const string D = "D";
     public const string S = "S";
+    public const string E = "E";
+    public const string Q = "Q";
     public const string W = "W";
     public const string Up = "Up";
     public const string Left = "Left";

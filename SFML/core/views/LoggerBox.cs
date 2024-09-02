@@ -1,5 +1,9 @@
 ﻿namespace SFMLGame.core.views;
 
+// TODO :: Alterar o design da caixa de logs;
+// TODO :: Adicionar maximo de 50 logs na lista;
+// TODO :: Ajustar o tamanho da caixa para ser responsivo com o zoom da view;
+
 public sealed class LoggerBox : RectangleShape
 {
     Vector2i _position = new(10, 820);

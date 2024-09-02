@@ -1,13 +1,13 @@
 ﻿namespace SFMLGame.core.enums;
 
-public enum EDirection : byte
+public enum EDirection : sbyte
 {
     Top,
-    Left,
-    Right,
-    Bottom,
-    TopLeft,
     TopRight,
-    BottomLeft,
+    Right,
     BottomRight,
+    Bottom,
+    BottomLeft,
+    Left,
+    TopLeft,
 }

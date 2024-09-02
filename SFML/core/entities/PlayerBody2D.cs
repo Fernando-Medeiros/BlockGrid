@@ -12,8 +12,6 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
         Metadata = new MetadataComponent();
         Movement = new MovementComponent();
 
-        Light.VisibilityTo(Node, EOpacity.Light);
-
         Global.Subscribe(EEvent.KeyPressed, Execute);
     }
 
@@ -30,15 +28,13 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
     #region Action
     public void Execute(object? keyCode)
     {
-        Metadata?.FlipTo(keyCode);
+        Light?.VisibilityTo(this, EOpacity.Regular);
 
-        Movement?.PushTo(this, keyCode);
-
-        Light?.VisibilityTo(Node, EOpacity.Regular);
+        Metadata?.DirectionTo(keyCode);
 
         Movement?.MoveTo(this, keyCode);
 
-        Light?.VisibilityTo(Node, EOpacity.Light);
+        Light?.VisibilityTo(this, EOpacity.Light);
 
         Action?.DamageTo(this, keyCode);
     }

@@ -29,13 +29,6 @@ public sealed class Canva(INode2D node)
         var sprite = Content.GetResource((Sprite2D)Node.Body.Sprite);
         sprite.Color = new(255, 255, 255, Convert.ToByte(Node.Opacity));
         sprite.Position = position;
-
-        sprite.TextureRect = Node.Body.Metadata?.IsFlipped() switch
-        {
-            true => new(Global.RECT, 0, -Global.RECT, Global.RECT),
-            _ => new(0, 0, Global.RECT, Global.RECT)
-        };
-
         window.Draw(sprite);
     }
 

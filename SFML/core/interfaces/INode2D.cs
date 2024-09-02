@@ -12,6 +12,6 @@ public interface INode2D
     void SetBody(IBody2D? body);
     void SetOpacity(EOpacity opacity);
 
-    INode2D? Get(object? keyCode);
     INode2D? Get(EDirection direction);
+    INode2D? Get(params EDirection[] directions);
 }
