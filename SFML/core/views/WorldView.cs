@@ -46,6 +46,7 @@ public sealed class WorldView(FloatRect rect) : View(rect)
 
     public void ConfigureListeners(RenderWindow window)
     {
+        window.KeyPressed += OnZoomChanged;
         window.MouseWheelScrolled += OnZoomChanged;
 
         Global.Subscribe(EEvent.Camera, OnCenterChanged);
@@ -71,9 +72,16 @@ public sealed class WorldView(FloatRect rect) : View(rect)
     #endregion
 
     #region Event
-    private void OnZoomChanged(object? sender, MouseWheelScrollEventArgs e)
+    private void OnZoomChanged(object? sender, EventArgs e)
     {
-        if (e.Delta == 1)
+        int option = e switch
+        {
+            MouseWheelScrollEventArgs x => (int)x.Delta,
+            KeyEventArgs x => Enum.GetName(x.Code) == "Z" ? 1 : Enum.GetName(x.Code) == "X" ? -1 : 0,
+            _ => 0
+        };
+
+        if (option == 1)
         {
             if (Size.X <= Rect.Width / 2) return;
             Zoom(0.9f);
@@ -81,7 +89,7 @@ public sealed class WorldView(FloatRect rect) : View(rect)
             Global.Invoke(EEvent.Logger, new Logger(ELogger.General, $"Zoom changed :: +1.."));
         }
 
-        if (e.Delta == -1)
+        if (option == -1)
         {
             if (Size.Y >= Rect.Height) return;
             Zoom(1.1f);
