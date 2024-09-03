@@ -4,7 +4,7 @@
 
 public sealed class LoggerBoxShape : RectangleShape, IBoxShape
 {
-    private ELogger Guide { get; set; } = ELogger.General;
+    private ELogger Guide { get; set; }
     private Dictionary<ELogger, List<string>> Loggers { get; } = [];
 
     public LoggerBoxShape()
@@ -13,29 +13,15 @@ public sealed class LoggerBoxShape : RectangleShape, IBoxShape
 
         Size = new(200, 130);
         Position = new(10, 820);
-        FillColor = new(222, 184, 135, 128);
+        FillColor = new(222, 184, 135, Convert.ToByte(EOpacity.Regular));
     }
 
+    #region Build
     public void ConfigureListeners(RenderWindow window)
     {
-        window.MouseButtonPressed += (_, e) =>
-        {
-            if (GetGlobalBounds().Contains(e.X, e.Y))
-            {
-                Guide = Guide == 0 ? ELogger.Debug : (byte)Guide == 1 ? ELogger.General : ELogger.Dialog;
-            }
-        };
+        window.MouseButtonPressed += OnGuideClicked;
 
-        Global.Subscribe(EEvent.Logger, (sender) =>
-        {
-            if (sender is Logger x)
-            {
-                if (Loggers[x.Guide].Count >= 50)
-                    Loggers[x.Guide].RemoveRange(0, 25);
-
-                Loggers[x.Guide].Add(x.Message);
-            }
-        });
+        Global.Subscribe(EEvent.Logger, OnLoggerReceive);
     }
 
     public void Draw(RenderWindow window)
@@ -47,7 +33,7 @@ public sealed class LoggerBoxShape : RectangleShape, IBoxShape
         {
             var text = new Text($"{guide}", Content.GetResource(Fonte.OpenSansSemibold), 12)
             {
-                FillColor = guide == Guide ? Color.Green : Color.Black,
+                FillColor = guide == Guide ? Color.Green : Color.White,
                 Position = Position + new Vector2f(horizontal, 01),
             };
             horizontal += 67;
@@ -66,4 +52,29 @@ public sealed class LoggerBoxShape : RectangleShape, IBoxShape
             window.Draw(text);
         }
     }
+    #endregion
+
+    #region Event
+    private void OnGuideClicked(object? sender, MouseButtonEventArgs e)
+    {
+        if (GetGlobalBounds().Contains(e.X, e.Y))
+            Guide = (int)Guide switch
+            {
+                0 => ELogger.Debug,
+                1 => ELogger.General,
+                _ => ELogger.Dialog,
+            };
+    }
+
+    private void OnLoggerReceive(object? sender)
+    {
+        if (sender is Logger x)
+        {
+            if (Loggers[x.Guide].Count >= 50)
+                Loggers[x.Guide].RemoveRange(0, 25);
+
+            Loggers[x.Guide].Add(x.Message);
+        }
+    }
+    #endregion
 }
