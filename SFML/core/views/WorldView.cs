@@ -85,16 +85,12 @@ public sealed class WorldView(FloatRect rect) : View(rect)
         {
             if (Size.X <= Rect.Width / 2) return;
             Zoom(0.9f);
-
-            Global.Invoke(EEvent.Logger, new Logger(ELogger.General, $"Zoom changed :: +1.."));
         }
 
         if (option == -1)
         {
             if (Size.Y >= Rect.Height) return;
             Zoom(1.1f);
-
-            Global.Invoke(EEvent.Logger, new Logger(ELogger.General, $"Zoom changed :: -1.."));
         }
     }
 
