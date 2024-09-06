@@ -10,7 +10,6 @@ public sealed class Canva(INode2D node)
     {
         DrawSurface(window);
         DrawSprite(window);
-        DrawAction(window);
     }
 
     #region Layer
@@ -32,21 +31,6 @@ public sealed class Canva(INode2D node)
         sprite.Color = new(255, 255, 255, Convert.ToByte(Node.Opacity));
         sprite.Position = position;
         window.Draw(sprite);
-    }
-
-    public void DrawAction(RenderWindow window)
-    {
-        if (Is.Null(Node.Body) || Node.Body?.Health?.HasUpdate() is false) return;
-
-        string damage = $"{Node.Body?.Health?.GetHealth()}";
-
-        var text = new Text(damage, default, 18)
-        {
-            Position = position,
-            FillColor = new Color(Color.Black),
-            Font = Content.GetResource(Fonte.OpenSansSemibold),
-        };
-        window.Draw(text);
     }
     #endregion
 }

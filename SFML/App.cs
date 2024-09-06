@@ -23,6 +23,8 @@ internal sealed class App
     {
         Content.LoadResources();
         WorldView.ConfigureNodes();
+        WorldUIView.Add(new PlayerBoxShape());
+        WorldUIView.Add(new EnemyBoxShape());
         WorldUIView.Add(new LoggerBoxShape());
     }
 

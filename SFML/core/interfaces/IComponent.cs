@@ -7,12 +7,9 @@ public interface IMetadataComponent
     INode2D? ResolveDirection(IBody2D body, object? keyCode);
 }
 
-public interface IHealthComponent
+public interface IStatusComponent
 {
-    bool HasUpdate();
-    float GetHealth();
-    float GetMaxHealth();
-    void ReceiveTo(IBody2D body, float value);
+    void ReceiveDamage(int damage);
 }
 
 public interface IActionComponent

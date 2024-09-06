@@ -12,7 +12,7 @@ public sealed class LoggerBoxShape : RectangleShape, IBoxShape
         foreach (var key in Enum.GetValues<ELogger>()) Loggers.Add(key, []);
 
         Size = new(200, 130);
-        Position = new(10, 820);
+        Position = new(05, 820);
         FillColor = new(222, 184, 135, Convert.ToByte(EOpacity.Regular));
     }
 

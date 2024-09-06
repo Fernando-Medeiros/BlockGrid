@@ -7,4 +7,6 @@ public enum EEvent : byte
     LoadScene,
     KeyPressed,
     KeyReleased,
+
+    BasicStatus,
 }

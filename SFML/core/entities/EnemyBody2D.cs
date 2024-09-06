@@ -6,7 +6,7 @@ public sealed class EnemyBody2D : IBody2D, IDisposable
     {
         Node = node;
         Sprite = Sprite2D.Spider;
-        Health = new HealthComponent();
+        Status = new StatusComponent(this);
         Movement = new MovementComponent();
     }
 
@@ -15,7 +15,7 @@ public sealed class EnemyBody2D : IBody2D, IDisposable
     public Sprite2D? Sprite { get; private set; }
     public ILightComponent? Light { get; private set; }
     public IActionComponent? Action { get; private set; }
-    public IHealthComponent? Health { get; private set; }
+    public IStatusComponent? Status { get; private set; }
     public IMetadataComponent? Metadata { get; private set; }
     public IMovementComponent? Movement { get; private set; }
     #endregion
@@ -32,11 +32,9 @@ public sealed class EnemyBody2D : IBody2D, IDisposable
 
     public void Dispose()
     {
-        Global.Invoke(EEvent.Logger, new Logger(ELogger.General, $"Victory :: {Sprite} is dead!"));
-
         Light = null;
         Action = null;
-        Health = null;
+        Status = null;
         Metadata = null;
         Movement = null;
         SetSprite(null);

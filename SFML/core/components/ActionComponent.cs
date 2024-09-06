@@ -17,6 +17,6 @@ public sealed class ActionComponent : IActionComponent
 
         if (Is.Null(node) || Is.Null(node?.Body) || Is.Blocked(node?.Surface)) return;
 
-        node?.Body?.Health?.ReceiveTo(node.Body, 1);
+        node?.Body?.Status?.ReceiveDamage(1);
     }
 }

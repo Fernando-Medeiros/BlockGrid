@@ -5,8 +5,8 @@ public interface IBody2D
     INode2D? Node { get; }
     Sprite2D? Sprite { get; }
     ILightComponent? Light { get; }
+    IStatusComponent? Status { get; }
     IActionComponent? Action { get; }
-    IHealthComponent? Health { get; }
     IMetadataComponent? Metadata { get; }
     IMovementComponent? Movement { get; }
 

@@ -8,7 +8,7 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
         Sprite = Sprite2D.Aracne;
         Light = new LightComponent();
         Action = new ActionComponent();
-        Health = new HealthComponent();
+        Status = new StatusComponent(this);
         Metadata = new MetadataComponent();
         Movement = new MovementComponent();
 
@@ -20,7 +20,7 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
     public Sprite2D? Sprite { get; private set; }
     public ILightComponent? Light { get; private set; }
     public IActionComponent? Action { get; private set; }
-    public IHealthComponent? Health { get; private set; }
+    public IStatusComponent? Status { get; private set; }
     public IMetadataComponent? Metadata { get; private set; }
     public IMovementComponent? Movement { get; private set; }
     #endregion
@@ -52,7 +52,7 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
     {
         Light = null;
         Action = null;
-        Health = null;
+        Status = null;
         Metadata = null;
         Movement = null;
         SetSprite(null);
