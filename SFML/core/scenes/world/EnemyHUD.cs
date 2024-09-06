@@ -1,15 +1,20 @@
-﻿namespace SFMLGame.core.views;
+﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class EnemyBoxShape : IBoxShape
+public sealed class EnemyHUD : IGameObject
 {
-    private Font Font { get; }
-    private Vector2f Offset { get; }
-    private BasicStatus Data { get; set; }
+    private Font? Font { get; set; }
+    private Vector2f? Offset { get; set; }
+    private BasicStatus? Data { get; set; }
+    private RectangleShape? HpBar { get; set; }
+    private RectangleShape? MpBar { get; set; }
 
-    private RectangleShape HpBar { get; }
-    private RectangleShape MpBar { get; }
+    #region Build
+    public void LoadEvents(RenderWindow window)
+    {
+        Global.Subscribe(EEvent.BasicStatus, OnBasicStatusChanged);
+    }
 
-    public EnemyBoxShape()
+    public void LoadContent()
     {
         var (posY, space) = (5f, 5f);
 
@@ -19,7 +24,7 @@ public sealed class EnemyBoxShape : IBoxShape
             OutlineThickness = 1f,
             OutlineColor = Colors.White,
             FillColor = Colors.Tomate,
-            Position = new(Global.WINDOW_WIDTH / 2 - (300 / 2), posY),
+            Position = new(Global.WINDOW_WIDTH / 2 - 300 / 2, posY),
         };
 
         posY += HpBar.Size.Y + space;
@@ -30,7 +35,7 @@ public sealed class EnemyBoxShape : IBoxShape
             OutlineThickness = 1f,
             OutlineColor = Colors.White,
             FillColor = Colors.CornFlowerBlue,
-            Position = new(Global.WINDOW_WIDTH / 2 - (150 / 2), posY),
+            Position = new(Global.WINDOW_WIDTH / 2 - 150 / 2, posY),
         };
 
         Offset = new(space, 0);
@@ -38,32 +43,26 @@ public sealed class EnemyBoxShape : IBoxShape
         Font = Content.GetResource(Fonte.OpenSansSemibold);
     }
 
-    #region Build
-    public void ConfigureListeners(RenderWindow window)
-    {
-        Global.Subscribe(EEvent.BasicStatus, OnBasicStatusChanged);
-    }
-
     public void Draw(RenderWindow window)
     {
-        if (Data.Hp <= 0) return;
+        if (Data?.Hp <= 0) return;
 
         window.Draw(HpBar);
         window.Draw(MpBar);
 
-        window.Draw(new Text($"HP: {Data.Hp} / {Data.MaxHp}", Font, 18)
+        window.Draw(new Text($"HP: {Data?.Hp} / {Data?.MaxHp}", Font, 18)
         {
             FillColor = Colors.White,
-            Position = HpBar.Position + Offset,
+            Position = (Vector2f)(HpBar!.Position + Offset),
         });
 
-        window.Draw(new Text($"MP: {Data.Mp} / {Data.MaxMp}", Font, 14)
+        window.Draw(new Text($"MP: {Data?.Mp} / {Data?.MaxMp}", Font, 14)
         {
             FillColor = Colors.White,
-            Position = MpBar.Position + Offset,
+            Position = (Vector2f)(MpBar!.Position + Offset),
         });
 
-        window.Draw(new Text(Data.Name, Font, 14)
+        window.Draw(new Text(Data?.Name, Font, 14)
         {
             FillColor = Colors.White,
             Position = MpBar.Position + new Vector2f(20, 18),

@@ -8,4 +8,4 @@ global using SFMLGame.core.entities;
 global using SFMLGame.core.enums;
 global using SFMLGame.core.interfaces;
 global using SFMLGame.core.nodes;
-global using SFMLGame.core.views;
+global using SFMLGame.core.scenes.world;

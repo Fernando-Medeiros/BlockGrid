@@ -1,27 +1,27 @@
-﻿namespace SFMLGame.core.views;
+﻿namespace SFMLGame.core.scenes.world;
 
 // TODO :: Alterar o design da caixa de logs;
 
-public sealed class LoggerBoxShape : RectangleShape, IBoxShape
+public sealed class LoggerHUD : RectangleShape, IGameObject
 {
     private ELogger Guide { get; set; }
     private Dictionary<ELogger, List<string>> Loggers { get; } = [];
 
-    public LoggerBoxShape()
+    #region Build
+    public void LoadEvents(RenderWindow window)
+    {
+        window.MouseButtonPressed += OnGuideClicked;
+
+        Global.Subscribe(EEvent.Logger, OnLoggerReceive);
+    }
+
+    public void LoadContent()
     {
         foreach (var key in Enum.GetValues<ELogger>()) Loggers.Add(key, []);
 
         Size = new(200, 130);
         Position = new(05, 820);
         FillColor = new(222, 184, 135, Convert.ToByte(EOpacity.Regular));
-    }
-
-    #region Build
-    public void ConfigureListeners(RenderWindow window)
-    {
-        window.MouseButtonPressed += OnGuideClicked;
-
-        Global.Subscribe(EEvent.Logger, OnLoggerReceive);
     }
 
     public void Draw(RenderWindow window)

@@ -3,16 +3,16 @@
 internal sealed class App
 {
     private FloatRect Size { get; }
-    private WorldView WorldView { get; }
-    private WorldUIView WorldUIView { get; }
+    private IGameObject WorldView { get; }
+    private IGameObject WorldUIView { get; }
     private RenderWindow Window { get; }
 
     public App()
     {
         Size = new(0, 0, Global.WINDOW_WIDTH, Global.WINDOW_HEIGHT);
 
-        WorldView = new(Size);
-        WorldUIView = new(Size);
+        WorldView = new WorldView(Size);
+        WorldUIView = new WorldUIView(Size);
 
         Window = new(new(Global.WINDOW_WIDTH, Global.WINDOW_HEIGHT), Global.TITLE, Styles.Titlebar);
         Window.SetFramerateLimit(30);
@@ -22,16 +22,14 @@ internal sealed class App
     public void ConfigureResources()
     {
         Content.LoadResources();
-        WorldView.ConfigureNodes();
-        WorldUIView.Add(new PlayerBoxShape());
-        WorldUIView.Add(new EnemyBoxShape());
-        WorldUIView.Add(new LoggerBoxShape());
+        WorldView.LoadContent();
+        WorldUIView.LoadContent();
     }
 
     public void ConfigureListeners()
     {
-        WorldView.ConfigureListeners(Window);
-        WorldUIView.ConfigureListeners(Window);
+        WorldView.LoadEvents(Window);
+        WorldUIView.LoadEvents(Window);
 
         Window.Closed += (_, _) => Window.Close();
         Window.KeyPressed += (_, e) => { if (e.Code == Keyboard.Key.Escape) Window.Close(); };

@@ -1,16 +1,21 @@
-﻿namespace SFMLGame.core.views;
+﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class PlayerBoxShape : IBoxShape
+public sealed class PlayerHUD : IGameObject
 {
-    private Font Font { get; }
-    private Vector2f Offset { get; }
-    private BasicStatus Data { get; set; }
+    private Font? Font { get; set; }
+    private Vector2f? Offset { get; set; }
+    private BasicStatus? Data { get; set; }
+    private RectangleShape? HpBar { get; set; }
+    private RectangleShape? MpBar { get; set; }
+    private RectangleShape? ExpBar { get; set; }
 
-    private RectangleShape HpBar { get; }
-    private RectangleShape MpBar { get; }
-    private RectangleShape ExpBar { get; }
+    #region Build
+    public void LoadEvents(RenderWindow window)
+    {
+        Global.Subscribe(EEvent.BasicStatus, OnBasicStatusChanged);
+    }
 
-    public PlayerBoxShape()
+    public void LoadContent()
     {
         var (posX, posY, space) = (5f, 5f, 5f);
 
@@ -50,34 +55,28 @@ public sealed class PlayerBoxShape : IBoxShape
         Font = Content.GetResource(Fonte.OpenSansSemibold);
     }
 
-    #region Build
-    public void ConfigureListeners(RenderWindow window)
-    {
-        Global.Subscribe(EEvent.BasicStatus, OnBasicStatusChanged);
-    }
-
     public void Draw(RenderWindow window)
     {
         window.Draw(HpBar);
         window.Draw(MpBar);
         window.Draw(ExpBar);
 
-        window.Draw(new Text($"HP: {Data.Hp} / {Data.MaxHp}", Font, 18)
+        window.Draw(new Text($"HP: {Data?.Hp} / {Data?.MaxHp}", Font, 18)
         {
             FillColor = Colors.White,
-            Position = HpBar.Position + Offset,
+            Position = (Vector2f)(HpBar!.Position + Offset),
         });
 
-        window.Draw(new Text($"MP: {Data.Mp} / {Data.MaxMp}", Font, 14)
+        window.Draw(new Text($"MP: {Data?.Mp} / {Data?.MaxMp}", Font, 14)
         {
             FillColor = Colors.White,
-            Position = MpBar.Position + Offset,
+            Position = (Vector2f)(MpBar!.Position + Offset),
         });
 
-        window.Draw(new Text($"EX: {Data.Exp} / {Data.MaxExp}", Font, 14)
+        window.Draw(new Text($"EX: {Data?.Exp} / {Data?.MaxExp}", Font, 14)
         {
             FillColor = Colors.White,
-            Position = ExpBar.Position + Offset,
+            Position = (Vector2f)(ExpBar!.Position + Offset),
         });
     }
     #endregion

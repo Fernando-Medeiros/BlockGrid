@@ -1,12 +1,20 @@
-﻿namespace SFMLGame.core.views;
+﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class WorldView(FloatRect rect) : View(rect)
+public sealed class WorldView(FloatRect rect) : View(rect), IGameObject
 {
     private FloatRect Rect { get; } = rect;
     private IList<IList<INode2D>> Collection { get; } = [];
 
     #region Build
-    public void ConfigureNodes()
+    public void LoadEvents(RenderWindow window)
+    {
+        window.KeyPressed += OnZoomChanged;
+        window.MouseWheelScrolled += OnZoomChanged;
+
+        Global.Subscribe(EEvent.Camera, OnCenterChanged);
+    }
+
+    public void LoadContent()
     {
         for (byte row = 0; row < Global.MAX_ROW; row++)
         {
@@ -42,14 +50,6 @@ public sealed class WorldView(FloatRect rect) : View(rect)
                 else if (row % 3 == 0 && column % 3 == 0)
                     node.SetBody(new EnemyBody2D(node));
             }
-    }
-
-    public void ConfigureListeners(RenderWindow window)
-    {
-        window.KeyPressed += OnZoomChanged;
-        window.MouseWheelScrolled += OnZoomChanged;
-
-        Global.Subscribe(EEvent.Camera, OnCenterChanged);
     }
 
     public void Draw(RenderWindow window)
