@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class EnemyHUD : IGameObject
+public sealed class CommandHUD : IGameObject
 {
     private Font? Font { get; set; }
     private Vector2f? Offset { get; set; }

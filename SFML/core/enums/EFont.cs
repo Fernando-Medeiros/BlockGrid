@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.enums;
 
-public enum Fonte : byte
+public enum EFont : byte
 {
     OpenSansRegular,
     OpenSansSemibold,

@@ -5,7 +5,7 @@ public interface INode2D
     Canva Canva { get; }
     IBody2D? Body { get; }
     EOpacity Opacity { get; }
-    Surface2D Surface { get; }
+    ESurface Surface { get; }
     Position2D Position { get; }
     Dictionary<EDirection, INode2D?> Navigation { get; }
 

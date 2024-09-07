@@ -31,7 +31,7 @@ public sealed class LoggerHUD : RectangleShape, IGameObject
         int horizontal = 10;
         foreach (var guide in Enum.GetValues<ELogger>())
         {
-            var text = new Text($"{guide}", Content.GetResource(Fonte.OpenSansSemibold), 12)
+            var text = new Text($"{guide}", Content.GetResource(EFont.OpenSansSemibold), 12)
             {
                 FillColor = guide == Guide ? Color.Green : Color.White,
                 Position = Position + new Vector2f(horizontal, 01),
@@ -43,7 +43,7 @@ public sealed class LoggerHUD : RectangleShape, IGameObject
         int vertical = 18;
         foreach (var logger in Loggers[Guide].Take(^10..))
         {
-            var text = new Text(logger, Content.GetResource(Fonte.OpenSansRegular), 9)
+            var text = new Text(logger, Content.GetResource(EFont.OpenSansRegular), 9)
             {
                 FillColor = Color.White,
                 Position = Position + new Vector2f(05, vertical),

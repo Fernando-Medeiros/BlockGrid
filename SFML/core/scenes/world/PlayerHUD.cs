@@ -52,7 +52,7 @@ public sealed class PlayerHUD : IGameObject
 
         Offset = new(space, 0);
         Data = new(string.Empty, 0, 0, 0, 0, 0, 0, 0);
-        Font = Content.GetResource(Fonte.OpenSansSemibold);
+        Font = Content.GetResource(EFont.OpenSansSemibold);
     }
 
     public void Draw(RenderWindow window)

@@ -5,7 +5,7 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
     public PlayerBody2D(INode2D node)
     {
         Node = node;
-        Sprite = Sprite2D.Aracne;
+        Sprite = ESprite.Aracne;
         Light = new LightComponent();
         Action = new ActionComponent();
         Status = new StatusComponent(this);
@@ -17,7 +17,7 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
 
     #region Property
     public INode2D? Node { get; private set; }
-    public Sprite2D? Sprite { get; private set; }
+    public ESprite? Sprite { get; private set; }
     public ILightComponent? Light { get; private set; }
     public IActionComponent? Action { get; private set; }
     public IStatusComponent? Status { get; private set; }
@@ -44,7 +44,7 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
         Node = node;
         Global.Invoke(EEvent.Camera, Node?.Position);
     }
-    public void SetSprite(Sprite2D? sprite) => Sprite = sprite;
+    public void SetSprite(ESprite? sprite) => Sprite = sprite;
     public void SetBody(IBody2D? body) => Node?.SetBody(body);
     #endregion
 

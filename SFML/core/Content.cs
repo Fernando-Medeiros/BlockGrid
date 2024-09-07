@@ -5,19 +5,22 @@ namespace SFMLGame.core;
 public static class Content
 {
     private static bool _started;
-    private static readonly Dictionary<Fonte, Font> FontResources = [];
-    private static readonly Dictionary<Sprite2D, Sprite> SpriteResources = [];
-    private static readonly Dictionary<Surface2D, Sprite> SurfaceResources = [];
+    private static readonly Dictionary<EFont, Font> FontResources = [];
+    private static readonly Dictionary<EIcon, Sprite> IconResources = [];
+    private static readonly Dictionary<ESprite, Sprite> SpriteResources = [];
+    private static readonly Dictionary<ESurface, Sprite> SurfaceResources = [];
 
     #region Action
-    public static Font GetResource(Fonte font) => FontResources[font];
-    public static Sprite GetResource(Sprite2D sprite) => SpriteResources[sprite];
-    public static Sprite GetResource(Surface2D surface) => SurfaceResources[surface];
+    public static Font GetResource(EFont font) => FontResources[font];
+    public static Sprite GetResource(EIcon icon) => IconResources[icon];
+    public static Sprite GetResource(ESprite sprite) => SpriteResources[sprite];
+    public static Sprite GetResource(ESurface surface) => SurfaceResources[surface];
 
     public static void LoadResources()
     {
         if (_started) return;
         Load(FontResources);
+        Load(IconResources);
         Load(SpriteResources);
         Load(SurfaceResources);
         _started = true;
@@ -27,21 +30,22 @@ public static class Content
     #region Build
     private static void Load<T, C>(Dictionary<T, C> container) where T : Enum where C : class
     {
-        var sufix = typeof(T) == typeof(Fonte) ? ".ttf" : ".png";
+        var suffix = typeof(T) == typeof(EFont) ? ".ttf" : ".png";
 
         foreach (T key in Enum.GetValues(typeof(T)))
         {
-            var folder = typeof(T).Name;
+            var folder = typeof(T).Name.Substring(1);
 
             var fileName = Enum.GetName(typeof(T), key);
 
-            var path = $"./resources/{folder}/{fileName}{sufix}".ToLower();
+            var path = $"./resources/{folder}/{fileName}{suffix}".ToLower();
 
-            if (typeof(C) == typeof(Font))
+            if (typeof(T) == typeof(EFont))
+            {
                 container.Add(key, new Font(path) as C);
-
-            if (typeof(C) == typeof(Sprite))
-                container.Add(key, new Sprite(new Texture(path)) as C);
+                continue;
+            }
+            container.Add(key, new Sprite(new Texture(path)) as C);
         }
     }
 

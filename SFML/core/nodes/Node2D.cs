@@ -19,7 +19,7 @@ public sealed class Node2D : INode2D
     public Position2D Position { get; }
     public EOpacity Opacity { get; private set; }
     public IBody2D? Body { get; private set; }
-    public Surface2D Surface { get; private set; }
+    public ESurface Surface { get; private set; }
     public Dictionary<EDirection, INode2D?> Navigation { get; } = [];
     #endregion
 
