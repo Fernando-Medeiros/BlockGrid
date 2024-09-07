@@ -1,9 +1,11 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class WorldView(FloatRect rect) : View(rect), IGameObject
+public sealed class WorldView : View, IGameObject
 {
-    private FloatRect Rect { get; } = rect;
-    private IList<IList<INode2D>> Collection { get; } = [];
+    private FloatRect Rect { get; set; }
+    private static IList<IList<INode2D>> Collection { get; } = [];
+
+    public WorldView(FloatRect rect) : base(rect) => Rect = rect;
 
     #region Build
     public void LoadEvents(RenderWindow window)

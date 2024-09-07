@@ -14,9 +14,9 @@ internal sealed class App
         WorldView = new WorldView(Size);
         WorldUIView = new WorldUIView(Size);
 
-        Window = new(new(Global.WINDOW_WIDTH, Global.WINDOW_HEIGHT), Global.TITLE, Styles.Titlebar);
+        Window = new(new(Global.WINDOW_WIDTH, Global.WINDOW_HEIGHT), Global.TITLE, Styles.Fullscreen);
         Window.SetFramerateLimit(30);
-        Window.SetVerticalSyncEnabled(true);
+        Window.SetVerticalSyncEnabled(false);
     }
 
     public void ConfigureResources()

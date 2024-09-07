@@ -19,9 +19,9 @@ public sealed class LoggerHUD : RectangleShape, IGameObject
     {
         foreach (var key in Enum.GetValues<ELogger>()) Loggers.Add(key, []);
 
-        Size = new(200, 130);
-        Position = new(05, 820);
-        FillColor = new(222, 184, 135, Convert.ToByte(EOpacity.Regular));
+        Size = new(200, 150);
+        FillColor = Colors.GoldRodTransparent;
+        Position = new(5, Global.WINDOW_HEIGHT - (Size.Y + 5));
     }
 
     public void Draw(RenderWindow window)
@@ -43,7 +43,7 @@ public sealed class LoggerHUD : RectangleShape, IGameObject
         int vertical = 18;
         foreach (var logger in Loggers[Guide].Take(^10..))
         {
-            var text = new Text(logger, Content.GetResource(EFont.OpenSansRegular), 9)
+            var text = new Text(logger, Content.GetResource(EFont.OpenSansRegular), 10)
             {
                 FillColor = Color.White,
                 Position = Position + new Vector2f(05, vertical),

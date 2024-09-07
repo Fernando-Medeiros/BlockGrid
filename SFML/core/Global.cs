@@ -27,8 +27,8 @@ public static class Global
     public const byte MAX_ROW = 132;
     public const string TITLE = "2D Game";
     public const byte MAX_COLUMN = 132;
-    public const int WINDOW_HEIGHT = 960;
-    public const int WINDOW_WIDTH = 1280;
+    public const int WINDOW_HEIGHT = 1080;
+    public const int WINDOW_WIDTH = 1920;
     public const float WORLD_HEIGHT = MAX_ROW * RECT;
     public const float WORLD_WIDTH = MAX_COLUMN * RECT;
 
