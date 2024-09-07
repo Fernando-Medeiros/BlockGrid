@@ -58,9 +58,9 @@ public sealed class CommandHUD : IGameObject
             if (e.X >= pos.X && e.X <= pos.X + Global.RECT &&
                 e.Y >= pos.Y && e.Y <= pos.Y + Global.RECT)
             {
+                if (icon == EIcon.Exit) Global.Invoke(EEvent.Scene, EScene.Main);
                 if (icon == EIcon.ZoomIn) Global.Invoke(EEvent.KeyPressed, Key.Z);
                 if (icon == EIcon.ZoomOut) Global.Invoke(EEvent.KeyPressed, Key.X);
-                if (icon == EIcon.Exit) Global.Invoke(EEvent.KeyPressed, Key.Escape);
             }
         }
     }

@@ -8,12 +8,14 @@ public static class Content
     private static readonly Dictionary<EFont, Font> FontResources = [];
     private static readonly Dictionary<EIcon, Sprite> IconResources = [];
     private static readonly Dictionary<ESprite, Sprite> SpriteResources = [];
+    private static readonly Dictionary<EPicture, Sprite> PictureResources = [];
     private static readonly Dictionary<ESurface, Sprite> SurfaceResources = [];
 
     #region Action
     public static Font GetResource(EFont font) => FontResources[font];
     public static Sprite GetResource(EIcon icon) => IconResources[icon];
     public static Sprite GetResource(ESprite sprite) => SpriteResources[sprite];
+    public static Sprite GetResource(EPicture picture) => PictureResources[picture];
     public static Sprite GetResource(ESurface surface) => SurfaceResources[surface];
 
     public static void LoadResources()
@@ -22,6 +24,7 @@ public static class Content
         Load(FontResources);
         Load(IconResources);
         Load(SpriteResources);
+        Load(PictureResources);
         Load(SurfaceResources);
         _started = true;
     }
@@ -58,7 +61,7 @@ public static class Content
             var jsonString = await File.ReadAllTextAsync(filePath);
             var scenePackage = JsonSerializer.Deserialize<ScenePackage>(jsonString);
 
-            Global.Invoke(EEvent.LoadScene, scenePackage);
+            Global.Invoke(EEvent.Region, scenePackage);
         }
     }
     #endregion

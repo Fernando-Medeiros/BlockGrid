@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <Folder Include="core\widgets\" />
-    <Folder Include="core\scenes\main\" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

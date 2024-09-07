@@ -11,6 +11,7 @@ public sealed class WorldView : View, IGameObject
     #region Build
     public void LoadEvents(RenderWindow window)
     {
+        Global.Subscribe(EEvent.Scene, OnSceneChanged);
         Global.Subscribe(EEvent.Camera, OnCenterChanged);
         Global.Subscribe(EEvent.KeyPressed, OnZoomChanged);
     }
@@ -44,12 +45,6 @@ public sealed class WorldView : View, IGameObject
                 node.Navigation[EDirection.Bottom] = Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column);
                 node.Navigation[EDirection.BottomLeft] = Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column - 1);
                 node.Navigation[EDirection.BottomRight] = Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column + 1);
-
-                // Tests 
-                if (row == 21 && column == 21)
-                    node.SetBody(new PlayerBody2D(node));
-                else if (row % 3 == 0 && column % 3 == 0)
-                    node.SetBody(new EnemyBody2D(node));
             }
     }
 
@@ -73,6 +68,19 @@ public sealed class WorldView : View, IGameObject
     #endregion
 
     #region Event
+    private void OnSceneChanged(object? sender)
+    {
+        // TODO :: Corrigir o objeto duplicado do PlayerBody2D sempre que a cena mudar;
+        // TODO :: Trabalhar em alguma estrutura pra manter e carregar o estado do player e do mapa;
+        if (sender is EScene.World)
+        {
+            Content.LoadScene();
+
+            var node = Collection.ElementAt(21).ElementAt(21);
+            node.SetBody(new PlayerBody2D(node));
+        }
+    }
+
     private void OnZoomChanged(object? sender)
     {
         if (sender is Key.Z)

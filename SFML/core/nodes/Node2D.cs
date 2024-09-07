@@ -7,7 +7,7 @@ public sealed class Node2D : INode2D
         Position = position;
         Canva = new Canva(this);
 
-        Global.Subscribe(EEvent.LoadScene, (sender) =>
+        Global.Subscribe(EEvent.Region, (sender) =>
         {
             if (sender is ScenePackage package)
                 Surface = package.Surface[Position.Row][Position.Column];

@@ -2,11 +2,13 @@
 
 public enum EEvent : byte
 {
+    Scene,
     Logger,
+    Region,
     Camera,
-    LoadScene,
+    EndGame,
+    StartGame,
+    BasicStatus,
     KeyPressed,
     KeyReleased,
-
-    BasicStatus,
 }

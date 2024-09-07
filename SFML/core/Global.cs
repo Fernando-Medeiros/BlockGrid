@@ -33,41 +33,54 @@ public static class Global
     public const float WORLD_WIDTH = MAX_COLUMN * RECT;
 
     #region Event
+
+    private static event EventHandler<EventArgs?>? OnScene;
+    private static event EventHandler<EventArgs?>? OnRegion;
     private static event EventHandler<EventArgs?>? OnLogger;
     private static event EventHandler<EventArgs?>? OnCamera;
-    private static event EventHandler<EventArgs?>? OnLoadScene;
+    private static event EventHandler<EventArgs?>? OnEndGame;
+    private static event EventHandler<EventArgs?>? OnStartGame;
+    private static event EventHandler<EventArgs?>? OnBasicStatus;
     private static event EventHandler<EventArgs?>? OnKeyPressed;
     private static event EventHandler<EventArgs?>? OnKeyReleased;
-    private static event EventHandler<EventArgs?>? OnBasicStatus;
 
     public static void Subscribe(EEvent e, Action<object?> action)
     {
+        if (e is EEvent.Scene) OnScene += (args, _) => action(args);
         if (e is EEvent.Logger) OnLogger += (args, _) => action(args);
+        if (e is EEvent.Region) OnRegion += (args, _) => action(args);
         if (e is EEvent.Camera) OnCamera += (args, _) => action(args);
-        if (e is EEvent.LoadScene) OnLoadScene += (args, _) => action(args);
+        if (e is EEvent.EndGame) OnEndGame += (args, _) => action(args);
+        if (e is EEvent.StartGame) OnStartGame += (args, _) => action(args);
+        if (e is EEvent.BasicStatus) OnBasicStatus += (args, _) => action(args);
         if (e is EEvent.KeyPressed) OnKeyPressed += (args, _) => action(args);
         if (e is EEvent.KeyReleased) OnKeyReleased += (args, _) => action(args);
-        if (e is EEvent.BasicStatus) OnBasicStatus += (args, _) => action(args);
     }
 
     public static void UnSubscribe(EEvent e, Action<object?> action)
     {
+        if (e is EEvent.Scene) OnScene -= (args, _) => action(args);
         if (e is EEvent.Logger) OnLogger -= (args, _) => action(args);
+        if (e is EEvent.Region) OnRegion -= (args, _) => action(args);
         if (e is EEvent.Camera) OnCamera -= (args, _) => action(args);
-        if (e is EEvent.LoadScene) OnLoadScene -= (args, _) => action(args);
+        if (e is EEvent.EndGame) OnEndGame -= (args, _) => action(args);
+        if (e is EEvent.StartGame) OnStartGame -= (args, _) => action(args);
+        if (e is EEvent.BasicStatus) OnBasicStatus -= (args, _) => action(args);
         if (e is EEvent.KeyPressed) OnKeyPressed -= (args, _) => action(args);
         if (e is EEvent.KeyReleased) OnKeyReleased -= (args, _) => action(args);
-        if (e is EEvent.BasicStatus) OnBasicStatus -= (args, _) => action(args);
     }
 
     public static void Invoke(EEvent e, object? sender)
     {
+        if (e is EEvent.Scene) OnScene?.Invoke(sender, EventArgs.Empty);
         if (e is EEvent.Logger) OnLogger?.Invoke(sender, EventArgs.Empty);
+        if (e is EEvent.Region) OnRegion?.Invoke(sender, EventArgs.Empty);
         if (e is EEvent.Camera) OnCamera?.Invoke(sender, EventArgs.Empty);
-        if (e is EEvent.LoadScene) OnLoadScene?.Invoke(sender, EventArgs.Empty);
+        if (e is EEvent.EndGame) OnEndGame?.Invoke(sender, EventArgs.Empty);
+        if (e is EEvent.StartGame) OnStartGame?.Invoke(sender, EventArgs.Empty);
+        if (e is EEvent.BasicStatus) OnBasicStatus?.Invoke(sender, EventArgs.Empty);
         if (e is EEvent.KeyPressed) OnKeyPressed?.Invoke(sender, EventArgs.Empty);
         if (e is EEvent.KeyReleased) OnKeyReleased?.Invoke(sender, EventArgs.Empty);
-        if (e is EEvent.BasicStatus) OnBasicStatus?.Invoke(sender, EventArgs.Empty);
     }
     #endregion
 }
