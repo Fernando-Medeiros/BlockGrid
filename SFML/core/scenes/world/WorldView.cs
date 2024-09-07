@@ -11,9 +11,8 @@ public sealed class WorldView : View, IGameObject
     #region Build
     public void LoadEvents(RenderWindow window)
     {
-        window.KeyPressed += OnZoomChanged;
-        Global.Subscribe(EEvent.KeyPressed, (sender) => OnZoomChanged(sender, EventArgs.Empty));
         Global.Subscribe(EEvent.Camera, OnCenterChanged);
+        Global.Subscribe(EEvent.KeyPressed, OnZoomChanged);
     }
 
     public void LoadContent()
@@ -74,26 +73,16 @@ public sealed class WorldView : View, IGameObject
     #endregion
 
     #region Event
-    private void OnZoomChanged(object? sender, EventArgs e)
+    private void OnZoomChanged(object? sender)
     {
-        int option = (sender, e) switch
-        {
-            (Key.Z, _) => 1,
-            (Key.X, _) => -1,
-            (_, KeyEventArgs x) => Enum.GetName(x.Code) == Key.Z ? 1 : Enum.GetName(x.Code) == Key.X ? -1 : 0,
-            _ => 0
-        };
-
-        if (option == 0) return;
-
-        if (option == 1)
+        if (sender is Key.Z)
         {
             if (Size.X <= Rect.Width / 2) return;
             Zoom(0.9f);
             Global.Invoke(EEvent.Camera, Position2D);
         }
 
-        if (option == -1)
+        if (sender is Key.X)
         {
             if (Size.Y >= Rect.Height) return;
             Zoom(1.1f);
