@@ -60,6 +60,7 @@ public sealed class CommandHUD : IGameObject
             {
                 if (icon == EIcon.ZoomIn) Global.Invoke(EEvent.KeyPressed, Key.Z);
                 if (icon == EIcon.ZoomOut) Global.Invoke(EEvent.KeyPressed, Key.X);
+                if (icon == EIcon.Exit) Global.Invoke(EEvent.KeyPressed, Key.Escape);
             }
         }
     }

@@ -31,10 +31,10 @@ internal sealed class App
         WorldView.LoadEvents(Window);
         WorldUIView.LoadEvents(Window);
 
-        Window.KeyPressed += (_, e) => { if (e.Code == Keyboard.Key.Escape) Window.Close(); };
-
         Window.KeyPressed += (_, e) => Global.Invoke(EEvent.KeyPressed, Enum.GetName(e.Code));
         Window.KeyReleased += (_, e) => Global.Invoke(EEvent.KeyReleased, Enum.GetName(e.Code));
+
+        Global.Subscribe(EEvent.KeyPressed, (sender) => { if (sender is Key.Escape) Window.Close(); });
     }
 
     public void Start()
