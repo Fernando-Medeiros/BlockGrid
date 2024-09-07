@@ -3,6 +3,7 @@
 public sealed class WorldView : View, IGameObject
 {
     private FloatRect Rect { get; set; }
+    private static Position2D? Position2D { get; set; }
     private static IList<IList<INode2D>> Collection { get; } = [];
 
     public WorldView(FloatRect rect) : base(rect) => Rect = rect;
@@ -89,20 +90,24 @@ public sealed class WorldView : View, IGameObject
         {
             if (Size.X <= Rect.Width / 2) return;
             Zoom(0.9f);
+            Global.Invoke(EEvent.Camera, Position2D);
         }
 
         if (option == -1)
         {
             if (Size.Y >= Rect.Height) return;
             Zoom(1.1f);
+            Global.Invoke(EEvent.Camera, Position2D);
         }
     }
 
     private void OnCenterChanged(object? sender)
     {
-        if (sender is Position2D position2D)
+        if (sender is Position2D position2D) Position2D = position2D;
+
+        if (Position2D != null)
         {
-            var (row, column, posX, posY) = position2D;
+            var (row, column, posX, posY) = Position2D;
 
             var (width, height) = (Size.X, Size.Y);
 
