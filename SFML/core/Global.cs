@@ -5,6 +5,8 @@ public readonly struct Key
     public const string A = "A";
     public const string D = "D";
     public const string S = "S";
+    public const string X = "X";
+    public const string Z = "Z";
     public const string E = "E";
     public const string Q = "Q";
     public const string W = "W";
@@ -13,6 +15,7 @@ public readonly struct Key
     public const string Right = "Right";
     public const string Down = "Down";
     public const string Space = "Space";
+    public const string Escape = "Escape";
 
     public static readonly IReadOnlyList<string> Actions = [Space];
     public static readonly IReadOnlyList<string> Positions = [Up, Down, Left, Right];

@@ -9,8 +9,7 @@ public sealed class WorldView(FloatRect rect) : View(rect), IGameObject
     public void LoadEvents(RenderWindow window)
     {
         window.KeyPressed += OnZoomChanged;
-        window.MouseWheelScrolled += OnZoomChanged;
-
+        Global.Subscribe(EEvent.KeyPressed, (sender) => OnZoomChanged(sender, EventArgs.Empty));
         Global.Subscribe(EEvent.Camera, OnCenterChanged);
     }
 
@@ -74,12 +73,15 @@ public sealed class WorldView(FloatRect rect) : View(rect), IGameObject
     #region Event
     private void OnZoomChanged(object? sender, EventArgs e)
     {
-        int option = e switch
+        int option = (sender, e) switch
         {
-            MouseWheelScrollEventArgs x => (int)x.Delta,
-            KeyEventArgs x => Enum.GetName(x.Code) == "Z" ? 1 : Enum.GetName(x.Code) == "X" ? -1 : 0,
+            (Key.Z, _) => 1,
+            (Key.X, _) => -1,
+            (_, KeyEventArgs x) => Enum.GetName(x.Code) == Key.Z ? 1 : Enum.GetName(x.Code) == Key.X ? -1 : 0,
             _ => 0
         };
+
+        if (option == 0) return;
 
         if (option == 1)
         {

@@ -34,7 +34,7 @@ public static class Content
 
         foreach (T key in Enum.GetValues(typeof(T)))
         {
-            var folder = typeof(T).Name.Substring(1);
+            var folder = typeof(T).Name[1..];
 
             var fileName = Enum.GetName(typeof(T), key);
 

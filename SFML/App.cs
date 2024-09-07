@@ -31,7 +31,6 @@ internal sealed class App
         WorldView.LoadEvents(Window);
         WorldUIView.LoadEvents(Window);
 
-        Window.Closed += (_, _) => Window.Close();
         Window.KeyPressed += (_, e) => { if (e.Code == Keyboard.Key.Escape) Window.Close(); };
 
         Window.KeyPressed += (_, e) => Global.Invoke(EEvent.KeyPressed, Enum.GetName(e.Code));

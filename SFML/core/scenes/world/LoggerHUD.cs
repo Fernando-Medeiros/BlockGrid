@@ -57,6 +57,8 @@ public sealed class LoggerHUD : RectangleShape, IGameObject
     #region Event
     private void OnGuideClicked(object? sender, MouseButtonEventArgs e)
     {
+        if (e.Button != Mouse.Button.Left) return;
+
         if (GetGlobalBounds().Contains(e.X, e.Y))
             Guide = (int)Guide switch
             {

@@ -3,78 +3,65 @@
 public sealed class CommandHUD : IGameObject
 {
     private Font? Font { get; set; }
-    private Vector2f? Offset { get; set; }
-    private BasicStatus? Data { get; set; }
-    private RectangleShape? HpBar { get; set; }
-    private RectangleShape? MpBar { get; set; }
+    private IList<(EIcon, string, Vector2f)> Collection { get; } = [];
 
     #region Build
     public void LoadEvents(RenderWindow window)
     {
-        Global.Subscribe(EEvent.BasicStatus, OnBasicStatusChanged);
+        window.MouseButtonPressed += OnCommandClicked;
     }
 
     public void LoadContent()
     {
-        var (posY, space) = (5f, 5f);
+        var (posX, posY, space) = ((float)(Global.WINDOW_WIDTH - Global.RECT), (float)Global.WINDOW_HEIGHT, 5f);
+        posX -= space;
 
-        HpBar = new()
-        {
-            Size = new(300, 25),
-            OutlineThickness = 1f,
-            OutlineColor = Colors.White,
-            FillColor = Colors.Tomate,
-            Position = new(Global.WINDOW_WIDTH / 2 - 300 / 2, posY),
-        };
+        posY -= Global.RECT + space;
+        Collection.Add((EIcon.Exit, Key.Escape[..3], new(posX, posY)));
 
-        posY += HpBar.Size.Y + space;
+        posY -= Global.RECT + space;
+        Collection.Add((EIcon.ZoomOut, Key.X, new(posX, posY)));
 
-        MpBar = new()
-        {
-            Size = new(150, 18),
-            OutlineThickness = 1f,
-            OutlineColor = Colors.White,
-            FillColor = Colors.CornFlowerBlue,
-            Position = new(Global.WINDOW_WIDTH / 2 - 150 / 2, posY),
-        };
+        posY -= Global.RECT + space;
+        Collection.Add((EIcon.ZoomIn, Key.Z, new(posX, posY)));
 
-        Offset = new(space, 0);
-        Data = new(string.Empty, 0, 0, 0, 0, 0, 0, 0);
         Font = Content.GetResource(EFont.OpenSansSemibold);
     }
 
     public void Draw(RenderWindow window)
     {
-        if (Data?.Hp <= 0) return;
-
-        window.Draw(HpBar);
-        window.Draw(MpBar);
-
-        window.Draw(new Text($"HP: {Data?.Hp} / {Data?.MaxHp}", Font, 18)
+        foreach (var (icon, command, position) in Collection)
         {
-            FillColor = Colors.White,
-            Position = (Vector2f)(HpBar!.Position + Offset),
-        });
+            var sprite = Content.GetResource(icon);
+            sprite.Color = Colors.GoldRod;
+            sprite.Position = position;
+            window.Draw(sprite);
 
-        window.Draw(new Text($"MP: {Data?.Mp} / {Data?.MaxMp}", Font, 14)
-        {
-            FillColor = Colors.White,
-            Position = (Vector2f)(MpBar!.Position + Offset),
-        });
-
-        window.Draw(new Text(Data?.Name, Font, 14)
-        {
-            FillColor = Colors.White,
-            Position = MpBar.Position + new Vector2f(20, 18),
-        });
+            window.Draw(new Text(command, Font, 14)
+            {
+                OutlineThickness = 1f,
+                FillColor = Colors.White,
+                OutlineColor = Colors.Black,
+                Position = position,
+            });
+        }
     }
     #endregion
 
     #region Event
-    private void OnBasicStatusChanged(object? sender)
+    private void OnCommandClicked(object? sender, MouseButtonEventArgs e)
     {
-        if (sender is BasicStatus basicStatus)
-            Data = basicStatus;
+        if (e.Button != Mouse.Button.Left) return;
+
+        foreach (var (icon, _, pos) in Collection)
+        {
+            if (e.X >= pos.X && e.X <= pos.X + Global.RECT &&
+                e.Y >= pos.Y && e.Y <= pos.Y + Global.RECT)
+            {
+                if (icon == EIcon.ZoomIn) Global.Invoke(EEvent.KeyPressed, Key.Z);
+                if (icon == EIcon.ZoomOut) Global.Invoke(EEvent.KeyPressed, Key.X);
+            }
+        }
     }
     #endregion
 }

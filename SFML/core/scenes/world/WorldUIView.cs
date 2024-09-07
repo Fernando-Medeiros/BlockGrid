@@ -15,7 +15,8 @@ public sealed class WorldUIView(FloatRect rect) : View(rect), IGameObject
         Collection.Add(new PlayerHUD());
         Collection.Add(new EnemyHUD());
         Collection.Add(new LoggerHUD());
-
+        Collection.Add(new CommandHUD());
+        
         foreach (var gameObject in Collection) gameObject.LoadContent();
     }
 
