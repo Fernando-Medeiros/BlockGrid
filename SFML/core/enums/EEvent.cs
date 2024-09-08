@@ -11,4 +11,6 @@ public enum EEvent : byte
     BasicStatus,
     KeyPressed,
     KeyReleased,
+    MouseWheelScrolled,
+    MouseButtonPressed,
 }

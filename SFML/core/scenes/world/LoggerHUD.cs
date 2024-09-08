@@ -8,11 +8,11 @@ public sealed class LoggerHUD : RectangleShape, IGameObject
     private Dictionary<ELogger, List<string>> Loggers { get; } = [];
 
     #region Build
-    public void LoadEvents(RenderWindow window)
+    public void LoadEvents()
     {
-        window.MouseButtonPressed += OnGuideClicked;
-
         Global.Subscribe(EEvent.Logger, OnLoggerReceive);
+
+        Global.Subscribe(EEvent.MouseButtonPressed, OnGuideClicked);
     }
 
     public void LoadContent()
@@ -55,22 +55,25 @@ public sealed class LoggerHUD : RectangleShape, IGameObject
     #endregion
 
     #region Event
-    private void OnGuideClicked(object? sender, MouseButtonEventArgs e)
+    private void OnGuideClicked(object? sender)
     {
-        if (e.Button != Mouse.Button.Left) return;
+        if (sender is MouseDTO mouse)
+        {
+            if (mouse.Button != EMouse.Left) return;
 
-        if (GetGlobalBounds().Contains(e.X, e.Y))
-            Guide = (int)Guide switch
-            {
-                0 => ELogger.Debug,
-                1 => ELogger.General,
-                _ => ELogger.Dialog,
-            };
+            if (GetGlobalBounds().Contains(mouse.X, mouse.Y))
+                Guide = (int)Guide switch
+                {
+                    0 => ELogger.Debug,
+                    1 => ELogger.General,
+                    _ => ELogger.Dialog,
+                };
+        }
     }
 
     private void OnLoggerReceive(object? sender)
     {
-        if (sender is Logger x)
+        if (sender is LoggerDTO x)
         {
             if (Loggers[x.Guide].Count >= 50)
                 Loggers[x.Guide].RemoveRange(0, 25);

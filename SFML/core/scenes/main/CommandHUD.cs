@@ -8,9 +8,9 @@ public sealed class CommandHUD : IGameObject
     private IList<(EOption, string, Vector2f)> Collection { get; } = [];
 
     #region Build
-    public void LoadEvents(RenderWindow window)
+    public void LoadEvents()
     {
-        window.MouseButtonPressed += OnCommandClicked;
+        Global.Subscribe(EEvent.MouseButtonPressed, OnCommandClicked);
     }
 
     public void LoadContent()
@@ -48,17 +48,20 @@ public sealed class CommandHUD : IGameObject
     #endregion
 
     #region Event
-    private void OnCommandClicked(object? sender, MouseButtonEventArgs e)
+    private void OnCommandClicked(object? sender)
     {
-        if (e.Button != Mouse.Button.Left) return;
-
-        foreach (var (option, _, pos) in Collection)
+        if (sender is MouseDTO mouse)
         {
-            if (e.X >= pos.X && e.X <= pos.X + Global.RECT &&
-                e.Y >= pos.Y && e.Y <= pos.Y + Global.RECT)
+            if (mouse.Button != EMouse.Left) return;
+
+            foreach (var (option, _, pos) in Collection)
             {
-                if (option is EOption.Exit) Global.Invoke(EEvent.EndGame, null);
-                if (option is EOption.Start) Global.Invoke(EEvent.Scene, EScene.World);
+                if (mouse.X >= pos.X && mouse.X <= pos.X + Global.RECT &&
+                    mouse.Y >= pos.Y && mouse.Y <= pos.Y + Global.RECT)
+                {
+                    if (option is EOption.Exit) Global.Invoke(EEvent.EndGame, null);
+                    if (option is EOption.Start) Global.Invoke(EEvent.Scene, EScene.World);
+                }
             }
         }
     }

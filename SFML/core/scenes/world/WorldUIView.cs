@@ -5,9 +5,9 @@ public sealed class WorldUIView(FloatRect rect) : View(rect), IGameObject
     private IList<IGameObject> Collection { get; } = [];
 
     #region Build
-    public void LoadEvents(RenderWindow window)
+    public void LoadEvents()
     {
-        foreach (var gameObject in Collection) gameObject.LoadEvents(window);
+        foreach (var gameObject in Collection) gameObject.LoadEvents();
     }
 
     public void LoadContent()

@@ -4,13 +4,13 @@ public sealed class PlayerHUD : IGameObject
 {
     private Font? Font { get; set; }
     private Vector2f? Offset { get; set; }
-    private BasicStatus? Data { get; set; }
+    private StatusDTO? Data { get; set; }
     private RectangleShape? HpBar { get; set; }
     private RectangleShape? MpBar { get; set; }
     private RectangleShape? ExpBar { get; set; }
 
     #region Build
-    public void LoadEvents(RenderWindow window)
+    public void LoadEvents()
     {
         Global.Subscribe(EEvent.BasicStatus, OnBasicStatusChanged);
     }

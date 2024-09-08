@@ -9,7 +9,7 @@ public sealed class Node2D : INode2D
 
         Global.Subscribe(EEvent.Region, (sender) =>
         {
-            if (sender is ScenePackage package)
+            if (sender is RegionDTO package)
                 Surface = package.Surface[Position.Row][Position.Column];
         });
     }

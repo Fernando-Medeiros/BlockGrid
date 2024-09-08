@@ -37,10 +37,19 @@ internal sealed class App
     {
         foreach (var sceneObjects in Scenes.Values)
             foreach (var gameObject in sceneObjects)
-                gameObject.LoadEvents(Window);
+                gameObject.LoadEvents();
 
-        Window.KeyPressed += (_, e) => Global.Invoke(EEvent.KeyPressed, Enum.GetName(e.Code));
-        Window.KeyReleased += (_, e) => Global.Invoke(EEvent.KeyReleased, Enum.GetName(e.Code));
+        Window.KeyPressed += (_, e) =>
+            Global.Invoke(EEvent.KeyPressed, Enum.GetName(e.Code));
+
+        Window.KeyReleased += (_, e) =>
+            Global.Invoke(EEvent.KeyReleased, Enum.GetName(e.Code));
+
+        Window.MouseWheelScrolled += (_, e) =>
+           Global.Invoke(EEvent.MouseWheelScrolled, new MouseDTO(Enum.Parse<EMouse>($"{e.Delta}"), e.X, e.Y));
+
+        Window.MouseButtonPressed += (_, e) =>
+            Global.Invoke(EEvent.MouseButtonPressed, new MouseDTO(Enum.Parse<EMouse>(Enum.GetName(e.Button)), e.X, e.Y));
 
         Global.Subscribe(EEvent.EndGame, (x) => Window.Close());
 

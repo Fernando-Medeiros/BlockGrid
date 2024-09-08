@@ -9,7 +9,7 @@ public sealed class WorldView : View, IGameObject
     public WorldView(FloatRect rect) : base(rect) => Rect = rect;
 
     #region Build
-    public void LoadEvents(RenderWindow window)
+    public void LoadEvents()
     {
         Global.Subscribe(EEvent.Scene, OnSceneChanged);
         Global.Subscribe(EEvent.Camera, OnCenterChanged);
@@ -116,7 +116,7 @@ public sealed class WorldView : View, IGameObject
 
             Center = new Vector2f(scrollX + (width / 2), scrollY + (height / 2));
 
-            Global.Invoke(EEvent.Logger, new Logger(ELogger.Debug, $"R:{row} C:{column} X:{Center.X} Y:{Center.Y}"));
+            Global.Invoke(EEvent.Logger, new LoggerDTO(ELogger.Debug, $"R:{row} C:{column} X:{Center.X} Y:{Center.Y}"));
         }
     }
     #endregion

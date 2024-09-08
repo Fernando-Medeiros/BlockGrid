@@ -43,6 +43,8 @@ public static class Global
     private static event EventHandler<EventArgs?>? OnBasicStatus;
     private static event EventHandler<EventArgs?>? OnKeyPressed;
     private static event EventHandler<EventArgs?>? OnKeyReleased;
+    private static event EventHandler<EventArgs?>? OnMouseWheelScrolled;
+    private static event EventHandler<EventArgs?>? OnMouseButtonPressed;
 
     public static void Subscribe(EEvent e, Action<object?> action)
     {
@@ -55,6 +57,8 @@ public static class Global
         if (e is EEvent.BasicStatus) OnBasicStatus += (args, _) => action(args);
         if (e is EEvent.KeyPressed) OnKeyPressed += (args, _) => action(args);
         if (e is EEvent.KeyReleased) OnKeyReleased += (args, _) => action(args);
+        if (e is EEvent.MouseWheelScrolled) OnMouseWheelScrolled += (args, _) => action(args);
+        if (e is EEvent.MouseButtonPressed) OnMouseButtonPressed += (args, _) => action(args);
     }
 
     public static void UnSubscribe(EEvent e, Action<object?> action)
@@ -68,6 +72,8 @@ public static class Global
         if (e is EEvent.BasicStatus) OnBasicStatus -= (args, _) => action(args);
         if (e is EEvent.KeyPressed) OnKeyPressed -= (args, _) => action(args);
         if (e is EEvent.KeyReleased) OnKeyReleased -= (args, _) => action(args);
+        if (e is EEvent.MouseWheelScrolled) OnMouseWheelScrolled -= (args, _) => action(args);
+        if (e is EEvent.MouseButtonPressed) OnMouseButtonPressed -= (args, _) => action(args);
     }
 
     public static void Invoke(EEvent e, object? sender)
@@ -81,6 +87,8 @@ public static class Global
         if (e is EEvent.BasicStatus) OnBasicStatus?.Invoke(sender, EventArgs.Empty);
         if (e is EEvent.KeyPressed) OnKeyPressed?.Invoke(sender, EventArgs.Empty);
         if (e is EEvent.KeyReleased) OnKeyReleased?.Invoke(sender, EventArgs.Empty);
+        if (e is EEvent.MouseWheelScrolled) OnMouseWheelScrolled?.Invoke(sender, EventArgs.Empty);
+        if (e is EEvent.MouseButtonPressed) OnMouseButtonPressed?.Invoke(sender, EventArgs.Empty);
     }
     #endregion
 }

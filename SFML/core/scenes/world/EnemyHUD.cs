@@ -4,12 +4,12 @@ public sealed class EnemyHUD : IGameObject
 {
     private Font? Font { get; set; }
     private Vector2f? Offset { get; set; }
-    private BasicStatus? Data { get; set; }
+    private StatusDTO? Data { get; set; }
     private RectangleShape? HpBar { get; set; }
     private RectangleShape? MpBar { get; set; }
 
     #region Build
-    public void LoadEvents(RenderWindow window)
+    public void LoadEvents()
     {
         Global.Subscribe(EEvent.BasicStatus, OnBasicStatusChanged);
     }
@@ -73,7 +73,7 @@ public sealed class EnemyHUD : IGameObject
     #region Event
     private void OnBasicStatusChanged(object? sender)
     {
-        if (sender is BasicStatus basicStatus)
+        if (sender is StatusDTO basicStatus)
             Data = basicStatus;
     }
     #endregion

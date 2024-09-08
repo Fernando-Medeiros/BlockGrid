@@ -6,9 +6,9 @@ public sealed class CommandHUD : IGameObject
     private IList<(EIcon, string, Vector2f)> Collection { get; } = [];
 
     #region Build
-    public void LoadEvents(RenderWindow window)
+    public void LoadEvents()
     {
-        window.MouseButtonPressed += OnCommandClicked;
+        Global.Subscribe(EEvent.MouseButtonPressed, OnCommandClicked);
     }
 
     public void LoadContent()
@@ -49,18 +49,21 @@ public sealed class CommandHUD : IGameObject
     #endregion
 
     #region Event
-    private void OnCommandClicked(object? sender, MouseButtonEventArgs e)
+    private void OnCommandClicked(object? sender)
     {
-        if (e.Button != Mouse.Button.Left) return;
-
-        foreach (var (icon, _, pos) in Collection)
+        if (sender is MouseDTO mouse)
         {
-            if (e.X >= pos.X && e.X <= pos.X + Global.RECT &&
-                e.Y >= pos.Y && e.Y <= pos.Y + Global.RECT)
+            if (mouse.Button != EMouse.Left) return;
+
+            foreach (var (icon, _, pos) in Collection)
             {
-                if (icon == EIcon.Exit) Global.Invoke(EEvent.Scene, EScene.Main);
-                if (icon == EIcon.ZoomIn) Global.Invoke(EEvent.KeyPressed, Key.Z);
-                if (icon == EIcon.ZoomOut) Global.Invoke(EEvent.KeyPressed, Key.X);
+                if (mouse.X >= pos.X && mouse.X <= pos.X + Global.RECT &&
+                    mouse.Y >= pos.Y && mouse.Y <= pos.Y + Global.RECT)
+                {
+                    if (icon == EIcon.Exit) Global.Invoke(EEvent.Scene, EScene.Main);
+                    if (icon == EIcon.ZoomIn) Global.Invoke(EEvent.KeyPressed, Key.Z);
+                    if (icon == EIcon.ZoomOut) Global.Invoke(EEvent.KeyPressed, Key.X);
+                }
             }
         }
     }

@@ -5,7 +5,7 @@ public sealed class WorldMapHUD : IGameObject
     private WorldView? World { get; set; }
 
     #region Build
-    public void LoadEvents(RenderWindow window) => World?.LoadEvents(window);
+    public void LoadEvents() => World?.LoadEvents();
 
     public void LoadContent()
     {

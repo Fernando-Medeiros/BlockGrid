@@ -59,7 +59,7 @@ public static class Content
         if (File.Exists(filePath))
         {
             var jsonString = await File.ReadAllTextAsync(filePath);
-            var scenePackage = JsonSerializer.Deserialize<ScenePackage>(jsonString);
+            var scenePackage = JsonSerializer.Deserialize<RegionDTO>(jsonString);
 
             Global.Invoke(EEvent.Region, scenePackage);
         }
