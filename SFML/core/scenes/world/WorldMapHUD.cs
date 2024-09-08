@@ -2,20 +2,17 @@
 
 public sealed class WorldMapHUD : IGameObject
 {
-    private WorldView? World { get; set; }
+    private IGameObject? GameObject { get; set; }
 
     #region Build
-    public void LoadEvents() => World?.LoadEvents();
-
     public void LoadContent()
     {
-        World = new(new FloatRect(0, 0, 3000, 3000))
-        {
-            Viewport = new(0.85f, 0, 0.15f, 0.15f)
-        };
+        GameObject = new WorldMapView(new FloatRect(0, 0, Global.WORLD_WIDTH / 2f, Global.WORLD_HEIGHT / 2f));
     }
 
-    public void Draw(RenderWindow window) => World?.Draw(window);
+    public void LoadEvents() => GameObject?.LoadEvents();
+
+    public void Draw(RenderWindow window) => GameObject?.Draw(window);
     #endregion
 
     #region Event

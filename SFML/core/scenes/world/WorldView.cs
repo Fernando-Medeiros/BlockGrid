@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class WorldView : View, IGameObject
+public class WorldView : View, IGameObject
 {
     private FloatRect Rect { get; set; }
     private static Position2D? Position2D { get; set; }
@@ -8,14 +8,7 @@ public sealed class WorldView : View, IGameObject
 
     public WorldView(FloatRect rect) : base(rect) => Rect = rect;
 
-    #region Build
-    public void LoadEvents()
-    {
-        Global.Subscribe(EEvent.Scene, OnSceneChanged);
-        Global.Subscribe(EEvent.Camera, OnCenterChanged);
-        Global.Subscribe(EEvent.KeyPressed, OnZoomChanged);
-    }
-
+    #region Build 
     public void LoadContent()
     {
         for (byte row = 0; row < Global.MAX_ROW; row++)
@@ -48,6 +41,13 @@ public sealed class WorldView : View, IGameObject
             }
     }
 
+    public virtual void LoadEvents()
+    {
+        Global.Subscribe(EEvent.Scene, OnSceneChanged);
+        Global.Subscribe(EEvent.Camera, OnCenterChanged);
+        Global.Subscribe(EEvent.KeyPressed, OnZoomChanged);
+    }
+
     public void Draw(RenderWindow window)
     {
         window.SetView(this);
@@ -70,7 +70,6 @@ public sealed class WorldView : View, IGameObject
     #region Event
     private void OnSceneChanged(object? sender)
     {
-        // TODO :: Corrigir o objeto duplicado do PlayerBody2D sempre que a cena mudar;
         // TODO :: Trabalhar em alguma estrutura pra manter e carregar o estado do player e do mapa;
         if (sender is EScene.World)
         {
@@ -98,7 +97,7 @@ public sealed class WorldView : View, IGameObject
         }
     }
 
-    private void OnCenterChanged(object? sender)
+    protected void OnCenterChanged(object? sender)
     {
         if (sender is Position2D position2D) Position2D = position2D;
 
@@ -120,4 +119,17 @@ public sealed class WorldView : View, IGameObject
         }
     }
     #endregion
+}
+
+public sealed class WorldMapView : WorldView
+{
+    public WorldMapView(FloatRect rect) : base(rect)
+    {
+        Viewport = new(0.85f, 0, 0.15f, 0.15f);
+    }
+
+    public override void LoadEvents()
+    {
+        Global.Subscribe(EEvent.Camera, OnCenterChanged);
+    }
 }

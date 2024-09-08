@@ -4,12 +4,7 @@ public sealed class WorldUIView(FloatRect rect) : View(rect), IGameObject
 {
     private IList<IGameObject> Collection { get; } = [];
 
-    #region Build
-    public void LoadEvents()
-    {
-        foreach (var gameObject in Collection) gameObject.LoadEvents();
-    }
-
+    #region Build  
     public void LoadContent()
     {
         Collection.Add(new PlayerHUD());
@@ -19,6 +14,11 @@ public sealed class WorldUIView(FloatRect rect) : View(rect), IGameObject
         Collection.Add(new WorldMapHUD());
 
         foreach (var gameObject in Collection) gameObject.LoadContent();
+    }
+
+    public void LoadEvents()
+    {
+        foreach (var gameObject in Collection) gameObject.LoadEvents();
     }
 
     public void Draw(RenderWindow window)

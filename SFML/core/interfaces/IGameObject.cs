@@ -2,7 +2,7 @@
 
 public interface IGameObject
 {
-    void Draw(RenderWindow window);
-    void LoadEvents();
     void LoadContent();
+    void LoadEvents();
+    void Draw(RenderWindow window);
 }
