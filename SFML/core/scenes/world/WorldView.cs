@@ -55,6 +55,9 @@ public class WorldView : View, IGameObject
         foreach (var nodeList in Collection)
             foreach (var node in nodeList)
             {
+                if (node.Opacity is EOpacity.Dark)
+                    continue;
+
                 var (posX, posY, width, height) = (node.Position.X, node.Position.Y, Size.X / 2, Size.Y / 2);
 
                 if (posX < Center.X - width || posX > Center.X + width)
@@ -121,6 +124,8 @@ public class WorldView : View, IGameObject
     #endregion
 }
 
+// TODO :: Otimizar a renderização e o uso do processador.
+// Este objeto é redundante porque renderiza o world, porem o exibe em uma escala menor.
 public sealed class WorldMapView : WorldView
 {
     public WorldMapView(FloatRect rect) : base(rect)

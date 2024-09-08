@@ -8,11 +8,6 @@ public sealed class CommandHUD : IGameObject
     private IList<(EOption, string, Vector2f)> Collection { get; } = [];
 
     #region Build
-    public void LoadEvents()
-    {
-        Global.Subscribe(EEvent.MouseButtonPressed, OnCommandClicked);
-    }
-
     public void LoadContent()
     {
         var (posX, posY, space) = (Global.WINDOW_WIDTH / 2f, Global.WINDOW_HEIGHT / 3f, 60f);
@@ -26,10 +21,14 @@ public sealed class CommandHUD : IGameObject
         Font = Content.GetResource(EFont.OpenSansSemibold);
     }
 
+    public void LoadEvents()
+    {
+        Global.Subscribe(EEvent.MouseButtonPressed, OnCommandClicked);
+    }
+
     public void Draw(RenderWindow window)
     {
-        var picture = Content.GetResource(EPicture.MainBackground);
-        window.Draw(picture);
+        window.Draw(Content.GetResource(EPicture.MainBackground));
 
         foreach (var (_, placeholder, position) in Collection)
         {
