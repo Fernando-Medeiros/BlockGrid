@@ -1,6 +1,7 @@
 ﻿namespace SFMLGame.core.scenes.main;
 
-public sealed class MainUIView(FloatRect rect) : View(rect), IGameObject
+public sealed class MainScene(FloatRect viewRect)
+    : View(viewRect), IGameObject
 {
     private IList<IGameObject> Collection { get; } = [];
 

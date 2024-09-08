@@ -5,39 +5,34 @@ namespace SFMLGame;
 
 internal sealed class App
 {
-    private FloatRect Size { get; }
     private RenderWindow Window { get; }
     private EScene CurrentScene { get; set; }
-    private Dictionary<EScene, IList<IGameObject>> Scenes { get; }
+    private Dictionary<EScene, IGameObject> Scenes { get; }
 
     public App()
     {
-        Size = new(0, 0, Global.WINDOW_WIDTH, Global.WINDOW_HEIGHT);
+        var size = new FloatRect(0, 0, Global.WINDOW_WIDTH, Global.WINDOW_HEIGHT);
 
-        Window = new(new(Global.WINDOW_WIDTH, Global.WINDOW_HEIGHT), Global.TITLE, Styles.Fullscreen);
-
+        Window = new(new((uint)size.Width, (uint)size.Height), Global.TITLE, Styles.Fullscreen);
         Window.SetFramerateLimit(30);
-        Window.SetVerticalSyncEnabled(false);
 
         Scenes = [];
-        Scenes.Add(EScene.Main, [new MainUIView(Size)]);
-        Scenes.Add(EScene.World, [new WorldView(Size), new WorldUIView(Size)]);
+        Scenes.Add(EScene.Main, new MainScene(size));
+        Scenes.Add(EScene.World, new WorldScene(size));
     }
 
     public void ConfigureResources()
     {
         Content.LoadResources();
 
-        foreach (var sceneObjects in Scenes.Values)
-            foreach (var gameObject in sceneObjects)
-                gameObject.LoadContent();
+        foreach (var scene in Scenes.Values)
+            scene.LoadContent();
     }
 
     public void ConfigureListeners()
     {
-        foreach (var sceneObjects in Scenes.Values)
-            foreach (var gameObject in sceneObjects)
-                gameObject.LoadEvents();
+        foreach (var scene in Scenes.Values)
+            scene.LoadEvents();
 
         Window.KeyPressed += (_, e) =>
             Global.Invoke(EEvent.KeyPressed, Enum.GetName(e.Code));
@@ -63,8 +58,7 @@ internal sealed class App
             Window.DispatchEvents();
             Window.Clear();
 
-            foreach (var gameObject in Scenes[CurrentScene])
-                gameObject.Draw(Window);
+            Scenes[CurrentScene].Draw(Window);
 
             Window.Display();
         }

@@ -1,12 +1,12 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-public class WorldView : View, IGameObject
+public class WorldView(FloatRect viewRect)
+    : View(viewRect), IGameObject
 {
-    private FloatRect Rect { get; set; }
+    private FloatRect ViewRect { get; } = viewRect;
+
     private static Position2D? Position2D { get; set; }
     private static IList<IList<INode2D>> Collection { get; } = [];
-
-    public WorldView(FloatRect rect) : base(rect) => Rect = rect;
 
     #region Build 
     public void LoadContent()
@@ -87,14 +87,14 @@ public class WorldView : View, IGameObject
     {
         if (sender is Key.Z)
         {
-            if (Size.X <= Rect.Width / 2) return;
+            if (Size.X <= ViewRect.Width / 2) return;
             Zoom(0.9f);
             Global.Invoke(EEvent.Camera, Position2D);
         }
 
         if (sender is Key.X)
         {
-            if (Size.Y >= Rect.Height) return;
+            if (Size.Y >= ViewRect.Height) return;
             Zoom(1.1f);
             Global.Invoke(EEvent.Camera, Position2D);
         }
