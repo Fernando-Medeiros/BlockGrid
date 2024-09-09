@@ -26,7 +26,7 @@ public class WorldView(FloatRect viewRect)
         foreach (var nodeList in Collection)
             foreach (var node in nodeList)
             {
-                var (row, column, _, _) = node.Position;
+                var (row, column, _, _) = node.Position2D;
 
                 node.Navigation[EDirection.Left] = Collection.ElementAtOrDefault(row)?.ElementAtOrDefault(column - 1);
                 node.Navigation[EDirection.Right] = Collection.ElementAtOrDefault(row)?.ElementAtOrDefault(column + 1);
@@ -58,14 +58,14 @@ public class WorldView(FloatRect viewRect)
                 if (node.Opacity is EOpacity.Dark)
                     continue;
 
-                var (posX, posY, width, height) = (node.Position.X, node.Position.Y, Size.X / 2, Size.Y / 2);
+                var (posX, posY, width, height) = (node.Position2D.X, node.Position2D.Y, Size.X / 2, Size.Y / 2);
 
                 if (posX < Center.X - width || posX > Center.X + width)
                     continue;
                 if (posY < Center.Y - height || posY > Center.Y + height)
                     continue;
 
-                node.Canva.Draw(window);
+                node.Draw(window);
             }
     }
     #endregion

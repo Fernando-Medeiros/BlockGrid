@@ -42,7 +42,7 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
     public void SetNode(INode2D? node)
     {
         Node = node;
-        Global.Invoke(EEvent.Camera, Node?.Position);
+        Global.Invoke(EEvent.Camera, Node?.Position2D);
     }
     public void SetSprite(ESprite? sprite) => Sprite = sprite;
     public void SetBody(IBody2D? body) => Node?.SetBody(body);
