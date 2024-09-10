@@ -52,9 +52,13 @@ public static class Content
         }
     }
 
+    // TODO :: Trabalhar no Mapa
+    static string map = "TierE";
     public static async void LoadScene()
     {
-        string filePath = "./resources/raw/TierE.json";
+        string filePath = $"./resources/raw/{map}.json";
+
+        map = map == "TierE" ? "TierF" : "TierE";
 
         if (File.Exists(filePath))
         {

@@ -75,11 +75,18 @@ public class WorldView(FloatRect viewRect)
     {
         if (AppState.CurrentScene != EScene.World) return;
 
-        // TODO :: Trabalhar em alguma estrutura pra manter e carregar o estado do player e do mapa;
+        // TODO :: Remover após implementar a distribuição do pacote de região.
+        // A cena deve ser salva em um enum no AppState e os pacotes distribuidos ao iniciar o jogo.
         Content.LoadScene();
 
-        var node = Collection.ElementAt(21).ElementAt(21);
-        node.SetBody(new PlayerBody2D(node));
+        // O Player pode ser lançado para o node a partir do evento de envio dos dados da região.
+        // O pacote será distribuido entre os nodes com Surface, Body2D.
+        if (AppState.CurrentPlayer == null)
+        {
+            var node = Collection.ElementAt(21).ElementAt(21);
+            AppState.CurrentPlayer = new PlayerBody2D(node);
+            node.SetBody(AppState.CurrentPlayer);
+        }
     }
 
     private void OnZoomChanged(object? sender)

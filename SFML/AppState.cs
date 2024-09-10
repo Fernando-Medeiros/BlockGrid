@@ -3,7 +3,7 @@
 internal static class AppState
 {
     public static EScene CurrentScene { get; private set; }
-    public static IBody2D? CurrentPlayer { get; private set; }
+    public static IBody2D? CurrentPlayer { get; set; }
 
     public static void LoadEvents(RenderWindow window)
     {
