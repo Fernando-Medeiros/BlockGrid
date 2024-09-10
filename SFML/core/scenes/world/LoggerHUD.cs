@@ -57,6 +57,8 @@ public sealed class LoggerHUD : RectangleShape, IGameObject
     #region Event
     private void OnGuideClicked(object? sender)
     {
+        if (AppState.CurrentScene != EScene.World) return;
+
         if (sender is MouseDTO mouse)
         {
             if (mouse.Button != EMouse.Left) return;
@@ -73,6 +75,8 @@ public sealed class LoggerHUD : RectangleShape, IGameObject
 
     private void OnLoggerReceive(object? sender)
     {
+        if (AppState.CurrentScene != EScene.World) return;
+
         if (sender is LoggerDTO x)
         {
             if (Loggers[x.Guide].Count >= 50)

@@ -73,6 +73,8 @@ public sealed class EnemyHUD : IGameObject
     #region Event
     private void OnBasicStatusChanged(object? sender)
     {
+        if (AppState.CurrentScene != EScene.World) return;
+
         if (sender is StatusDTO basicStatus)
             Data = basicStatus;
     }

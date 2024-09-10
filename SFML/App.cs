@@ -6,7 +6,6 @@ namespace SFMLGame;
 internal sealed class App
 {
     private RenderWindow Window { get; }
-    private EScene CurrentScene { get; set; }
     private Dictionary<EScene, IGameObject> Scenes { get; }
 
     public App()
@@ -31,6 +30,8 @@ internal sealed class App
 
     public void ConfigureListeners()
     {
+        AppState.LoadEvents();
+
         foreach (var scene in Scenes.Values)
             scene.LoadEvents();
 
@@ -47,8 +48,6 @@ internal sealed class App
             Global.Invoke(EEvent.MouseButtonPressed, new MouseDTO(Enum.Parse<EMouse>(Enum.GetName(e.Button)), e.X, e.Y));
 
         Global.Subscribe(EEvent.EndGame, (x) => Window.Close());
-
-        Global.Subscribe(EEvent.Scene, (x) => { if (x is EScene scene) CurrentScene = scene; });
     }
 
     public void Start()
@@ -58,7 +57,7 @@ internal sealed class App
             Window.DispatchEvents();
             Window.Clear();
 
-            Scenes[CurrentScene].Draw(Window);
+            Scenes[AppState.CurrentScene].Draw(Window);
 
             Window.Display();
         }

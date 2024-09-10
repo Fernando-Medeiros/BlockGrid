@@ -73,18 +73,19 @@ public class WorldView(FloatRect viewRect)
     #region Event
     private void OnSceneChanged(object? sender)
     {
-        // TODO :: Trabalhar em alguma estrutura pra manter e carregar o estado do player e do mapa;
-        if (sender is EScene.World)
-        {
-            Content.LoadScene();
+        if (AppState.CurrentScene != EScene.World) return;
 
-            var node = Collection.ElementAt(21).ElementAt(21);
-            node.SetBody(new PlayerBody2D(node));
-        }
+        // TODO :: Trabalhar em alguma estrutura pra manter e carregar o estado do player e do mapa;
+        Content.LoadScene();
+
+        var node = Collection.ElementAt(21).ElementAt(21);
+        node.SetBody(new PlayerBody2D(node));
     }
 
     private void OnZoomChanged(object? sender)
     {
+        if (AppState.CurrentScene != EScene.World) return;
+
         if (sender is Key.Z)
         {
             if (Size.X <= ViewRect.Width / 2) return;
@@ -102,6 +103,8 @@ public class WorldView(FloatRect viewRect)
 
     protected void OnCenterChanged(object? sender)
     {
+        if (AppState.CurrentScene != EScene.World) return;
+
         if (sender is Position2D position2D) Position2D = position2D;
 
         if (Position2D != null)
