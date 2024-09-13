@@ -5,7 +5,6 @@ public class WorldView(FloatRect viewRect)
 {
     private FloatRect ViewRect { get; } = viewRect;
 
-    private static Position2D? Position2D { get; set; }
     private static IList<IList<INode2D>> Collection { get; } = [];
 
     #region Build 
@@ -45,7 +44,7 @@ public class WorldView(FloatRect viewRect)
     {
         Global.Subscribe(EEvent.Scene, OnSceneChanged);
         Global.Subscribe(EEvent.Region, OnRegionChanged);
-        Global.Subscribe(EEvent.Camera, OnCenterChanged);
+        Global.Subscribe(EEvent.Camera, OnCameraChanged);
         Global.Subscribe(EEvent.KeyPressed, OnZoomChanged);
     }
 
@@ -110,39 +109,36 @@ public class WorldView(FloatRect viewRect)
         {
             if (Size.X <= ViewRect.Width / 2) return;
             Zoom(0.9f);
-            Global.Invoke(EEvent.Camera, Position2D);
+            OnCameraChanged(null);
         }
 
         if (sender is Key.X)
         {
             if (Size.Y >= ViewRect.Height) return;
             Zoom(1.1f);
-            Global.Invoke(EEvent.Camera, Position2D);
+            OnCameraChanged(null);
         }
     }
 
-    protected void OnCenterChanged(object? sender)
+    protected void OnCameraChanged(object? sender)
     {
         if (AppState.CurrentScene != EScene.World) return;
 
-        if (sender is Position2D position2D) Position2D = position2D;
+        AppState.CurrentPosition.Deconstruct(out var row, out var column, out var posX, out var posY);
 
-        if (Position2D != null)
-        {
-            var (row, column, posX, posY) = Position2D;
+        var (width, height) = (Size.X, Size.Y);
 
-            var (width, height) = (Size.X, Size.Y);
+        float scrollX = posX - (width / 2);
+        float scrollY = posY - (height / 2);
 
-            float scrollX = posX - (width / 2);
-            float scrollY = posY - (height / 2);
+        scrollX = Math.Max(0, Math.Min(scrollX, Global.WORLD_WIDTH - width));
+        scrollY = Math.Max(0, Math.Min(scrollY, Global.WORLD_HEIGHT - height));
 
-            scrollX = Math.Max(0, Math.Min(scrollX, Global.WORLD_WIDTH - width));
-            scrollY = Math.Max(0, Math.Min(scrollY, Global.WORLD_HEIGHT - height));
+        Center = new Vector2f(scrollX + (width / 2), scrollY + (height / 2));
 
-            Center = new Vector2f(scrollX + (width / 2), scrollY + (height / 2));
-
-            Global.Invoke(EEvent.Logger, new LoggerDTO(ELogger.Debug, $"R:{row} C:{column} X:{Center.X} Y:{Center.Y}"));
-        }
+#if DEBUG
+        Global.Invoke(EEvent.Logger, new LoggerDTO(ELogger.Debug, $"R:{row} C:{column} X:{Center.X} Y:{Center.Y}"));
+#endif
     }
     #endregion
 }
@@ -158,6 +154,6 @@ public sealed class WorldMapView : WorldView
 
     public override void LoadEvents()
     {
-        Global.Subscribe(EEvent.Camera, OnCenterChanged);
+        Global.Subscribe(EEvent.Camera, OnCameraChanged);
     }
 }
