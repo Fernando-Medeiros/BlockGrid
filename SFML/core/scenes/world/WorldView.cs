@@ -92,6 +92,8 @@ public class WorldView(FloatRect viewRect)
 
     private void OnRegionChanged(object? sender)
     {
+        if (AppState.CurrentScene != EScene.World) return;
+
         if (sender is RegionDTO package)
         {
             foreach (var nodeList in Collection)
