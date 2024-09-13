@@ -18,7 +18,7 @@ public readonly struct Key
     public const string Escape = "Escape";
 
     public static readonly IReadOnlyList<string> Actions = [Space];
-    public static readonly IReadOnlyList<string> Positions = [Up, Down, Left, Right];
+    public static readonly IReadOnlyList<string> Positions = [W, S, A, D];
 }
 
 public static class Global
