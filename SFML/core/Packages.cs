@@ -1,6 +1,9 @@
 ﻿namespace SFMLGame.core;
 
-public sealed record Position2D(byte Row, byte Column, float X, float Y);
+public sealed record Position2D(byte Row, byte Column, float X, float Y)
+{
+    public static Position2D Empty() => new(0, 0, 0, 0);
+};
 
 public sealed record MouseDTO(EMouse Button, int X, int Y);
 public sealed record RegionDTO(IList<IList<ESurface>> Surface);
