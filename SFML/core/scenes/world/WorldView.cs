@@ -44,6 +44,7 @@ public class WorldView(FloatRect viewRect)
     public virtual void LoadEvents()
     {
         Global.Subscribe(EEvent.Scene, OnSceneChanged);
+        Global.Subscribe(EEvent.Region, OnRegionChanged);
         Global.Subscribe(EEvent.Camera, OnCenterChanged);
         Global.Subscribe(EEvent.KeyPressed, OnZoomChanged);
     }
@@ -86,6 +87,16 @@ public class WorldView(FloatRect viewRect)
             var node = Collection.ElementAt(21).ElementAt(21);
             AppState.CurrentPlayer = new PlayerBody2D(node);
             node.SetBody(AppState.CurrentPlayer);
+        }
+    }
+
+    private void OnRegionChanged(object? sender)
+    {
+        if (sender is RegionDTO package)
+        {
+            foreach (var nodeList in Collection)
+                foreach (var node in nodeList)
+                    node.SetSurface(package.Surface[node.Position2D.Row][node.Position2D.Column]);
         }
     }
 

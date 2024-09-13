@@ -6,12 +6,6 @@ public sealed class Node2D : INode2D
     {
         Position2D = position2D;
         Position = new(position2D.X, position2D.Y);
-
-        Global.Subscribe(EEvent.Region, (sender) =>
-        {
-            if (sender is RegionDTO package)
-                Surface = package.Surface[Position2D.Row][Position2D.Column];
-        });
     }
 
     #region Property
@@ -26,6 +20,8 @@ public sealed class Node2D : INode2D
 
     #region Action
     public void SetBody(IBody2D? body) => Body = body;
+
+    public void SetSurface(ESurface? surface) => Surface = surface ?? default;
 
     public void SetOpacity(EOpacity opacity) => Opacity = opacity;
 

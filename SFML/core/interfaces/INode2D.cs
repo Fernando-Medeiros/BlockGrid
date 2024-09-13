@@ -9,6 +9,7 @@ public interface INode2D
     Dictionary<EDirection, INode2D?> Navigation { get; }
 
     void SetBody(IBody2D? body);
+    void SetSurface(ESurface? surface);
     void SetOpacity(EOpacity opacity);
     void Draw(RenderWindow window);
 
