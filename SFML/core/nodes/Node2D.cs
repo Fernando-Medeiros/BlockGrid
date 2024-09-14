@@ -49,6 +49,16 @@ public sealed class Node2D : INode2D
         sprite.Color = new(255, 255, 255, Convert.ToByte(Opacity));
         sprite.Position = Position;
         window.Draw(sprite);
+
+        if (App.SelectedNode == this)
+            window.Draw(new RectangleShape()
+            {
+                Position = Position,
+                Size = new(31, 31),
+                FillColor = Color.Transparent,
+                OutlineColor = Colors.GoldRod,
+                OutlineThickness = 1f
+            });
     }
 
     private void DrawSprite(RenderWindow window)

@@ -51,7 +51,7 @@ public sealed class CommandHUD : IGameObject
     #region Event
     private void OnCommandClicked(object? sender)
     {
-        if (AppState.CurrentScene != EScene.World) return;
+        if (App.CurrentScene != EScene.World) return;
 
         if (sender is MouseDTO mouse)
         {

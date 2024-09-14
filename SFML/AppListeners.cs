@@ -1,39 +1,31 @@
 ﻿namespace SFMLGame;
 
-internal static class AppState
+internal sealed partial class App
 {
+    public static INode2D? SelectedNode { get; set; }
     public static IBody2D? CurrentPlayer { get; set; }
     public static EScene CurrentScene { get; private set; } = EScene.Main;
     public static Position2D CurrentPosition { get; private set; } = Position2D.Empty();
 
-    public static void LoadEvents(RenderWindow window)
-    {
-        OnCreate(window);
-        OnStart(window);
-        OnResume(window);
-        OnPause(window);
-        OnDestroy(window);
-    }
-
     #region States
-    private static void OnCreate(RenderWindow window)
+    private void OnCreate()
     {
-        window.KeyPressed += (_, e) =>
+        Window.KeyPressed += (_, e) =>
            Global.Invoke(EEvent.KeyPressed, Enum.GetName(e.Code));
 
-        window.KeyReleased += (_, e) =>
+        Window.KeyReleased += (_, e) =>
             Global.Invoke(EEvent.KeyReleased, Enum.GetName(e.Code));
 
-        window.MouseWheelScrolled += (_, e) =>
+        Window.MouseWheelScrolled += (_, e) =>
            Global.Invoke(EEvent.MouseWheelScrolled, new MouseDTO(Enum.Parse<EMouse>($"{e.Delta}"), e.X, e.Y));
 
-        window.MouseButtonPressed += (_, e) =>
+        Window.MouseButtonPressed += (_, e) =>
             Global.Invoke(EEvent.MouseButtonPressed, new MouseDTO(Enum.Parse<EMouse>(Enum.GetName(e.Button)), e.X, e.Y));
     }
 
-    private static void OnStart(RenderWindow window) { }
+    private void OnStart() { }
 
-    private static void OnResume(RenderWindow window)
+    private void OnResume()
     {
         Global.Subscribe(EEvent.Scene, (x) =>
             { if (x is EScene scene) CurrentScene = scene; });
@@ -42,11 +34,11 @@ internal static class AppState
             { if (x is Position2D position) CurrentPosition = position; });
     }
 
-    private static void OnPause(RenderWindow window) { }
+    private void OnPause() { }
 
-    private static void OnDestroy(RenderWindow window)
+    private void OnDestroy()
     {
-        Global.Subscribe(EEvent.EndGame, (x) => window.Close());
+        Global.Subscribe(EEvent.EndGame, (x) => Window.Close());
     }
     #endregion
 }

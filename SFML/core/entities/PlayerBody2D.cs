@@ -28,7 +28,7 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
     #region Action
     public void Execute(object? keyCode)
     {
-        if (AppState.CurrentScene != EScene.World) return;
+        if (App.CurrentScene != EScene.World) return;
 
         Light?.VisibilityTo(this, EOpacity.Regular);
 

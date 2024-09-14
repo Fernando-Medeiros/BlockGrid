@@ -25,7 +25,7 @@ public class WorldView(FloatRect viewRect)
         foreach (var nodeList in Collection)
             foreach (var node in nodeList)
             {
-                var (row, column, _, _) = node.Position2D;
+                node.Position2D.Deconstruct(out var row, out var column, out _, out _);
 
                 node.Navigation[EDirection.Left] = Collection.ElementAtOrDefault(row)?.ElementAtOrDefault(column - 1);
                 node.Navigation[EDirection.Right] = Collection.ElementAtOrDefault(row)?.ElementAtOrDefault(column + 1);
@@ -46,6 +46,7 @@ public class WorldView(FloatRect viewRect)
         Global.Subscribe(EEvent.Region, OnRegionChanged);
         Global.Subscribe(EEvent.Camera, OnCameraChanged);
         Global.Subscribe(EEvent.KeyPressed, OnZoomChanged);
+        Global.Subscribe(EEvent.MouseButtonPressed, OnNodeSelected);
     }
 
     public void Draw(RenderWindow window)
@@ -73,25 +74,25 @@ public class WorldView(FloatRect viewRect)
     #region Event
     private void OnSceneChanged(object? sender)
     {
-        if (AppState.CurrentScene != EScene.World) return;
+        if (App.CurrentScene != EScene.World) return;
 
         // TODO :: Remover após implementar a distribuição do pacote de região.
-        // A cena deve ser salva em um enum no AppState e os pacotes distribuidos ao iniciar o jogo.
+        // A cena deve ser salva em um enum no App e os pacotes distribuidos ao iniciar o jogo.
         Content.LoadScene();
 
         // O Player pode ser lançado para o node a partir do evento de envio dos dados da região.
         // O pacote será distribuido entre os nodes com Surface, Body2D.
-        if (AppState.CurrentPlayer == null)
+        if (App.CurrentPlayer == null)
         {
             var node = Collection.ElementAt(21).ElementAt(21);
-            AppState.CurrentPlayer = new PlayerBody2D(node);
-            node.SetBody(AppState.CurrentPlayer);
+            App.CurrentPlayer = new PlayerBody2D(node);
+            node.SetBody(App.CurrentPlayer);
         }
     }
 
     private void OnRegionChanged(object? sender)
     {
-        if (AppState.CurrentScene != EScene.World) return;
+        if (App.CurrentScene != EScene.World) return;
 
         if (sender is RegionDTO package)
         {
@@ -101,9 +102,27 @@ public class WorldView(FloatRect viewRect)
         }
     }
 
+    private void OnNodeSelected(object? sender)
+    {
+        if (App.CurrentScene != EScene.World) return;
+
+        if (sender is MouseDTO mouse)
+        {
+            var absolutePosition = App.MapCoords(mouse.X, mouse.Y, this);
+
+            var posY = absolutePosition.Y - (Global.RECT / 2);
+            var posX = absolutePosition.X - (Global.RECT / 2);
+
+            int row = Math.Max(0, Math.Min(Convert.ToInt32(posY / Global.RECT), Global.MAX_ROW - 1));
+            int column = Math.Max(0, Math.Min(Convert.ToInt32(posX / Global.RECT), Global.MAX_COLUMN - 1));
+
+            App.SelectedNode = Collection[row][column];
+        }
+    }
+
     private void OnZoomChanged(object? sender)
     {
-        if (AppState.CurrentScene != EScene.World) return;
+        if (App.CurrentScene != EScene.World) return;
 
         if (sender is Key.Z)
         {
@@ -122,9 +141,9 @@ public class WorldView(FloatRect viewRect)
 
     protected void OnCameraChanged(object? sender)
     {
-        if (AppState.CurrentScene != EScene.World) return;
+        if (App.CurrentScene != EScene.World) return;
 
-        AppState.CurrentPosition.Deconstruct(out var row, out var column, out var posX, out var posY);
+        App.CurrentPosition.Deconstruct(out var row, out var column, out var posX, out var posY);
 
         var (width, height) = (Size.X, Size.Y);
 

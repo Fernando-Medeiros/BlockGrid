@@ -3,16 +3,16 @@ using SFMLGame.core.scenes.world;
 
 namespace SFMLGame;
 
-internal sealed class App
+internal sealed partial class App
 {
-    private RenderWindow Window { get; }
-    private Dictionary<EScene, IGameObject> Scenes { get; }
+    private static RenderWindow Window { get; }
+    private static Dictionary<EScene, IGameObject> Scenes { get; }
 
-    public App()
+    static App()
     {
         var size = new FloatRect(0, 0, Global.WINDOW_WIDTH, Global.WINDOW_HEIGHT);
 
-        Window = new(new((uint)size.Width, (uint)size.Height), Global.TITLE, Styles.Fullscreen);
+        Window = new(new(Global.WINDOW_WIDTH, Global.WINDOW_HEIGHT), Global.TITLE, Styles.Fullscreen);
         Window.SetFramerateLimit(30);
 
         Scenes = [];
@@ -30,7 +30,11 @@ internal sealed class App
 
     public void ConfigureListeners()
     {
-        AppState.LoadEvents(Window);
+        OnCreate();
+        OnStart();
+        OnResume();
+        OnPause();
+        OnDestroy();
 
         foreach (var scene in Scenes.Values)
             scene.LoadEvents();
@@ -43,7 +47,7 @@ internal sealed class App
             Window.DispatchEvents();
             Window.Clear();
 
-            Scenes[AppState.CurrentScene].Draw(Window);
+            Scenes[CurrentScene].Draw(Window);
 
             Window.Display();
         }
