@@ -6,6 +6,7 @@ public enum EEvent : byte
     Logger,
     Region,
     Camera,
+    Transport,
     EndGame,
     StartGame,
     BasicStatus,

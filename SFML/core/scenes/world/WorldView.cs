@@ -85,8 +85,7 @@ public class WorldView(FloatRect viewRect)
         if (App.CurrentPlayer == null)
         {
             var node = Collection.ElementAt(21).ElementAt(21);
-            App.CurrentPlayer = new PlayerBody2D(node);
-            node.SetBody(App.CurrentPlayer);
+            Global.Invoke(EEvent.Transport, new PlayerBody2D(node));
         }
     }
 
@@ -116,7 +115,7 @@ public class WorldView(FloatRect viewRect)
             int row = Math.Max(0, Math.Min(Convert.ToInt32(posY / Global.RECT), Global.MAX_ROW - 1));
             int column = Math.Max(0, Math.Min(Convert.ToInt32(posX / Global.RECT), Global.MAX_COLUMN - 1));
 
-            App.SelectedNode = Collection[row][column];
+            Global.Invoke(EEvent.Transport, Collection.ElementAt(row).ElementAt(column));
         }
     }
 

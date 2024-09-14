@@ -2,8 +2,8 @@
 
 internal sealed partial class App
 {
-    public static INode2D? SelectedNode { get; set; }
-    public static IBody2D? CurrentPlayer { get; set; }
+    public static IBody2D? CurrentPlayer { get; private set; }
+    public static INode2D? SelectedNode { get; private set; }
     public static EScene CurrentScene { get; private set; } = EScene.Main;
     public static Position2D CurrentPosition { get; private set; } = Position2D.Empty();
 
@@ -32,6 +32,12 @@ internal sealed partial class App
 
         Global.Subscribe(EEvent.Camera, (x) =>
             { if (x is Position2D position) CurrentPosition = position; });
+
+        Global.Subscribe(EEvent.Transport, (x) =>
+            {
+                if (x is IBody2D body) CurrentPlayer = body;
+                if (x is INode2D node) SelectedNode = node;
+            });
     }
 
     private void OnPause() { }

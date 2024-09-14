@@ -5,6 +5,8 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
     public PlayerBody2D(INode2D node)
     {
         Node = node;
+        Node.SetBody(this);
+
         Sprite = ESprite.Aracne;
         Light = new LightComponent();
         Action = new ActionComponent();
