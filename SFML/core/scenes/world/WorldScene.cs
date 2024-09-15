@@ -17,7 +17,7 @@ public sealed class WorldScene(FloatRect viewRect)
         Collection.Add(new EnemyHUD());
         Collection.Add(new LoggerHUD());
         Collection.Add(new CommandHUD());
-        Collection.Add(new WorldMapHUD());
+        //Collection.Add(new WorldMapHUD()); // TODO :: Refazer o mapa para um formato simples e eficiente.
 
         foreach (var gameObject in Collection) gameObject.LoadContent();
     }

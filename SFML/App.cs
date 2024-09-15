@@ -45,7 +45,7 @@ internal sealed partial class App
         while (Window.IsOpen)
         {
             Window.DispatchEvents();
-            Window.Clear(Factory.Get(RegionSurface));
+            Window.Clear(Colors.Black);
 
             Scenes[CurrentScene].Draw(Window);
 

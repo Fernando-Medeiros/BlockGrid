@@ -18,26 +18,27 @@ public class WorldView(FloatRect viewRect)
             {
                 var position2D = new Position2D(row, column, column * Global.RECT, row * Global.RECT);
 
-                Collection[row].Add(new Node2D(position2D));
+                Collection.ElementAt(row).Add(new Node2D(position2D));
             }
         }
 
-        foreach (var nodeList in Collection)
-            foreach (var node in nodeList)
-            {
-                node.Position2D.Deconstruct(out var row, out var column, out _, out _);
+        Node2D.NavigationHandler = INode2D? (EDirection direction, Position2D position2D) =>
+    {
+        position2D.Deconstruct(out var row, out var column, out _, out _);
 
-                node.Navigation[EDirection.Left] = Collection.ElementAtOrDefault(row)?.ElementAtOrDefault(column - 1);
-                node.Navigation[EDirection.Right] = Collection.ElementAtOrDefault(row)?.ElementAtOrDefault(column + 1);
-
-                node.Navigation[EDirection.Top] = Collection.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column);
-                node.Navigation[EDirection.TopLeft] = Collection.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column - 1);
-                node.Navigation[EDirection.TopRight] = Collection.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column + 1);
-
-                node.Navigation[EDirection.Bottom] = Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column);
-                node.Navigation[EDirection.BottomLeft] = Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column - 1);
-                node.Navigation[EDirection.BottomRight] = Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column + 1);
-            }
+        return direction switch
+        {
+            EDirection.Left => Collection.ElementAtOrDefault(row)?.ElementAtOrDefault(column - 1),
+            EDirection.Right => Collection.ElementAtOrDefault(row)?.ElementAtOrDefault(column + 1),
+            EDirection.Top => Collection.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column),
+            EDirection.TopLeft => Collection.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column - 1),
+            EDirection.TopRight => Collection.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column + 1),
+            EDirection.Bottom => Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column),
+            EDirection.BottomLeft => Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column - 1),
+            EDirection.BottomRight => Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column + 1),
+            _ => null
+        };
+    };
     }
 
     public virtual void LoadEvents()
@@ -103,7 +104,7 @@ public class WorldView(FloatRect viewRect)
                 {
                     Row = row,
                     Column = column,
-                    Opacity = node.Opacity,
+                    Discovered = node.Opacity != EOpacity.Dark,
                 };
 
                 if (node.Body != null)
@@ -143,7 +144,7 @@ public class WorldView(FloatRect viewRect)
 
                     node.SetBody(null);
                     node.GameItems.Clear();
-                    node.SetOpacity(schema.Opacity);
+                    node.SetOpacity(schema.Discovered ? EOpacity.Regular : EOpacity.Dark);
 
                     foreach (var itemSchema in schema.Items)
                         node.GameItems.Add(new GameItem() { Sprite = itemSchema.Sprite });
@@ -151,10 +152,14 @@ public class WorldView(FloatRect viewRect)
                     if (schema.Body is null) continue;
 
                     if (schema.Body.Type is EBody.Player)
+                    {
                         App.CurrentPlayer?.Dispose();
+                        Global.Invoke(EEvent.Transport, Factory.Get(schema.Body.Type, node));
+                        Global.Invoke(EEvent.Camera, node.Position2D);
+                        continue;
+                    }
 
-                    Global.Invoke(EEvent.Transport, Factory.Get(schema.Body.Type, node));
-                    Global.Invoke(EEvent.Camera, node.Position2D);
+                    Factory.Get(schema.Body.Type, node);
                 }
         }
 
@@ -180,11 +185,9 @@ public class WorldView(FloatRect viewRect)
             int row = Math.Max(0, Math.Min(Convert.ToInt32(posY / Global.RECT), Global.MAX_ROW - 1));
             int column = Math.Max(0, Math.Min(Convert.ToInt32(posX / Global.RECT), Global.MAX_COLUMN - 1));
 
-            Global.Invoke(EEvent.Transport, Collection.ElementAt(row).ElementAt(column));
+            INode2D node = Collection.ElementAt(row).ElementAt(column);
 
-#if DEBUG
-            Collection.ElementAt(row).ElementAt(column).GameItems.Add(new GameItem());
-#endif
+            Global.Invoke(EEvent.Transport, node);
         }
     }
 

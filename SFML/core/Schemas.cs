@@ -13,7 +13,7 @@ public sealed class NodeSchema
 {
     public byte Row { get; set; } = 0;
     public byte Column { get; set; } = 0;
-    public EOpacity Opacity { get; set; } = EOpacity.Dark;
+    public bool Discovered { get; set; } = false;
     public BodySchema? Body { get; set; } = null;
     public List<ItemSchema> Items { get; set; } = [];
 }
