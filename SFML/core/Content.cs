@@ -66,13 +66,16 @@ public static class Content
     {
         string path = $"./resources/raw/{fileName}.xml";
 
-        if (File.Exists(path) == false) return;
+        RegionSchema? schema = null;
 
-        var serializer = new XmlSerializer(typeof(RegionSchema));
+        if (File.Exists(path))
+        {
+            var serializer = new XmlSerializer(typeof(RegionSchema));
 
-        using StreamReader reader = new(path);
+            using StreamReader reader = new(path);
 
-        RegionSchema? schema = serializer.Deserialize(reader) as RegionSchema;
+            schema = serializer.Deserialize(reader) as RegionSchema;
+        }
 
         Global.Invoke(EEvent.Region, schema);
 
