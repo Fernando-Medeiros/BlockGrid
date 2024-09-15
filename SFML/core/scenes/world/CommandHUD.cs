@@ -62,7 +62,11 @@ public sealed class CommandHUD : IGameObject
                 if (mouse.X >= pos.X && mouse.X <= pos.X + Global.RECT &&
                     mouse.Y >= pos.Y && mouse.Y <= pos.Y + Global.RECT)
                 {
-                    if (icon == EIcon.Exit) Global.Invoke(EEvent.Scene, EScene.Main);
+                    if (icon == EIcon.Exit)
+                    {
+                        Global.Invoke(EEvent.SaveGame, null);
+                        Global.Invoke(EEvent.Scene, EScene.Main);
+                    };
                     if (icon == EIcon.ZoomIn) Global.Invoke(EEvent.KeyPressed, Key.Z);
                     if (icon == EIcon.ZoomOut) Global.Invoke(EEvent.KeyPressed, Key.X);
                 }

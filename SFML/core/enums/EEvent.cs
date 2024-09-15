@@ -8,7 +8,7 @@ public enum EEvent : byte
     Camera,
     Transport,
     EndGame,
-    StartGame,
+    SaveGame,
     BasicStatus,
     KeyPressed,
     KeyReleased,

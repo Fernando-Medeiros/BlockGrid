@@ -40,7 +40,7 @@ public static class Global
     private static event EventHandler<EventArgs?>? OnCamera;
     private static event EventHandler<EventArgs?>? OnTransport;
     private static event EventHandler<EventArgs?>? OnEndGame;
-    private static event EventHandler<EventArgs?>? OnStartGame;
+    private static event EventHandler<EventArgs?>? OnSaveGame;
     private static event EventHandler<EventArgs?>? OnBasicStatus;
     private static event EventHandler<EventArgs?>? OnKeyPressed;
     private static event EventHandler<EventArgs?>? OnKeyReleased;
@@ -55,7 +55,7 @@ public static class Global
         if (e is EEvent.Camera) OnCamera += (args, _) => action(args);
         if (e is EEvent.Transport) OnTransport += (args, _) => action(args);
         if (e is EEvent.EndGame) OnEndGame += (args, _) => action(args);
-        if (e is EEvent.StartGame) OnStartGame += (args, _) => action(args);
+        if (e is EEvent.SaveGame) OnSaveGame += (args, _) => action(args);
         if (e is EEvent.BasicStatus) OnBasicStatus += (args, _) => action(args);
         if (e is EEvent.KeyPressed) OnKeyPressed += (args, _) => action(args);
         if (e is EEvent.KeyReleased) OnKeyReleased += (args, _) => action(args);
@@ -71,7 +71,7 @@ public static class Global
         if (e is EEvent.Camera) OnCamera -= (args, _) => action(args);
         if (e is EEvent.Transport) OnTransport -= (args, _) => action(args);
         if (e is EEvent.EndGame) OnEndGame -= (args, _) => action(args);
-        if (e is EEvent.StartGame) OnStartGame -= (args, _) => action(args);
+        if (e is EEvent.SaveGame) OnSaveGame -= (args, _) => action(args);
         if (e is EEvent.BasicStatus) OnBasicStatus -= (args, _) => action(args);
         if (e is EEvent.KeyPressed) OnKeyPressed -= (args, _) => action(args);
         if (e is EEvent.KeyReleased) OnKeyReleased -= (args, _) => action(args);
@@ -87,7 +87,7 @@ public static class Global
         if (e is EEvent.Camera) OnCamera?.Invoke(sender, EventArgs.Empty);
         if (e is EEvent.Transport) OnTransport?.Invoke(sender, EventArgs.Empty);
         if (e is EEvent.EndGame) OnEndGame?.Invoke(sender, EventArgs.Empty);
-        if (e is EEvent.StartGame) OnStartGame?.Invoke(sender, EventArgs.Empty);
+        if (e is EEvent.SaveGame) OnSaveGame?.Invoke(sender, EventArgs.Empty);
         if (e is EEvent.BasicStatus) OnBasicStatus?.Invoke(sender, EventArgs.Empty);
         if (e is EEvent.KeyPressed) OnKeyPressed?.Invoke(sender, EventArgs.Empty);
         if (e is EEvent.KeyReleased) OnKeyReleased?.Invoke(sender, EventArgs.Empty);

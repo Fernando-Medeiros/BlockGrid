@@ -1,7 +1,8 @@
 ﻿namespace SFMLGame.core.enums;
 
-public enum ESprite : byte
+public enum ESprite : int
 {
     Aracne,
     Spider,
+    Road,
 }

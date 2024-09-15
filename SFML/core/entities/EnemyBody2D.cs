@@ -5,12 +5,16 @@ public sealed class EnemyBody2D : IBody2D, IDisposable
     public EnemyBody2D(INode2D node)
     {
         Node = node;
+        Node.SetBody(this);
+
+        Type = EBody.Enemy;
         Sprite = ESprite.Spider;
         Status = new StatusComponent(this);
         Movement = new MovementComponent();
     }
 
     #region Property
+    public EBody? Type { get; private set; }
     public INode2D? Node { get; private set; }
     public ESprite? Sprite { get; private set; }
     public ILightComponent? Light { get; private set; }
@@ -32,6 +36,7 @@ public sealed class EnemyBody2D : IBody2D, IDisposable
 
     public void Dispose()
     {
+        Type = null;
         Light = null;
         Action = null;
         Status = null;

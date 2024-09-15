@@ -6,5 +6,7 @@ global using SFMLGame.core;
 global using SFMLGame.core.components;
 global using SFMLGame.core.entities;
 global using SFMLGame.core.enums;
+global using SFMLGame.core.factories;
 global using SFMLGame.core.interfaces;
+global using SFMLGame.core.items;
 global using SFMLGame.core.nodes;

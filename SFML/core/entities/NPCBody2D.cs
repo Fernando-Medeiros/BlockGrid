@@ -1,21 +1,16 @@
 ﻿namespace SFMLGame.core.entities;
 
-public sealed class PlayerBody2D : IBody2D, IDisposable
+public sealed class NPCBody2D : IBody2D, IDisposable
 {
-    public PlayerBody2D(INode2D node)
+    public NPCBody2D(INode2D node)
     {
         Node = node;
         Node.SetBody(this);
 
-        Type = EBody.Player;
-        Sprite = ESprite.Aracne;
-        Light = new LightComponent();
-        Action = new ActionComponent();
+        Type = EBody.Npc;
+        Sprite = ESprite.Spider;
         Status = new StatusComponent(this);
-        Metadata = new MetadataComponent();
         Movement = new MovementComponent();
-
-        Global.Subscribe(EEvent.KeyPressed, Execute);
     }
 
     #region Property
@@ -32,32 +27,15 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
     #region Action
     public void Execute(object? keyCode)
     {
-        if (App.CurrentScene != EScene.World) return;
-
-        Light?.VisibilityTo(this, EOpacity.Regular);
-
-        Metadata?.DirectionTo(keyCode);
-
-        Movement?.MoveTo(this, keyCode);
-
-        Light?.VisibilityTo(this, EOpacity.Light);
-
-        Action?.DamageTo(this, keyCode);
     }
 
-    public void SetNode(INode2D? node)
-    {
-        Node = node;
-        Global.Invoke(EEvent.Camera, Node?.Position2D);
-    }
+    public void SetNode(INode2D? node) => Node = node;
     public void SetSprite(ESprite? sprite) => Sprite = sprite;
     public void SetBody(IBody2D? body) => Node?.SetBody(body);
     #endregion
 
     public void Dispose()
     {
-        Light?.VisibilityTo(this, EOpacity.Regular);
-
         Type = null;
         Light = null;
         Action = null;
@@ -67,7 +45,5 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
         SetSprite(null);
         SetBody(null);
         SetNode(null);
-
-        Global.UnSubscribe(EEvent.KeyPressed, Execute);
     }
 }

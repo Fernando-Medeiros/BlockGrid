@@ -6,7 +6,7 @@ public sealed class MovementComponent : IMovementComponent
     {
         var node = body.Metadata?.ResolveDirection(body, keyCode);
 
-        if (Is.Null(node) || Is.Type<IBody2D>(node?.Body) || Is.Blocked(node?.Surface)) return;
+        if (Is.Null(node) || Is.Type<IBody2D>(node?.Body)) return;
 
         body.SetBody(null);
         body.SetNode(node);

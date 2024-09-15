@@ -2,6 +2,7 @@
 
 public interface IBody2D
 {
+    EBody? Type { get; }
     INode2D? Node { get; }
     ESprite? Sprite { get; }
     ILightComponent? Light { get; }

@@ -14,14 +14,12 @@ public sealed class Node2D : INode2D
     public Position2D Position2D { get; }
     public EOpacity Opacity { get; private set; }
     public IBody2D? Body { get; private set; }
-    public ESurface Surface { get; private set; }
+    public IList<IGameItem> GameItems { get; } = [];
     public Dictionary<EDirection, INode2D?> Navigation { get; } = [];
     #endregion
 
     #region Action
     public void SetBody(IBody2D? body) => Body = body;
-
-    public void SetSurface(ESurface? surface) => Surface = surface ?? default;
 
     public void SetOpacity(EOpacity opacity) => Opacity = opacity;
 
@@ -37,28 +35,22 @@ public sealed class Node2D : INode2D
 
     public void Draw(RenderWindow window)
     {
-        DrawSurface(window);
+        DrawItems(window);
         DrawSprite(window);
+        DrawSelected(window);
     }
     #endregion
 
     #region Canva Layers
-    private void DrawSurface(RenderWindow window)
+    private void DrawItems(RenderWindow window)
     {
-        var sprite = Content.GetResource(Surface);
-        sprite.Color = new(255, 255, 255, Convert.ToByte(Opacity));
-        sprite.Position = Position;
-        window.Draw(sprite);
-
-        if (App.SelectedNode == this)
-            window.Draw(new RectangleShape()
-            {
-                Position = Position,
-                Size = new(31, 31),
-                FillColor = Color.Transparent,
-                OutlineColor = Colors.GoldRod,
-                OutlineThickness = 1f
-            });
+        foreach (var gameItem in GameItems)
+        {
+            var sprite = Content.GetResource(gameItem.Sprite);
+            sprite.Color = new(255, 255, 255, Convert.ToByte(Opacity));
+            sprite.Position = Position;
+            window.Draw(sprite);
+        }
     }
 
     private void DrawSprite(RenderWindow window)
@@ -70,6 +62,19 @@ public sealed class Node2D : INode2D
         sprite.Color = new(255, 255, 255, Convert.ToByte(Opacity));
         sprite.Position = Position;
         window.Draw(sprite);
+    }
+
+    private void DrawSelected(RenderWindow window)
+    {
+        if (App.SelectedNode == this)
+            window.Draw(new RectangleShape()
+            {
+                Position = Position,
+                Size = new(31, 31),
+                FillColor = Colors.Transparent,
+                OutlineColor = Colors.GoldRod,
+                OutlineThickness = 1f
+            });
     }
     #endregion
 }

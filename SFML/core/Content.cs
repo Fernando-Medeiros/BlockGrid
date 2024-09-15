@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using System.Xml.Serialization;
 
 namespace SFMLGame.core;
 
@@ -9,14 +9,12 @@ public static class Content
     private static readonly Dictionary<EIcon, Sprite> IconResources = [];
     private static readonly Dictionary<ESprite, Sprite> SpriteResources = [];
     private static readonly Dictionary<EPicture, Sprite> PictureResources = [];
-    private static readonly Dictionary<ESurface, Sprite> SurfaceResources = [];
 
     #region Action
     public static Font GetResource(EFont font) => FontResources[font];
     public static Sprite GetResource(EIcon icon) => IconResources[icon];
     public static Sprite GetResource(ESprite sprite) => SpriteResources[sprite];
     public static Sprite GetResource(EPicture picture) => PictureResources[picture];
-    public static Sprite GetResource(ESurface surface) => SurfaceResources[surface];
 
     public static void LoadResources()
     {
@@ -25,7 +23,6 @@ public static class Content
         Load(IconResources);
         Load(SpriteResources);
         Load(PictureResources);
-        Load(SurfaceResources);
         _started = true;
     }
     #endregion
@@ -52,21 +49,34 @@ public static class Content
         }
     }
 
-    // TODO :: Trabalhar no Mapa
-    static string map = "TierE";
-    public static async void LoadScene()
+    public static void SerializeToXml(RegionSchema schema, string fileName)
     {
-        string filePath = $"./resources/raw/{map}.json";
+        string path = $"./resources/raw/{fileName}.xml";
 
-        map = map == "TierE" ? "TierF" : "TierE";
+        var serializer = new XmlSerializer(typeof(RegionSchema));
 
-        if (File.Exists(filePath))
-        {
-            var jsonString = await File.ReadAllTextAsync(filePath);
-            var scenePackage = JsonSerializer.Deserialize<RegionDTO>(jsonString);
+        using StreamWriter writer = new(path);
 
-            Global.Invoke(EEvent.Region, scenePackage);
-        }
+        serializer.Serialize(writer, schema);
+
+        Global.Invoke(EEvent.Logger, new LoggerDTO(ELogger.General, $"Region {schema.Name} Saved"));
+    }
+
+    public static void DeserializeFromXml(string fileName)
+    {
+        string path = $"./resources/raw/{fileName}.xml";
+
+        if (File.Exists(path) == false) return;
+
+        var serializer = new XmlSerializer(typeof(RegionSchema));
+
+        using StreamReader reader = new(path);
+
+        RegionSchema? schema = serializer.Deserialize(reader) as RegionSchema;
+
+        Global.Invoke(EEvent.Region, schema);
+
+        Global.Invoke(EEvent.Logger, new LoggerDTO(ELogger.General, $"Region {schema?.Name} Loaded"));
     }
     #endregion
 }

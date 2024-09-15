@@ -15,7 +15,7 @@ public sealed class ActionComponent : IActionComponent
             if (Is.Type<IBody2D>(node?.Body)) break;
         }
 
-        if (Is.Null(node) || Is.Null(node?.Body) || Is.Blocked(node?.Surface)) return;
+        if (Is.Null(node) || Is.Null(node?.Body)) return;
 
         node?.Body?.Status?.ReceiveDamage(1);
     }

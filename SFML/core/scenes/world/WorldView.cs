@@ -44,6 +44,7 @@ public class WorldView(FloatRect viewRect)
     {
         Global.Subscribe(EEvent.Scene, OnSceneChanged);
         Global.Subscribe(EEvent.Region, OnRegionChanged);
+        Global.Subscribe(EEvent.SaveGame, OnRegionSaved);
         Global.Subscribe(EEvent.Camera, OnCameraChanged);
         Global.Subscribe(EEvent.KeyPressed, OnZoomChanged);
         Global.Subscribe(EEvent.MouseButtonPressed, OnNodeSelected);
@@ -76,28 +77,92 @@ public class WorldView(FloatRect viewRect)
     {
         if (App.CurrentScene != EScene.World) return;
 
-        // TODO :: Remover após implementar a distribuição do pacote de região.
-        // A cena deve ser salva em um enum no App e os pacotes distribuidos ao iniciar o jogo.
-        Content.LoadScene();
-
-        // O Player pode ser lançado para o node a partir do evento de envio dos dados da região.
-        // O pacote será distribuido entre os nodes com Surface, Body2D.
-        if (App.CurrentPlayer == null)
-        {
-            var node = Collection.ElementAt(21).ElementAt(21);
-            Global.Invoke(EEvent.Transport, new PlayerBody2D(node));
-        }
+        Content.DeserializeFromXml("0");
     }
 
+    // TODO :: Refinar
+    private void OnRegionSaved(object? sender)
+    {
+        if (App.CurrentScene != EScene.World) return;
+
+        var schema = new RegionSchema
+        {
+            Name = "0",
+            ESurface = App.RegionSurface
+        };
+
+        foreach (var nodeList in Collection)
+        {
+            schema.Nodes.Add([]);
+
+            foreach (var node in nodeList)
+            {
+                node.Position2D.Deconstruct(out var row, out var column, out _, out _);
+
+                var nodeSchema = new NodeSchema()
+                {
+                    Row = row,
+                    Column = column,
+                    Opacity = node.Opacity,
+                };
+
+                if (node.Body != null)
+                    nodeSchema.Body = new()
+                    {
+                        Type = node.Body.Type ?? default,
+                        Sprite = node.Body.Sprite ?? default
+                    };
+
+                foreach (var item in node.GameItems)
+                    nodeSchema.Items.Add(new() { Sprite = item.Sprite });
+
+                schema.Nodes.ElementAt(row).Add(nodeSchema);
+
+                node.SetBody(null);
+                node.GameItems.Clear();
+                node.SetOpacity(EOpacity.Dark);
+            }
+        }
+
+        Content.SerializeToXml(schema, "0");
+    }
+
+    // TODO :: Refinar
     private void OnRegionChanged(object? sender)
     {
         if (App.CurrentScene != EScene.World) return;
 
-        if (sender is RegionDTO package)
+        if (sender is RegionSchema regionSchema)
         {
-            foreach (var nodeList in Collection)
-                foreach (var node in nodeList)
-                    node.SetSurface(package.Surface[node.Position2D.Row][node.Position2D.Column]);
+            Global.Invoke(EEvent.Transport, regionSchema.ESurface);
+
+            foreach (var nodeSchemas in regionSchema.Nodes)
+                foreach (var schema in nodeSchemas)
+                {
+                    var node = Collection.ElementAt(schema.Row).ElementAt(schema.Column);
+
+                    node.SetBody(null);
+                    node.GameItems.Clear();
+                    node.SetOpacity(schema.Opacity);
+
+                    foreach (var itemSchema in schema.Items)
+                        node.GameItems.Add(new GameItem() { Sprite = itemSchema.Sprite });
+
+                    if (schema.Body is null) continue;
+
+                    if (schema.Body.Type is EBody.Player)
+                        App.CurrentPlayer?.Dispose();
+
+                    Global.Invoke(EEvent.Transport, Factory.Get(schema.Body.Type, node));
+                    Global.Invoke(EEvent.Camera, node.Position2D);
+                }
+        }
+
+        if (App.CurrentPlayer == null)
+        {
+            var node = Collection.ElementAt(Global.MAX_ROW / 2).ElementAt(Global.MAX_COLUMN / 2);
+            Global.Invoke(EEvent.Transport, Factory.Get(EBody.Player, node));
+            Global.Invoke(EEvent.Camera, node.Position2D);
         }
     }
 
@@ -116,6 +181,10 @@ public class WorldView(FloatRect viewRect)
             int column = Math.Max(0, Math.Min(Convert.ToInt32(posX / Global.RECT), Global.MAX_COLUMN - 1));
 
             Global.Invoke(EEvent.Transport, Collection.ElementAt(row).ElementAt(column));
+
+#if DEBUG
+            Collection.ElementAt(row).ElementAt(column).GameItems.Add(new GameItem());
+#endif
         }
     }
 
