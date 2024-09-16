@@ -49,7 +49,7 @@ public static class Content
         }
     }
 
-    public static void SerializeToXml(RegionSchema schema, string fileName)
+    public static void SerializeSchema(RegionSchema schema, string fileName)
     {
         string path = $"./resources/raw/{fileName}.xml";
 
@@ -62,7 +62,7 @@ public static class Content
         Global.Invoke(EEvent.Logger, new LoggerDTO(ELogger.General, $"Region {schema.Name} Saved"));
     }
 
-    public static void DeserializeFromXml(string fileName)
+    public static void DeserializeSchema(string fileName)
     {
         string path = $"./resources/raw/{fileName}.xml";
 

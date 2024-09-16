@@ -55,17 +55,23 @@ public class WorldView(FloatRect viewRect)
     {
         window.SetView(this);
 
+        float width = Size.X / 2 + Global.RECT;
+        float height = Size.Y / 2 + Global.RECT;
+        float minX = Center.X - width;
+        float maxX = Center.X + width;
+        float minY = Center.Y - height;
+        float maxY = Center.Y + height;
+
         foreach (var nodeList in Collection)
             foreach (var node in nodeList)
             {
-                if (node.Opacity is EOpacity.Dark)
+                if (node.Opacity == EOpacity.Dark)
                     continue;
 
-                var (posX, posY, width, height) = (node.Position2D.X, node.Position2D.Y, Size.X / 2, Size.Y / 2);
+                var posX = node.Position2D.X;
+                var posY = node.Position2D.Y;
 
-                if (posX < Center.X - width || posX > Center.X + width)
-                    continue;
-                if (posY < Center.Y - height || posY > Center.Y + height)
+                if (posX < minX || posX > maxX || posY < minY || posY > maxY)
                     continue;
 
                 node.Draw(window);
@@ -78,10 +84,10 @@ public class WorldView(FloatRect viewRect)
     {
         if (App.CurrentScene != EScene.World) return;
 
-        Content.DeserializeFromXml("0");
+        Content.DeserializeSchema("0");
     }
 
-    // TODO :: Refinar
+    // TODO :: Refatorar
     private void OnRegionSaved(object? sender)
     {
         if (App.CurrentScene != EScene.World) return;
@@ -125,10 +131,10 @@ public class WorldView(FloatRect viewRect)
             }
         }
 
-        Content.SerializeToXml(schema, "0");
+        Content.SerializeSchema(schema, "0");
     }
 
-    // TODO :: Refinar
+    // TODO :: Refatorar
     private void OnRegionChanged(object? sender)
     {
         if (App.CurrentScene != EScene.World) return;
@@ -154,19 +160,19 @@ public class WorldView(FloatRect viewRect)
                     if (schema.Body.Type is EBody.Player)
                     {
                         App.CurrentPlayer?.Dispose();
-                        Global.Invoke(EEvent.Transport, Factory.Get(schema.Body.Type, node));
+                        Global.Invoke(EEvent.Transport, Factory.Build(schema.Body.Type, node));
                         Global.Invoke(EEvent.Camera, node.Position2D);
                         continue;
                     }
 
-                    Factory.Get(schema.Body.Type, node);
+                    Factory.Build(schema.Body.Type, node);
                 }
         }
 
         if (App.CurrentPlayer == null)
         {
             var node = Collection.ElementAt(Global.MAX_ROW / 2).ElementAt(Global.MAX_COLUMN / 2);
-            Global.Invoke(EEvent.Transport, Factory.Get(EBody.Player, node));
+            Global.Invoke(EEvent.Transport, Factory.Build(EBody.Player, node));
             Global.Invoke(EEvent.Camera, node.Position2D);
         }
     }
@@ -198,14 +204,14 @@ public class WorldView(FloatRect viewRect)
         if (sender is Key.Z)
         {
             if (Size.X <= ViewRect.Width / 2) return;
-            Zoom(0.9f);
+            Zoom(0.95f);
             OnCameraChanged(null);
         }
 
         if (sender is Key.X)
         {
             if (Size.Y >= ViewRect.Height) return;
-            Zoom(1.1f);
+            Zoom(1.05f);
             OnCameraChanged(null);
         }
     }
@@ -225,10 +231,6 @@ public class WorldView(FloatRect viewRect)
         scrollY = Math.Max(0, Math.Min(scrollY, Global.WORLD_HEIGHT - height));
 
         Center = new Vector2f(scrollX + (width / 2), scrollY + (height / 2));
-
-#if DEBUG
-        Global.Invoke(EEvent.Logger, new LoggerDTO(ELogger.Debug, $"R:{row} C:{column} X:{Center.X} Y:{Center.Y}"));
-#endif
     }
     #endregion
 }

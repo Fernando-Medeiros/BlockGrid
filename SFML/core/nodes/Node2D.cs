@@ -3,23 +3,17 @@
 public sealed class Node2D(Position2D position2D) : INode2D
 {
     #region Property
+    private ESprite? Terrain { get; set; }
     public IBody2D? Body { get; private set; }
     public EOpacity Opacity { get; private set; }
     public Position2D Position2D { get; init; } = position2D;
 
     // TODO :: Refatorar
-    private ESprite? Sprite { get; set; }
     public IList<IGameItem> GameItems { get; init; } = [];
     #endregion
 
     #region Static Common
     public static Func<EDirection, Position2D, INode2D?> NavigationHandler = (_, _) => null;
-
-    private static readonly RectangleShape Terrain = new()
-    {
-        Size = new(Global.RECT, Global.RECT),
-        FillColor = Factory.Get(App.RegionSurface),
-    };
     #endregion
 
     #region Action
@@ -37,7 +31,7 @@ public sealed class Node2D(Position2D position2D) : INode2D
 
     public void Draw(RenderWindow window)
     {
-        DrawTerrain(window);
+        DrawDynamicTerrain(window);
         DrawItems(window);
         DrawBody2D(window);
         DrawSelected(window);
@@ -45,18 +39,12 @@ public sealed class Node2D(Position2D position2D) : INode2D
     #endregion
 
     #region Canva Layers
-    // TODO :: Salvar a configuração do terreno
-    private void DrawTerrain(RenderWindow window)
+    private void DrawDynamicTerrain(RenderWindow window)
     {
-        Terrain.Position = Position2D;
-        window.Draw(Terrain);
+        if (Terrain is null) Terrain ??= Factory.Shuffle(App.RegionSurface);
 
-        if (GameItems.Count > 0) return;
-
-        Sprite ??= App.Shuffle([ESprite.GrassA, ESprite.GrassB, ESprite.GrassC, ESprite.GrassD]);
-
-        var sprite = Content.GetResource((ESprite)Sprite);
-        sprite.Color = new(255, 255, 255, Convert.ToByte(Opacity));
+        var sprite = Content.GetResource((ESprite)Terrain);
+        sprite.Color = Factory.Color(Opacity);
         sprite.Position = Position2D;
         window.Draw(sprite);
     }
@@ -66,7 +54,7 @@ public sealed class Node2D(Position2D position2D) : INode2D
         foreach (var gameItem in GameItems)
         {
             var sprite = Content.GetResource(gameItem.Sprite);
-            sprite.Color = new(255, 255, 255, Convert.ToByte(Opacity));
+            sprite.Color = Factory.Color(Opacity);
             sprite.Position = Position2D;
             window.Draw(sprite);
         }

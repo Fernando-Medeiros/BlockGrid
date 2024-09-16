@@ -2,11 +2,6 @@
 
 public static class Colors
 {
-    #region Region Surface
-    public static Color Soil => new(44, 45, 40);
-    public static Color Desert => new(203, 163, 65);
-    #endregion
-
     #region Basic
     public static Color Black => new(0, 0, 0);
     public static Color CornFlowerBlue => new(100, 149, 237);

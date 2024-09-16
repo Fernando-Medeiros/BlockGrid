@@ -2,14 +2,26 @@
 
 public static class Factory
 {
-    public static Color Get(ESurface? surface) => surface switch
+    #region Color
+    public static Color Color(EOpacity opacity) => opacity switch
     {
-        ESurface.Soil => Colors.Soil,
-        ESurface.Desert => Colors.Desert,
+        EOpacity.Light => new(255, 255, 255, Convert.ToByte(opacity)),
+        EOpacity.Regular => new(255, 255, 255, Convert.ToByte(opacity)),
         _ => throw new Exception()
     };
+    #endregion
 
-    public static IBody2D Get(EBody? body, INode2D node) => body switch
+    #region Shuffle
+    public static ESprite Shuffle(ESurface surface) => surface switch
+    {
+        ESurface.Desert => App.Shuffle([ESprite.SandA, ESprite.SandB]),
+        ESurface.Soil => App.Shuffle([ESprite.GrassA, ESprite.GrassB, ESprite.GrassC, ESprite.GrassD]),
+        _ => throw new Exception()
+    };
+    #endregion
+
+    #region Build
+    public static IBody2D Build(EBody body, INode2D node) => body switch
     {
         EBody.Npc => new NPCBody2D(node),
         EBody.Static => new StaticBody2D(node),
@@ -17,4 +29,5 @@ public static class Factory
         EBody.Enemy => new EnemyBody2D(node),
         _ => throw new Exception()
     };
+    #endregion
 }
