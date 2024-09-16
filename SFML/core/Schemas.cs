@@ -3,7 +3,7 @@
 public sealed class RegionSchema
 {
     public string Name { get; set; } = string.Empty;
-    public ESurface ESurface { get; set; } = ESurface.Soil;
+    public EBiome Biome { get; set; } = EBiome.Forest;
     public List<List<NodeSchema>> Nodes { get; set; } = [];
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

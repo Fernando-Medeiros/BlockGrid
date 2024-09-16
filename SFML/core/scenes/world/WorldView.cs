@@ -95,7 +95,7 @@ public class WorldView(FloatRect viewRect)
         var schema = new RegionSchema
         {
             Name = "0",
-            ESurface = App.RegionSurface
+            Biome = App.CurrentBiome
         };
 
         foreach (var nodeList in Collection)
@@ -141,7 +141,7 @@ public class WorldView(FloatRect viewRect)
 
         if (sender is RegionSchema regionSchema)
         {
-            Global.Invoke(EEvent.Transport, regionSchema.ESurface);
+            Global.Invoke(EEvent.Transport, regionSchema.Biome);
 
             foreach (var nodeSchemas in regionSchema.Nodes)
                 foreach (var schema in nodeSchemas)

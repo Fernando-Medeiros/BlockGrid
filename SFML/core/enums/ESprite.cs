@@ -12,12 +12,30 @@ public enum ESprite : int
     Road,
     #endregion
 
-    #region Ambient / Region
-    GrassA,
-    GrassB,
-    GrassC,
-    GrassD,
-    SandA,
-    SandB,
+    #region Biome
+    BorealForestA,
+    BorealForestB,
+    BorealForestC,
+    BorealForestD,
+    DesertA,
+    DesertB,
+    DesertC,
+    DesertD,
+    ForestA,
+    ForestB,
+    ForestC,
+    ForestD,
+    SavannaA,
+    SavannaB,
+    SavannaC,
+    SavannaD,
+    SwampA,
+    SwampB,
+    SwampC,
+    SwampD,
+    TundraA,
+    TundraB,
+    TundraC,
+    TundraD,
     #endregion
 }

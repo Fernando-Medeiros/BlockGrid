@@ -15,7 +15,17 @@ public sealed class BackgroundView : IGameObject
             Collection.Add([]);
             for (byte column = 0; column < maxColumn; column++)
             {
-                var sprite = Factory.Shuffle(ESurface.Soil);
+                var sprite = column switch
+                {
+                    < 6 => Factory.Shuffle(EBiome.BorealForest),
+                    < 12 => Factory.Shuffle(EBiome.Desert),
+                    < 18 => Factory.Shuffle(EBiome.Savanna),
+                    < 24 => Factory.Shuffle(EBiome.Tundra),
+                    < 30 => Factory.Shuffle(EBiome.Forest),
+                    < 36 => Factory.Shuffle(EBiome.Swamp),
+                    _ => Factory.Shuffle(EBiome.Forest),
+                };
+
                 var position2D = new Position2D(row, column, column * Global.RECT, row * Global.RECT);
 
                 Collection.ElementAt(row).Add((sprite, position2D));
@@ -33,6 +43,7 @@ public sealed class BackgroundView : IGameObject
             foreach (var (resource, position) in nodeList)
             {
                 var sprite = Content.GetResource(resource);
+                sprite.Color = Factory.Color(EOpacity.Light);
                 sprite.Position = position;
                 window.Draw(sprite);
             }

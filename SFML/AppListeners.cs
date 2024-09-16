@@ -4,7 +4,7 @@ internal sealed partial class App
 {
     public static IBody2D? CurrentPlayer { get; private set; }
     public static INode2D? SelectedNode { get; private set; }
-    public static ESurface RegionSurface { get; private set; }
+    public static EBiome CurrentBiome { get; private set; } = EBiome.Forest;
     public static EScene CurrentScene { get; private set; } = EScene.Main;
     public static Position2D CurrentPosition { get; private set; } = Position2D.Empty;
 
@@ -38,7 +38,7 @@ internal sealed partial class App
             {
                 if (x is IBody2D body) CurrentPlayer = body;
                 if (x is INode2D node) SelectedNode = node;
-                if (x is ESurface surface) RegionSurface = surface;
+                if (x is EBiome biome) CurrentBiome = biome;
                 if (x is Position2D position) CurrentPosition = position;
             });
     }

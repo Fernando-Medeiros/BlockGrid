@@ -31,7 +31,7 @@ public sealed class Node2D(Position2D position2D) : INode2D
 
     public void Draw(RenderWindow window)
     {
-        DrawDynamicTerrain(window);
+        DrawDynamicBiome(window);
         DrawItems(window);
         DrawBody2D(window);
         DrawSelected(window);
@@ -39,9 +39,9 @@ public sealed class Node2D(Position2D position2D) : INode2D
     #endregion
 
     #region Canva Layers
-    private void DrawDynamicTerrain(RenderWindow window)
+    private void DrawDynamicBiome(RenderWindow window)
     {
-        if (Terrain is null) Terrain ??= Factory.Shuffle(App.RegionSurface);
+        if (Terrain is null) Terrain ??= Factory.Shuffle(App.CurrentBiome);
 
         var sprite = Content.GetResource((ESprite)Terrain);
         sprite.Color = Factory.Color(Opacity);

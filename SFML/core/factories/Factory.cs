@@ -12,10 +12,14 @@ public static class Factory
     #endregion
 
     #region Shuffle
-    public static ESprite Shuffle(ESurface surface) => surface switch
+    public static ESprite Shuffle(EBiome biome) => biome switch
     {
-        ESurface.Desert => App.Shuffle([ESprite.SandA, ESprite.SandB]),
-        ESurface.Soil => App.Shuffle([ESprite.GrassA, ESprite.GrassB, ESprite.GrassC, ESprite.GrassD]),
+        EBiome.BorealForest => App.Shuffle([ESprite.BorealForestA, ESprite.BorealForestB, ESprite.BorealForestC, ESprite.BorealForestD]),
+        EBiome.Desert => App.Shuffle([ESprite.DesertA, ESprite.DesertB, ESprite.DesertC, ESprite.DesertD]),
+        EBiome.Forest => App.Shuffle([ESprite.ForestA, ESprite.ForestB, ESprite.ForestC, ESprite.ForestD]),
+        EBiome.Savanna => App.Shuffle([ESprite.SavannaA, ESprite.SavannaB, ESprite.SavannaC, ESprite.SavannaD,]),
+        EBiome.Swamp => App.Shuffle([ESprite.SwampA, ESprite.SwampB, ESprite.SwampC, ESprite.SwampD]),
+        EBiome.Tundra => App.Shuffle([ESprite.TundraA, ESprite.TundraB, ESprite.TundraC, ESprite.TundraD]),
         _ => throw new Exception()
     };
     #endregion
