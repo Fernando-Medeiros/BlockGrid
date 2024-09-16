@@ -8,7 +8,7 @@ public sealed class ActionComponent : IActionComponent
 
         INode2D? node = default;
 
-        foreach (var position in Key.Positions)
+        foreach (var position in Key.Movement)
         {
             node = body.Metadata?.ResolveDirection(body, position);
 

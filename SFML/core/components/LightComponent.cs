@@ -4,18 +4,7 @@ public sealed class LightComponent : ILightComponent
 {
     public void VisibilityTo(IBody2D body, EOpacity opacity)
     {
-        EDirection[] directions = body.Metadata?.GetDirection() switch
-        {
-            EDirection.Top => [EDirection.Top, EDirection.Left, EDirection.Right],
-            EDirection.Left => [EDirection.Left, EDirection.Bottom, EDirection.Top],
-            EDirection.Right => [EDirection.Right, EDirection.Top, EDirection.Bottom],
-            EDirection.Bottom => [EDirection.Bottom, EDirection.Left, EDirection.Right],
-            EDirection.TopLeft => [EDirection.BottomLeft, EDirection.TopRight, EDirection.Left],
-            EDirection.TopRight => [EDirection.BottomRight, EDirection.TopLeft, EDirection.Right],
-            EDirection.BottomLeft => [EDirection.TopLeft, EDirection.BottomRight, EDirection.Left],
-            EDirection.BottomRight => [EDirection.TopRight, EDirection.BottomLeft, EDirection.Right],
-            _ => []
-        };
+        EDirection[] directions = Factory.Resolve(body.Metadata?.GetDirection() ?? default);
 
         body.Node?.SetOpacity(opacity);
 
