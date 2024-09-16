@@ -28,56 +28,51 @@ public sealed class LightComponent : ILightComponent
         if (mainDirection is EDirection.Top or EDirection.Bottom or EDirection.Left or EDirection.Right)
         {
             foreach (var direction in directions)
-                for (int level = 1; level <= 4; level++)
+                for (int row = 1; row <= 6; row++)
                 {
-                    collection = Repeat(direction, level);
+                    collection = Repeat(direction, row);
                     body.Node?.Get(collection)?.SetOpacity(opacity);
                 }
 
             foreach (var direction in directions.Skip(1).ToArray())
-                for (int level = 1; level <= 3; level++)
+                for (int row = 1; row <= 6; row++)
                 {
-                    collection = [mainDirection, .. Repeat(direction, level)];
-                    body.Node?.Get(collection)?.SetOpacity(opacity);
-
-                    collection = [.. Repeat(mainDirection, level), direction];
-                    body.Node?.Get(collection)?.SetOpacity(opacity);
-
-                    if (level > 2) continue;
-
-                    collection = [.. collection, direction];
-                    body.Node?.Get(collection)?.SetOpacity(opacity);
+                    for (int column = 7; column >= Math.Max(1, row - 2); column--)
+                    {
+                        collection = [.. Repeat(direction, row), .. Repeat(mainDirection, Math.Max(1, column - row))];
+                        body.Node?.Get(collection)?.SetOpacity(opacity);
+                    }
                 }
             return;
         }
 
 
         foreach (var direction in directions)
-            for (int level = 1; level <= 3; level++)
+            for (int row = 1; row <= 5; row++)
             {
-                collection = Repeat(direction, level);
+                collection = Repeat(direction, row);
                 body.Node?.Get(collection)?.SetOpacity(opacity);
 
                 if (direction == directions.Last()) continue;
 
-                if (direction == directions[0] && level <= 2)
-                    for (int repeat = 3; repeat > 1; repeat--)
+                if (direction == directions[0] && row <= 4)
+                    for (int repeat = 5; repeat >= 1; repeat--)
                     {
-                        collection = [.. Repeat(direction, level), .. Repeat(directions.Last(), repeat - level)];
+                        collection = [.. Repeat(direction, row), .. Repeat(directions.Last(), Math.Max(1, repeat - row))];
                         body.Node?.Get(collection)?.SetOpacity(opacity);
                     }
 
                 if (direction == directions[1])
-                    for (int repeat = 4; repeat >= -1; repeat--)
+                    for (int repeat = 6; repeat >= -1; repeat--)
                     {
-                        int _repeat = (repeat, level) switch
+                        int _repeat = (repeat, row) switch
                         {
                             ( > 0, 1) => repeat,
                             ( > -1, 2) => repeat + 1,
                             ( > -1, 3) => repeat + 2,
                             _ => repeat + 2
                         };
-                        collection = [.. Repeat(direction, level), .. Repeat(directions.Last(), _repeat)];
+                        collection = [.. Repeat(direction, row), .. Repeat(directions.Last(), _repeat)];
                         body.Node?.Get(collection)?.SetOpacity(opacity);
                     }
             }
