@@ -8,6 +8,7 @@ public sealed class MainScene(FloatRect viewRect)
     #region Build
     public void LoadContent()
     {
+        Collection.Add(new BackgroundView());
         Collection.Add(new CommandHUD());
 
         foreach (var gameObject in Collection) gameObject.LoadContent();

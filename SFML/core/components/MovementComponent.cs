@@ -11,5 +11,9 @@ public sealed class MovementComponent : IMovementComponent
         body.SetBody(null);
         body.SetNode(node);
         body.SetBody(body);
+
+        var sound = Content.GetResource(ESound.StepLeaves0);
+        sound.Volume = 10;
+        sound.Play();
     }
 }

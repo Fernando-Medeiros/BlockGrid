@@ -28,8 +28,6 @@ public sealed class CommandHUD : IGameObject
 
     public void Draw(RenderWindow window)
     {
-        window.Draw(Content.GetResource(EPicture.MainBackground));
-
         foreach (var (_, placeholder, position) in Collection)
         {
             window.Draw(new Text()
