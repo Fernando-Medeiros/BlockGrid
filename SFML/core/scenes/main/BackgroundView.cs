@@ -17,15 +17,18 @@ public sealed class BackgroundView : IGameObject
             {
                 var sprite = column switch
                 {
-                    < 6 => Factory.Shuffle(EBiome.BorealForest),
-                    < 12 => Factory.Shuffle(EBiome.Desert),
-                    < 18 => Factory.Shuffle(EBiome.Savanna),
-                    < 24 => Factory.Shuffle(EBiome.Tundra),
-                    < 30 => Factory.Shuffle(EBiome.Forest),
-                    < 36 => Factory.Shuffle(EBiome.Swamp),
-                    < 42 => Factory.Shuffle(EBiome.GrassLand),
-                    < 48 => Factory.Shuffle(EBiome.Snow),
-                    < 54 => Factory.Shuffle(EBiome.TropicalForest),
+                    < 5 => Factory.Shuffle(EBiome.BorealForest),
+                    < 10 => Factory.Shuffle(EBiome.Desert),
+                    < 15 => Factory.Shuffle(EBiome.Savanna),
+                    < 20 => Factory.Shuffle(EBiome.Tundra),
+                    < 25 => Factory.Shuffle(EBiome.Forest),
+                    < 30 => Factory.Shuffle(EBiome.Swamp),
+                    < 35 => Factory.Shuffle(EBiome.GrassLand),
+                    < 40 => Factory.Shuffle(EBiome.Snow),
+                    < 45 => Factory.Shuffle(EBiome.TropicalForest),
+                    < 50 => Factory.Shuffle(EBiome.Mountain),
+                    < 55 => Factory.Shuffle(EBiome.Highland),
+                    < 60 => Factory.Shuffle(EBiome.DarkForest),
                     _ => Factory.Shuffle(EBiome.Forest),
                 };
 

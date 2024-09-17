@@ -3,6 +3,7 @@
 public enum EBiome : byte
 {
     BorealForest,
+    DarkForest,
     Desert,
     Forest,
     GrassLand,

@@ -15,9 +15,12 @@ public static class Factory
     public static ESprite Shuffle(EBiome biome) => biome switch
     {
         EBiome.BorealForest => App.Shuffle([ESprite.BorealForestA, ESprite.BorealForestB, ESprite.BorealForestC, ESprite.BorealForestD]),
+        EBiome.DarkForest => App.Shuffle([ESprite.DarkForestA, ESprite.DarkForestB, ESprite.DarkForestC, ESprite.DarkForestD]),
         EBiome.Desert => App.Shuffle([ESprite.DesertA, ESprite.DesertB, ESprite.DesertC, ESprite.DesertD]),
         EBiome.Forest => App.Shuffle([ESprite.ForestA, ESprite.ForestB, ESprite.ForestC, ESprite.ForestD]),
         EBiome.GrassLand => App.Shuffle([ESprite.GrassLandA, ESprite.GrassLandB, ESprite.GrassLandC, ESprite.GrassLandD]),
+        EBiome.Highland => App.Shuffle([ESprite.HighlandA, ESprite.HighlandB, ESprite.HighlandC, ESprite.HighlandD]),
+        EBiome.Mountain => App.Shuffle([ESprite.MountainA, ESprite.MountainB, ESprite.MountainC, ESprite.MountainD]),
         EBiome.Savanna => App.Shuffle([ESprite.SavannaA, ESprite.SavannaB, ESprite.SavannaC, ESprite.SavannaD,]),
         EBiome.Snow => App.Shuffle([ESprite.SnowA, ESprite.SnowB, ESprite.SnowC, ESprite.SnowD]),
         EBiome.Swamp => App.Shuffle([ESprite.SwampA, ESprite.SwampB, ESprite.SwampC, ESprite.SwampD]),
