@@ -21,6 +21,7 @@ public static class Factory
         EBiome.Savanna => App.Shuffle([ESprite.SavannaA, ESprite.SavannaB, ESprite.SavannaC, ESprite.SavannaD,]),
         EBiome.Snow => App.Shuffle([ESprite.SnowA, ESprite.SnowB, ESprite.SnowC, ESprite.SnowD]),
         EBiome.Swamp => App.Shuffle([ESprite.SwampA, ESprite.SwampB, ESprite.SwampC, ESprite.SwampD]),
+        EBiome.TropicalForest => App.Shuffle([ESprite.TropicalForestA, ESprite.TropicalForestB, ESprite.TropicalForestC, ESprite.TropicalForestD]),
         EBiome.Tundra => App.Shuffle([ESprite.TundraA, ESprite.TundraB, ESprite.TundraC, ESprite.TundraD]),
         _ => throw new Exception()
     };
