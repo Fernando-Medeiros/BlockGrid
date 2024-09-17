@@ -23,6 +23,8 @@ public sealed class BackgroundView : IGameObject
                     < 24 => Factory.Shuffle(EBiome.Tundra),
                     < 30 => Factory.Shuffle(EBiome.Forest),
                     < 36 => Factory.Shuffle(EBiome.Swamp),
+                    < 42 => Factory.Shuffle(EBiome.GrassLand),
+                    < 48 => Factory.Shuffle(EBiome.Snow),
                     _ => Factory.Shuffle(EBiome.Forest),
                 };
 
