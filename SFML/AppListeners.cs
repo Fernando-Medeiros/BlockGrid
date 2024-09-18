@@ -17,6 +17,9 @@ internal sealed partial class App
         Window.KeyReleased += (_, e) =>
             Global.Invoke(EEvent.KeyReleased, Enum.GetName(e.Code));
 
+        Window.MouseMoved += (_, e) =>
+            Global.Invoke(EEvent.MouseMoved, new MouseDTO(default, e.X, e.Y));
+
         Window.MouseWheelScrolled += (_, e) =>
            Global.Invoke(EEvent.MouseWheelScrolled, new MouseDTO(Enum.Parse<EMouse>($"{e.Delta}"), e.X, e.Y));
 
