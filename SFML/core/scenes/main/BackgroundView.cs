@@ -45,10 +45,11 @@ public sealed class BackgroundView : IGameObject
         Global.Subscribe(EEvent.MouseMoved, OnMouseMoved);
     }
 
+    private float Speed { get; set; }
+    private float Radius { get; set; } = 7;
+
     public void Draw(RenderWindow window)
     {
-        int radius = 13;
-
         foreach (var nodeList in Collection)
             foreach (var (resource, position) in nodeList)
             {
@@ -58,7 +59,10 @@ public sealed class BackgroundView : IGameObject
                 int dy = position.Row - Center.Row;
                 double distance = Math.Sqrt(dx * dx + dy * dy);
 
-                if (distance <= radius)
+                if (distance < Radius + 4)
+                    opacity = Factory.Color(EOpacity.Regular);
+
+                if (distance < Radius)
                     opacity = Factory.Color(EOpacity.Light);
 
                 var sprite = Content.GetResource(resource);
@@ -66,6 +70,9 @@ public sealed class BackgroundView : IGameObject
                 sprite.Position = position;
                 window.Draw(sprite);
             }
+
+        Radius += Speed;
+        Speed += Radius >= 11 ? -0.01f : 0.01f;
     }
     #endregion
 
