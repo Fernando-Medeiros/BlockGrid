@@ -11,6 +11,7 @@ public static class Content
     private static readonly Dictionary<ESprite, Sprite> SpriteResources = [];
     private static readonly Dictionary<EPicture, Sprite> PictureResources = [];
     private static readonly Dictionary<ESound, Sound> SoundResources = [];
+    private static readonly Dictionary<EGraphic, Sprite> GraphicResources = [];
 
     #region Action
     public static Font GetResource(EFont font) => FontResources[font];
@@ -18,6 +19,7 @@ public static class Content
     public static Sprite GetResource(ESprite sprite) => SpriteResources[sprite];
     public static Sound GetResource(ESound sound) => SoundResources[sound];
     public static Sprite GetResource(EPicture picture) => PictureResources[picture];
+    public static Sprite GetResource(EGraphic graphic) => GraphicResources[graphic];
 
     public static void LoadResources()
     {
@@ -27,6 +29,7 @@ public static class Content
         Load(SpriteResources);
         Load(SoundResources);
         Load(PictureResources);
+        Load(GraphicResources);
         _started = true;
     }
     #endregion

@@ -4,4 +4,5 @@ public enum EFont : byte
 {
     OpenSansRegular,
     OpenSansSemibold,
+    Romulus,
 }

@@ -72,9 +72,9 @@ public sealed class Node2D(Position2D position2D) : INode2D
         {
             window.Draw(new CircleShape()
             {
-                Position = Position2D,
+                Position = Position2D + new Vector2f(2, 2),
                 Texture = sprite.Texture,
-                Radius = Global.RECT / 2 - 1,
+                Radius = Global.RECT / 2 - 2,
                 OutlineThickness = 1f,
                 OutlineColor = Colors.White,
             });
@@ -89,14 +89,9 @@ public sealed class Node2D(Position2D position2D) : INode2D
     {
         if (App.SelectedNode != this) return;
 
-        window.Draw(new RectangleShape()
-        {
-            Size = new(31, 31),
-            Position = Position2D,
-            FillColor = Colors.Transparent,
-            OutlineThickness = 1f,
-            OutlineColor = Colors.GoldRod,
-        });
+        var sprite = Content.GetResource(EGraphic.SelectedNode);
+        sprite.Position = Position2D;
+        window.Draw(sprite);
     }
     #endregion
 }

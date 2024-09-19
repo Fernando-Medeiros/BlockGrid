@@ -25,7 +25,7 @@ public static class Global
 {
     public const byte RECT = 32;
     public const byte MAX_ROW = 255;
-    public const string TITLE = "2D Game";
+    public const string TITLE = "Realms of Storms";
     public const byte MAX_COLUMN = 255;
     public const int WINDOW_HEIGHT = 1080;
     public const int WINDOW_WIDTH = 1920;
