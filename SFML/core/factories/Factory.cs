@@ -11,6 +11,17 @@ public static class Factory
         EOpacity.Regular => new(255, 255, 255, Convert.ToByte(opacity)),
         _ => throw new Exception()
     };
+
+    public static Color Color(EColor color) => color switch
+    {
+        EColor.Black => new(0, 0, 0),
+        EColor.CornFlowerBlue => new(100, 149, 237),
+        EColor.GoldRod => new(218, 165, 32),
+        EColor.Tomate => new(255, 99, 71),
+        EColor.Transparent => new(0, 0, 0, 0),
+        EColor.White => new(255, 255, 255),
+        _ => throw new Exception()
+    };
     #endregion
 
     #region Shuffle

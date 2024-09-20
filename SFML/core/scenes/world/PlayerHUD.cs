@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class PlayerHUD : IGameObject
+public sealed class PlayerHUD : IGameObject, IDisposable
 {
     private Font? Font { get; set; }
     private Vector2f? Offset { get; set; }
@@ -84,7 +84,23 @@ public sealed class PlayerHUD : IGameObject
     #region Event
     private void OnBasicStatusChanged(object? sender)
     {
-        if (App.CurrentScene != EScene.World) return;
+    }
+    #endregion
+
+    #region Dispose
+    public void Dispose()
+    {
+        Global.UnSubscribe(EEvent.BasicStatus, OnBasicStatusChanged);
+        
+        HpBar?.Dispose();
+        MpBar?.Dispose();
+        ExpBar?.Dispose();
+        Font = null;
+        Data = null;
+        Offset = null;
+        HpBar = null;
+        MpBar = null;
+        ExpBar = null;
     }
     #endregion
 }

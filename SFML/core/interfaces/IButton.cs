@@ -1,9 +1,11 @@
 ﻿namespace SFMLGame.core.interfaces;
 
-public interface IGameObject
+public interface IButton
 {
+    event EventHandler<EventArgs>? OnClicked;
+    event EventHandler<EventArgs>? OnSelected;
+
     void Dispose();
-    void LoadContent();
     void LoadEvents();
     void Draw(RenderWindow window);
 }

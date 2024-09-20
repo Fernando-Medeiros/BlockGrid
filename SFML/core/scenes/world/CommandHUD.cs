@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class CommandHUD : IGameObject
+public sealed class CommandHUD : IGameObject, IDisposable
 {
     private Font? Font { get; set; }
     private IList<(EIcon, string, Vector2f)> Collection { get; } = [];
@@ -51,8 +51,6 @@ public sealed class CommandHUD : IGameObject
     #region Event
     private void OnCommandClicked(object? sender)
     {
-        if (App.CurrentScene != EScene.World) return;
-
         if (sender is MouseDTO mouse)
         {
             if (mouse.Button != EMouse.Left) return;
@@ -66,12 +64,23 @@ public sealed class CommandHUD : IGameObject
                     {
                         Global.Invoke(EEvent.SaveGame, null);
                         Global.Invoke(EEvent.Scene, EScene.Main);
+                        break;
                     };
                     if (icon == EIcon.ZoomIn) Global.Invoke(EEvent.KeyPressed, Key.Z);
                     if (icon == EIcon.ZoomOut) Global.Invoke(EEvent.KeyPressed, Key.X);
                 }
             }
         }
+    }
+    #endregion
+
+    #region Dispose
+    public void Dispose()
+    {
+        Global.UnSubscribe(EEvent.MouseButtonPressed, OnCommandClicked);
+
+        Font = null;
+        Collection.Clear();
     }
     #endregion
 }

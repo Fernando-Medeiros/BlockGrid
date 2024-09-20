@@ -10,6 +10,7 @@ public interface INode2D
     void SetBody(IBody2D? body);
     void SetOpacity(EOpacity opacity);
     void Draw(RenderWindow window);
+    void Dispose();
 
     INode2D? Get(params EDirection[] directions);
 }

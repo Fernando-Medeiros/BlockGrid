@@ -10,3 +10,4 @@ global using SFMLGame.core.factories;
 global using SFMLGame.core.interfaces;
 global using SFMLGame.core.items;
 global using SFMLGame.core.nodes;
+global using SFMLGame.core.widgets;

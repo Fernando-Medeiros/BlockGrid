@@ -32,8 +32,6 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
     #region Action
     public void Execute(object? keyCode)
     {
-        if (App.CurrentScene != EScene.World) return;
-
         Light?.VisibilityTo(this, EOpacity.Regular);
 
         Metadata?.DirectionTo(keyCode);

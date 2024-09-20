@@ -10,6 +10,13 @@ public sealed record Position2D(byte Row, byte Column, float X, float Y)
     }
 };
 
-public sealed record MouseDTO(EMouse Button, int X, int Y);
+public sealed record MouseDTO(EMouse Button, int X, int Y)
+{
+    public static implicit operator Vector2f(MouseDTO postion)
+    {
+        return new(postion.X, postion.Y);
+    }
+}
+
 public sealed record LoggerDTO(ELogger Guide, string Message);
 public sealed record StatusDTO(string Name, int Level, int Hp, int MaxHp, int Mp, int MaxMp, int Exp, int MaxExp);

@@ -2,7 +2,7 @@
 
 // TODO :: Alterar o design da caixa de logs;
 
-public sealed class LoggerHUD : RectangleShape, IGameObject
+public sealed class LoggerHUD : RectangleShape, IGameObject, IDisposable
 {
     private ELogger Guide { get; set; }
     private Dictionary<ELogger, List<string>> Loggers { get; } = [];
@@ -11,7 +11,6 @@ public sealed class LoggerHUD : RectangleShape, IGameObject
     public void LoadEvents()
     {
         Global.Subscribe(EEvent.Logger, OnLoggerReceive);
-
         Global.Subscribe(EEvent.MouseButtonPressed, OnGuideClicked);
     }
 
@@ -57,8 +56,6 @@ public sealed class LoggerHUD : RectangleShape, IGameObject
     #region Event
     private void OnGuideClicked(object? sender)
     {
-        if (App.CurrentScene != EScene.World) return;
-
         if (sender is MouseDTO mouse)
         {
             if (mouse.Button != EMouse.Left) return;
@@ -75,8 +72,6 @@ public sealed class LoggerHUD : RectangleShape, IGameObject
 
     private void OnLoggerReceive(object? sender)
     {
-        if (App.CurrentScene != EScene.World) return;
-
         if (sender is LoggerDTO x)
         {
             if (Loggers[x.Guide].Count >= 50)
@@ -84,6 +79,16 @@ public sealed class LoggerHUD : RectangleShape, IGameObject
 
             Loggers[x.Guide].Add(x.Message);
         }
+    }
+    #endregion
+
+    #region Dispose
+    public new void Dispose()
+    {
+        Global.UnSubscribe(EEvent.Logger, OnLoggerReceive);
+        Global.UnSubscribe(EEvent.MouseButtonPressed, OnGuideClicked);
+
+        foreach (var key in Enum.GetValues<ELogger>()) Loggers[key].Clear();
     }
     #endregion
 }

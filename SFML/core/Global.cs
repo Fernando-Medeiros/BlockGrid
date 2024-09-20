@@ -34,69 +34,69 @@ public static class Global
 
     #region Event
 
-    private static event EventHandler<EventArgs?>? OnScene;
-    private static event EventHandler<EventArgs?>? OnRegion;
-    private static event EventHandler<EventArgs?>? OnLogger;
-    private static event EventHandler<EventArgs?>? OnCamera;
-    private static event EventHandler<EventArgs?>? OnTransport;
-    private static event EventHandler<EventArgs?>? OnEndGame;
-    private static event EventHandler<EventArgs?>? OnSaveGame;
-    private static event EventHandler<EventArgs?>? OnBasicStatus;
-    private static event EventHandler<EventArgs?>? OnKeyPressed;
-    private static event EventHandler<EventArgs?>? OnKeyReleased;
-    private static event EventHandler<EventArgs?>? OnMouseMoved;
-    private static event EventHandler<EventArgs?>? OnMouseWheelScrolled;
-    private static event EventHandler<EventArgs?>? OnMouseButtonPressed;
+    private static event Action<object?>? OnScene;
+    private static event Action<object?>? OnRegion;
+    private static event Action<object?>? OnLogger;
+    private static event Action<object?>? OnCamera;
+    private static event Action<object?>? OnTransport;
+    private static event Action<object?>? OnEndGame;
+    private static event Action<object?>? OnSaveGame;
+    private static event Action<object?>? OnBasicStatus;
+    private static event Action<object?>? OnKeyPressed;
+    private static event Action<object?>? OnKeyReleased;
+    private static event Action<object?>? OnMouseMoved;
+    private static event Action<object?>? OnMouseWheelScrolled;
+    private static event Action<object?>? OnMouseButtonPressed;
 
     public static void Subscribe(EEvent e, Action<object?> action)
     {
-        if (e is EEvent.Scene) OnScene += (args, _) => action(args);
-        if (e is EEvent.Logger) OnLogger += (args, _) => action(args);
-        if (e is EEvent.Region) OnRegion += (args, _) => action(args);
-        if (e is EEvent.Camera) OnCamera += (args, _) => action(args);
-        if (e is EEvent.Transport) OnTransport += (args, _) => action(args);
-        if (e is EEvent.EndGame) OnEndGame += (args, _) => action(args);
-        if (e is EEvent.SaveGame) OnSaveGame += (args, _) => action(args);
-        if (e is EEvent.BasicStatus) OnBasicStatus += (args, _) => action(args);
-        if (e is EEvent.KeyPressed) OnKeyPressed += (args, _) => action(args);
-        if (e is EEvent.KeyReleased) OnKeyReleased += (args, _) => action(args);
-        if (e is EEvent.MouseMoved) OnMouseMoved += (args, _) => action(args);
-        if (e is EEvent.MouseWheelScrolled) OnMouseWheelScrolled += (args, _) => action(args);
-        if (e is EEvent.MouseButtonPressed) OnMouseButtonPressed += (args, _) => action(args);
+        if (e is EEvent.Scene) OnScene += action;
+        if (e is EEvent.Logger) OnLogger += action;
+        if (e is EEvent.Region) OnRegion += action;
+        if (e is EEvent.Camera) OnCamera += action;
+        if (e is EEvent.Transport) OnTransport += action;
+        if (e is EEvent.EndGame) OnEndGame += action;
+        if (e is EEvent.SaveGame) OnSaveGame += action;
+        if (e is EEvent.BasicStatus) OnBasicStatus += action;
+        if (e is EEvent.KeyPressed) OnKeyPressed += action;
+        if (e is EEvent.KeyReleased) OnKeyReleased += action;
+        if (e is EEvent.MouseMoved) OnMouseMoved += action;
+        if (e is EEvent.MouseWheelScrolled) OnMouseWheelScrolled += action;
+        if (e is EEvent.MouseButtonPressed) OnMouseButtonPressed += action;
     }
 
     public static void UnSubscribe(EEvent e, Action<object?> action)
     {
-        if (e is EEvent.Scene) OnScene -= (args, _) => action(args);
-        if (e is EEvent.Logger) OnLogger -= (args, _) => action(args);
-        if (e is EEvent.Region) OnRegion -= (args, _) => action(args);
-        if (e is EEvent.Camera) OnCamera -= (args, _) => action(args);
-        if (e is EEvent.Transport) OnTransport -= (args, _) => action(args);
-        if (e is EEvent.EndGame) OnEndGame -= (args, _) => action(args);
-        if (e is EEvent.SaveGame) OnSaveGame -= (args, _) => action(args);
-        if (e is EEvent.BasicStatus) OnBasicStatus -= (args, _) => action(args);
-        if (e is EEvent.KeyPressed) OnKeyPressed -= (args, _) => action(args);
-        if (e is EEvent.KeyReleased) OnKeyReleased -= (args, _) => action(args);
-        if (e is EEvent.MouseMoved) OnMouseMoved -= (args, _) => action(args);
-        if (e is EEvent.MouseWheelScrolled) OnMouseWheelScrolled -= (args, _) => action(args);
-        if (e is EEvent.MouseButtonPressed) OnMouseButtonPressed -= (args, _) => action(args);
+        if (e is EEvent.Scene) OnScene -= action;
+        if (e is EEvent.Logger) OnLogger -= action;
+        if (e is EEvent.Region) OnRegion -= action;
+        if (e is EEvent.Camera) OnCamera -= action;
+        if (e is EEvent.Transport) OnTransport -= action;
+        if (e is EEvent.EndGame) OnEndGame -= action;
+        if (e is EEvent.SaveGame) OnSaveGame -= action;
+        if (e is EEvent.BasicStatus) OnBasicStatus -= action;
+        if (e is EEvent.KeyPressed) OnKeyPressed -= action;
+        if (e is EEvent.KeyReleased) OnKeyReleased -= action;
+        if (e is EEvent.MouseMoved) OnMouseMoved -= action;
+        if (e is EEvent.MouseWheelScrolled) OnMouseWheelScrolled -= action;
+        if (e is EEvent.MouseButtonPressed) OnMouseButtonPressed -= action;
     }
 
     public static void Invoke(EEvent e, object? sender)
     {
-        if (e is EEvent.Scene) OnScene?.Invoke(sender, EventArgs.Empty);
-        if (e is EEvent.Logger) OnLogger?.Invoke(sender, EventArgs.Empty);
-        if (e is EEvent.Region) OnRegion?.Invoke(sender, EventArgs.Empty);
-        if (e is EEvent.Camera) OnCamera?.Invoke(sender, EventArgs.Empty);
-        if (e is EEvent.Transport) OnTransport?.Invoke(sender, EventArgs.Empty);
-        if (e is EEvent.EndGame) OnEndGame?.Invoke(sender, EventArgs.Empty);
-        if (e is EEvent.SaveGame) OnSaveGame?.Invoke(sender, EventArgs.Empty);
-        if (e is EEvent.BasicStatus) OnBasicStatus?.Invoke(sender, EventArgs.Empty);
-        if (e is EEvent.KeyPressed) OnKeyPressed?.Invoke(sender, EventArgs.Empty);
-        if (e is EEvent.KeyReleased) OnKeyReleased?.Invoke(sender, EventArgs.Empty);
-        if (e is EEvent.MouseMoved) OnMouseMoved?.Invoke(sender, EventArgs.Empty);
-        if (e is EEvent.MouseWheelScrolled) OnMouseWheelScrolled?.Invoke(sender, EventArgs.Empty);
-        if (e is EEvent.MouseButtonPressed) OnMouseButtonPressed?.Invoke(sender, EventArgs.Empty);
+        if (e is EEvent.Scene) OnScene?.Invoke(sender);
+        if (e is EEvent.Logger) OnLogger?.Invoke(sender);
+        if (e is EEvent.Region) OnRegion?.Invoke(sender);
+        if (e is EEvent.Camera) OnCamera?.Invoke(sender);
+        if (e is EEvent.Transport) OnTransport?.Invoke(sender);
+        if (e is EEvent.EndGame) OnEndGame?.Invoke(sender);
+        if (e is EEvent.SaveGame) OnSaveGame?.Invoke(sender);
+        if (e is EEvent.BasicStatus) OnBasicStatus?.Invoke(sender);
+        if (e is EEvent.KeyPressed) OnKeyPressed?.Invoke(sender);
+        if (e is EEvent.KeyReleased) OnKeyReleased?.Invoke(sender);
+        if (e is EEvent.MouseMoved) OnMouseMoved?.Invoke(sender);
+        if (e is EEvent.MouseWheelScrolled) OnMouseWheelScrolled?.Invoke(sender);
+        if (e is EEvent.MouseButtonPressed) OnMouseButtonPressed?.Invoke(sender);
     }
     #endregion
 }

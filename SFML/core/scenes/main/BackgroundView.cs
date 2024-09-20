@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.scenes.main;
 
-public sealed class BackgroundView : IGameObject
+public sealed class BackgroundView : IGameObject, IDisposable
 {
     private (byte Row, byte Column) Center { get; set; } = (0, 0);
     private IList<IList<(ESprite, Position2D)>> Collection { get; } = [];
@@ -79,20 +79,25 @@ public sealed class BackgroundView : IGameObject
     #region Event
     private void OnMouseMoved(object? sender)
     {
-        if (App.CurrentScene != EScene.Main) return;
-
         if (sender is MouseDTO mouse)
         {
-            var absolutePosition = App.MapCoords(mouse.X, mouse.Y, EScene.Main);
-
-            var posY = absolutePosition.Y - (Global.RECT / 2);
-            var posX = absolutePosition.X - (Global.RECT / 2);
+            var posY = mouse.Y - (Global.RECT / 2);
+            var posX = mouse.X - (Global.RECT / 2);
 
             int row = Math.Max(0, Math.Min(Convert.ToInt32(posY / Global.RECT), MaxRow - 1));
             int column = Math.Max(0, Math.Min(Convert.ToInt32(posX / Global.RECT), MaxColumn - 1));
 
             Center = ((byte)row, (byte)column);
         }
+    }
+    #endregion
+
+    #region Dispose
+    public void Dispose()
+    {
+        Global.UnSubscribe(EEvent.MouseMoved, OnMouseMoved);
+        Center = (0, 0);
+        Collection.Clear();
     }
     #endregion
 }

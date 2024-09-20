@@ -1,9 +1,26 @@
 ﻿namespace SFMLGame.core.scenes.main;
 
-public sealed class MainScene(FloatRect viewRect)
-    : View(viewRect), IGameObject
+public sealed class MainScene : View, IGameObject, IDisposable
 {
+    private FloatRect ViewRect { get; init; }
     private IList<IGameObject> Collection { get; } = [];
+
+    public MainScene(FloatRect viewRect) : base(viewRect)
+    {
+        ViewRect = viewRect;
+
+        Global.Subscribe(EEvent.Scene, (sender) =>
+        {
+            if (sender is EScene.Main)
+            {
+                LoadContent();
+                LoadEvents();
+                return;
+            }
+
+            Dispose();
+        });
+    }
 
     #region Build
     public void LoadContent()
@@ -24,6 +41,14 @@ public sealed class MainScene(FloatRect viewRect)
         window.SetView(this);
 
         foreach (var gameObject in Collection) gameObject.Draw(window);
+    }
+    #endregion
+
+    #region Dispose
+    public new void Dispose()
+    {
+        foreach (var gameObject in Collection) gameObject.Dispose();
+        Collection.Clear();
     }
     #endregion
 }

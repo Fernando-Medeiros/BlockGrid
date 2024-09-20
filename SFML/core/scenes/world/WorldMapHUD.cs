@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class WorldMapHUD : IGameObject
+public sealed class WorldMapHUD : IGameObject, IDisposable
 {
     private IGameObject? GameObject { get; set; }
 
@@ -16,5 +16,13 @@ public sealed class WorldMapHUD : IGameObject
     #endregion
 
     #region Event
+    #endregion
+
+    #region Dispose
+    public void Dispose()
+    {
+        GameObject?.Dispose();
+        GameObject = null;
+    }
     #endregion
 }

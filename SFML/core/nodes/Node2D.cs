@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.nodes;
 
-public sealed class Node2D(Position2D position2D) : INode2D
+public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
 {
     #region Property
     private ESprite? Terrain { get; set; }
@@ -92,6 +92,16 @@ public sealed class Node2D(Position2D position2D) : INode2D
         var sprite = Content.GetResource(EGraphic.SelectedNode);
         sprite.Position = Position2D;
         window.Draw(sprite);
+    }
+    #endregion
+
+    #region Dispose
+    public void Dispose()
+    {
+        Body = null;
+        Terrain = null;
+        GameItems.Clear();
+        NavigationHandler = (_, _) => null;
     }
     #endregion
 }

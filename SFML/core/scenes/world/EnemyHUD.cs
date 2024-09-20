@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class EnemyHUD : IGameObject
+public sealed class EnemyHUD : IGameObject, IDisposable
 {
     private Font? Font { get; set; }
     private Vector2f? Offset { get; set; }
@@ -73,10 +73,23 @@ public sealed class EnemyHUD : IGameObject
     #region Event
     private void OnBasicStatusChanged(object? sender)
     {
-        if (App.CurrentScene != EScene.World) return;
-
         if (sender is StatusDTO basicStatus)
             Data = basicStatus;
+    }
+    #endregion
+
+    #region Dispose
+    public void Dispose()
+    {
+        Global.UnSubscribe(EEvent.BasicStatus, OnBasicStatusChanged);
+
+        HpBar?.Dispose();
+        MpBar?.Dispose();
+        Font = null;
+        Data = null;
+        Offset = null;
+        HpBar = null;
+        MpBar = null;
     }
     #endregion
 }

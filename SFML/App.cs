@@ -24,8 +24,7 @@ internal sealed partial class App
     {
         Content.LoadResources();
 
-        foreach (var scene in Scenes.Values)
-            scene.LoadContent();
+        Scenes[EScene.Main].LoadContent();
     }
 
     public void ConfigureListeners()
@@ -36,8 +35,7 @@ internal sealed partial class App
         OnPause();
         OnDestroy();
 
-        foreach (var scene in Scenes.Values)
-            scene.LoadEvents();
+        Scenes[EScene.Main].LoadEvents();
     }
 
     public void Start()
@@ -45,7 +43,7 @@ internal sealed partial class App
         while (Window.IsOpen)
         {
             Window.DispatchEvents();
-            Window.Clear(Colors.Black);
+            Window.Clear(Factory.Color(EColor.Black));
 
             Scenes[CurrentScene].Draw(Window);
 

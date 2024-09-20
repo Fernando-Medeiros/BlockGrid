@@ -1,7 +1,7 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
 public class WorldView(FloatRect viewRect)
-    : View(viewRect), IGameObject
+    : View(viewRect), IGameObject, IDisposable
 {
     private FloatRect ViewRect { get; } = viewRect;
 
@@ -43,7 +43,6 @@ public class WorldView(FloatRect viewRect)
 
     public virtual void LoadEvents()
     {
-        Global.Subscribe(EEvent.Scene, OnSceneChanged);
         Global.Subscribe(EEvent.Region, OnRegionChanged);
         Global.Subscribe(EEvent.SaveGame, OnRegionSaved);
         Global.Subscribe(EEvent.Camera, OnCameraChanged);
@@ -80,18 +79,9 @@ public class WorldView(FloatRect viewRect)
     #endregion
 
     #region Event
-    private void OnSceneChanged(object? sender)
-    {
-        if (App.CurrentScene != EScene.World) return;
-
-        Content.DeserializeSchema("0");
-    }
-
     // TODO :: Refatorar
     private void OnRegionSaved(object? sender)
     {
-        if (App.CurrentScene != EScene.World) return;
-
         var schema = new RegionSchema
         {
             Name = "0",
@@ -137,8 +127,6 @@ public class WorldView(FloatRect viewRect)
     // TODO :: Refatorar
     private void OnRegionChanged(object? sender)
     {
-        if (App.CurrentScene != EScene.World) return;
-
         if (sender is RegionSchema regionSchema)
         {
             Global.Invoke(EEvent.Transport, regionSchema.Biome);
@@ -179,7 +167,7 @@ public class WorldView(FloatRect viewRect)
 
     private void OnNodeSelected(object? sender)
     {
-        if (App.CurrentScene != EScene.World) return;
+        if (Collection.Count <= 0) return;
 
         if (sender is MouseDTO mouse)
         {
@@ -199,8 +187,6 @@ public class WorldView(FloatRect viewRect)
 
     private void OnZoomChanged(object? sender)
     {
-        if (App.CurrentScene != EScene.World) return;
-
         if (sender is Key.Z)
         {
             if (Size.X <= ViewRect.Width / 2) return;
@@ -218,9 +204,7 @@ public class WorldView(FloatRect viewRect)
 
     protected void OnCameraChanged(object? sender)
     {
-        if (App.CurrentScene != EScene.World) return;
-
-        App.CurrentPosition.Deconstruct(out var row, out var column, out var posX, out var posY);
+        App.CurrentPosition.Deconstruct(out _, out _, out var posX, out var posY);
 
         var (width, height) = (Size.X, Size.Y);
 
@@ -231,6 +215,23 @@ public class WorldView(FloatRect viewRect)
         scrollY = Math.Max(0, Math.Min(scrollY, Global.WORLD_HEIGHT - height));
 
         Center = new Vector2f(scrollX + (width / 2), scrollY + (height / 2));
+    }
+    #endregion
+
+    #region Dispose
+    public new void Dispose()
+    {
+        Global.UnSubscribe(EEvent.Region, OnRegionChanged);
+        Global.UnSubscribe(EEvent.SaveGame, OnRegionSaved);
+        Global.UnSubscribe(EEvent.Camera, OnCameraChanged);
+        Global.UnSubscribe(EEvent.KeyPressed, OnZoomChanged);
+        Global.UnSubscribe(EEvent.MouseButtonPressed, OnNodeSelected);
+
+        foreach (var nodeList in Collection)
+            foreach (var node in nodeList)
+                node.Dispose();
+
+        Collection.Clear();
     }
     #endregion
 }

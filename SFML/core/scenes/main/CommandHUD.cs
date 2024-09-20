@@ -1,85 +1,79 @@
 ﻿namespace SFMLGame.core.scenes.main;
 
-public sealed class CommandHUD : IGameObject
+public sealed class CommandHUD : IGameObject, IDisposable
 {
-    private enum EOption : byte { NewGame, LoadGame, Options, Quit }
+    private enum ECmd : byte { NewGame, LoadGame, Options, Quit }
 
-    private Font? Font { get; set; }
-    private IList<(EOption, string, Vector2f)> Collection { get; } = [];
+    private Text Title { get; set; } = new();
+    private IList<IButton> Buttons { get; } = [];
 
     #region Build
     public void LoadContent()
     {
         var (posX, posY, space) = (Global.WINDOW_WIDTH / 2, Global.WINDOW_HEIGHT / 3f, 60f);
 
-        posY += space;
-        Collection.Add((EOption.NewGame, nameof(EOption.NewGame), new(posX, posY)));
+        foreach (var cmd in Enum.GetValues<ECmd>())
+        {
+            Buttons.Add(new TextButton(cmd)
+            {
+                Size = 35,
+                Text = cmd.ToString(),
+                Font = EFont.Romulus,
+                Position = new(posX, posY),
+            });
+            posY += space;
+        }
 
-        posY += space;
-        Collection.Add((EOption.LoadGame, nameof(EOption.LoadGame), new(posX, posY)));
-
-        posY += space;
-        Collection.Add((EOption.Options, nameof(EOption.Options), new(posX, posY)));
-
-        posY += space;
-        Collection.Add((EOption.Quit, nameof(EOption.Quit), new(posX, posY)));
-
-        Font = Content.GetResource(EFont.Romulus);
+        Title = new Text()
+        {
+            Font = Content.GetResource(EFont.Romulus),
+            Position = new Vector2f(Global.WINDOW_WIDTH / 3, 25),
+            CharacterSize = 100,
+            OutlineThickness = 1f,
+            FillColor = Factory.Color(EColor.White),
+            OutlineColor = Factory.Color(EColor.Black),
+            DisplayedString = Global.TITLE,
+        };
     }
 
     public void LoadEvents()
     {
-        Global.Subscribe(EEvent.MouseButtonPressed, OnCommandClicked);
+        foreach (IButton button in Buttons)
+        {
+            button.LoadEvents();
+            button.OnClicked += OnButtonClicked;
+        }
     }
 
     public void Draw(RenderWindow window)
     {
-        window.Draw(new Text()
-        {
-            Font = Font,
-            Position = new Vector2f(Global.WINDOW_WIDTH / 3, 25),
-            CharacterSize = 100,
-            OutlineThickness = 1f,
-            FillColor = Colors.White,
-            OutlineColor = Colors.Black,
-            DisplayedString = Global.TITLE,
-        });
+        window.Draw(Title);
 
-        foreach (var (_, placeholder, position) in Collection)
-        {
-            window.Draw(new Text()
-            {
-                Font = Font,
-                Position = position,
-                CharacterSize = 35,
-                OutlineThickness = 1f,
-                FillColor = Colors.White,
-                OutlineColor = Colors.Black,
-                DisplayedString = placeholder,
-            });
-        }
+        foreach (IButton button in Buttons) button.Draw(window);
     }
     #endregion
 
     #region Event
-    private void OnCommandClicked(object? sender)
+    private void OnButtonClicked(object? sender, EventArgs e)
     {
-        if (App.CurrentScene != EScene.Main) return;
+        if (sender is ECmd.NewGame) Global.Invoke(EEvent.Scene, EScene.World);
+        if (sender is ECmd.LoadGame) return;
+        if (sender is ECmd.Options) return;
+        if (sender is ECmd.Quit) Global.Invoke(EEvent.EndGame, null);
+    }
+    #endregion
 
-        if (sender is MouseDTO mouse)
+    #region Dispose
+    public void Dispose()
+    {
+        foreach (IButton button in Buttons)
         {
-            if (mouse.Button != EMouse.Left) return;
-
-            foreach (var (option, _, pos) in Collection)
-            {
-                if (mouse.X >= pos.X && mouse.X <= pos.X + Global.RECT &&
-                    mouse.Y >= pos.Y && mouse.Y <= pos.Y + Global.RECT)
-                {
-                    if (option is EOption.Quit) Global.Invoke(EEvent.EndGame, null);
-                    if (option is EOption.NewGame) Global.Invoke(EEvent.Scene, EScene.World);
-                }
-            }
+            button.OnClicked -= OnButtonClicked;
+            button.Dispose();
         }
+
+        Title.Dispose();
+        Buttons.Clear();
     }
     #endregion
 }
