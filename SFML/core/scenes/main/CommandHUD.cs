@@ -54,7 +54,7 @@ public sealed class CommandHUD : IGameObject, IDisposable
     #endregion
 
     #region Event
-    private void OnButtonClicked(object? sender, EventArgs e)
+    private void OnButtonClicked(object? sender)
     {
         if (sender is ECmd.NewGame) Global.Invoke(EEvent.Scene, EScene.World);
         if (sender is ECmd.LoadGame) return;

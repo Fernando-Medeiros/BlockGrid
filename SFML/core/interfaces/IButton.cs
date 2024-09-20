@@ -2,8 +2,8 @@
 
 public interface IButton
 {
-    event EventHandler<EventArgs>? OnClicked;
-    event EventHandler<EventArgs>? OnSelected;
+    event Action<object?>? OnClicked;
+    event Action<object?>? OnSelected;
 
     void Dispose();
     void LoadEvents();

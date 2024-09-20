@@ -38,8 +38,8 @@ public sealed class TextButton(object id) : IButton, IDisposable
     #endregion
 
     #region Event
-    public event EventHandler<EventArgs>? OnClicked;
-    public event EventHandler<EventArgs>? OnSelected;
+    public event Action<object?>? OnClicked;
+    public event Action<object?>? OnSelected;
 
     private void OnButtonClicked(object? sender)
     {
@@ -49,7 +49,7 @@ public sealed class TextButton(object id) : IButton, IDisposable
 
             if (Graphic?.GetGlobalBounds().Contains(mouse) ?? default)
             {
-                OnClicked?.Invoke(Id, EventArgs.Empty);
+                OnClicked?.Invoke(Id);
             }
         }
     }
@@ -60,7 +60,7 @@ public sealed class TextButton(object id) : IButton, IDisposable
         {
             Selected = Graphic?.GetGlobalBounds().Contains(mouse) ?? false;
 
-            if (Selected) OnSelected?.Invoke(true, EventArgs.Empty);
+            if (Selected) OnSelected?.Invoke(true);
         }
     }
     #endregion
