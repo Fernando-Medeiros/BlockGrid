@@ -33,7 +33,6 @@ public static class Global
     public const float WORLD_WIDTH = MAX_COLUMN * RECT;
 
     #region Event
-
     private static event Action<object?>? OnScene;
     private static event Action<object?>? OnRegion;
     private static event Action<object?>? OnLogger;
@@ -50,53 +49,62 @@ public static class Global
 
     public static void Subscribe(EEvent e, Action<object?> action)
     {
-        if (e is EEvent.Scene) OnScene += action;
-        if (e is EEvent.Logger) OnLogger += action;
-        if (e is EEvent.Region) OnRegion += action;
-        if (e is EEvent.Camera) OnCamera += action;
-        if (e is EEvent.Transport) OnTransport += action;
-        if (e is EEvent.EndGame) OnEndGame += action;
-        if (e is EEvent.SaveGame) OnSaveGame += action;
-        if (e is EEvent.BasicStatus) OnBasicStatus += action;
-        if (e is EEvent.KeyPressed) OnKeyPressed += action;
-        if (e is EEvent.KeyReleased) OnKeyReleased += action;
-        if (e is EEvent.MouseMoved) OnMouseMoved += action;
-        if (e is EEvent.MouseWheelScrolled) OnMouseWheelScrolled += action;
-        if (e is EEvent.MouseButtonPressed) OnMouseButtonPressed += action;
+        switch (e)
+        {
+            case EEvent.Scene: OnScene += action; break;
+            case EEvent.Logger: OnLogger += action; break;
+            case EEvent.Region: OnRegion += action; break;
+            case EEvent.Camera: OnCamera += action; break;
+            case EEvent.Transport: OnTransport += action; break;
+            case EEvent.EndGame: OnEndGame += action; break;
+            case EEvent.SaveGame: OnSaveGame += action; break;
+            case EEvent.BasicStatus: OnBasicStatus += action; break;
+            case EEvent.KeyPressed: OnKeyPressed += action; break;
+            case EEvent.KeyReleased: OnKeyReleased += action; break;
+            case EEvent.MouseMoved: OnMouseMoved += action; break;
+            case EEvent.MouseWheelScrolled: OnMouseWheelScrolled += action; break;
+            case EEvent.MouseButtonPressed: OnMouseButtonPressed += action; break;
+        };
     }
 
     public static void UnSubscribe(EEvent e, Action<object?> action)
     {
-        if (e is EEvent.Scene) OnScene -= action;
-        if (e is EEvent.Logger) OnLogger -= action;
-        if (e is EEvent.Region) OnRegion -= action;
-        if (e is EEvent.Camera) OnCamera -= action;
-        if (e is EEvent.Transport) OnTransport -= action;
-        if (e is EEvent.EndGame) OnEndGame -= action;
-        if (e is EEvent.SaveGame) OnSaveGame -= action;
-        if (e is EEvent.BasicStatus) OnBasicStatus -= action;
-        if (e is EEvent.KeyPressed) OnKeyPressed -= action;
-        if (e is EEvent.KeyReleased) OnKeyReleased -= action;
-        if (e is EEvent.MouseMoved) OnMouseMoved -= action;
-        if (e is EEvent.MouseWheelScrolled) OnMouseWheelScrolled -= action;
-        if (e is EEvent.MouseButtonPressed) OnMouseButtonPressed -= action;
+        switch (e)
+        {
+            case EEvent.Scene: OnScene -= action; break;
+            case EEvent.Logger: OnLogger -= action; break;
+            case EEvent.Region: OnRegion -= action; break;
+            case EEvent.Camera: OnCamera -= action; break;
+            case EEvent.Transport: OnTransport -= action; break;
+            case EEvent.EndGame: OnEndGame -= action; break;
+            case EEvent.SaveGame: OnSaveGame -= action; break;
+            case EEvent.BasicStatus: OnBasicStatus -= action; break;
+            case EEvent.KeyPressed: OnKeyPressed -= action; break;
+            case EEvent.KeyReleased: OnKeyReleased -= action; break;
+            case EEvent.MouseMoved: OnMouseMoved -= action; break;
+            case EEvent.MouseWheelScrolled: OnMouseWheelScrolled -= action; break;
+            case EEvent.MouseButtonPressed: OnMouseButtonPressed -= action; break;
+        };
     }
 
     public static void Invoke(EEvent e, object? sender)
     {
-        if (e is EEvent.Scene) OnScene?.Invoke(sender);
-        if (e is EEvent.Logger) OnLogger?.Invoke(sender);
-        if (e is EEvent.Region) OnRegion?.Invoke(sender);
-        if (e is EEvent.Camera) OnCamera?.Invoke(sender);
-        if (e is EEvent.Transport) OnTransport?.Invoke(sender);
-        if (e is EEvent.EndGame) OnEndGame?.Invoke(sender);
-        if (e is EEvent.SaveGame) OnSaveGame?.Invoke(sender);
-        if (e is EEvent.BasicStatus) OnBasicStatus?.Invoke(sender);
-        if (e is EEvent.KeyPressed) OnKeyPressed?.Invoke(sender);
-        if (e is EEvent.KeyReleased) OnKeyReleased?.Invoke(sender);
-        if (e is EEvent.MouseMoved) OnMouseMoved?.Invoke(sender);
-        if (e is EEvent.MouseWheelScrolled) OnMouseWheelScrolled?.Invoke(sender);
-        if (e is EEvent.MouseButtonPressed) OnMouseButtonPressed?.Invoke(sender);
+        switch (e)
+        {
+            case EEvent.Scene: OnScene?.Invoke(sender); break;
+            case EEvent.Logger: OnLogger?.Invoke(sender); break;
+            case EEvent.Region: OnRegion?.Invoke(sender); break;
+            case EEvent.Camera: OnCamera?.Invoke(sender); break;
+            case EEvent.Transport: OnTransport?.Invoke(sender); break;
+            case EEvent.EndGame: OnEndGame?.Invoke(sender); break;
+            case EEvent.SaveGame: OnSaveGame?.Invoke(sender); break;
+            case EEvent.BasicStatus: OnBasicStatus?.Invoke(sender); break;
+            case EEvent.KeyPressed: OnKeyPressed?.Invoke(sender); break;
+            case EEvent.KeyReleased: OnKeyReleased?.Invoke(sender); break;
+            case EEvent.MouseMoved: OnMouseMoved?.Invoke(sender); break;
+            case EEvent.MouseWheelScrolled: OnMouseWheelScrolled?.Invoke(sender); break;
+            case EEvent.MouseButtonPressed: OnMouseButtonPressed?.Invoke(sender); break;
+        };
     }
     #endregion
 }
