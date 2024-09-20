@@ -22,8 +22,8 @@ public sealed class EnemyHUD : IGameObject, IDisposable
         {
             Size = new(300, 25),
             OutlineThickness = 1f,
-            OutlineColor = Colors.White,
-            FillColor = Colors.Tomate,
+            OutlineColor = Factory.Color(EColor.White),
+            FillColor = Factory.Color(EColor.Tomate),
             Position = new(Global.WINDOW_WIDTH / 2 - 300 / 2, posY),
         };
 
@@ -33,8 +33,8 @@ public sealed class EnemyHUD : IGameObject, IDisposable
         {
             Size = new(150, 18),
             OutlineThickness = 1f,
-            OutlineColor = Colors.White,
-            FillColor = Colors.CornFlowerBlue,
+            OutlineColor = Factory.Color(EColor.White),
+            FillColor = Factory.Color(EColor.CornFlowerBlue),
             Position = new(Global.WINDOW_WIDTH / 2 - 150 / 2, posY),
         };
 
@@ -52,19 +52,19 @@ public sealed class EnemyHUD : IGameObject, IDisposable
 
         window.Draw(new Text($"HP: {Data?.Hp} / {Data?.MaxHp}", Font, 18)
         {
-            FillColor = Colors.White,
+            FillColor = Factory.Color(EColor.White),
             Position = (Vector2f)(HpBar!.Position + Offset),
         });
 
         window.Draw(new Text($"MP: {Data?.Mp} / {Data?.MaxMp}", Font, 14)
         {
-            FillColor = Colors.White,
+            FillColor = Factory.Color(EColor.White),
             Position = (Vector2f)(MpBar!.Position + Offset),
         });
 
         window.Draw(new Text(Data?.Name, Font, 14)
         {
-            FillColor = Colors.White,
+            FillColor = Factory.Color(EColor.White),
             Position = MpBar.Position + new Vector2f(20, 18),
         });
     }

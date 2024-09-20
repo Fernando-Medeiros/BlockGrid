@@ -19,7 +19,7 @@ public sealed class LoggerHUD : RectangleShape, IGameObject, IDisposable
         foreach (var key in Enum.GetValues<ELogger>()) Loggers.Add(key, []);
 
         Size = new(200, 150);
-        FillColor = Colors.GoldRodTransparent;
+        FillColor = Factory.Color(EColor.Transparent);
         Position = new(5, Global.WINDOW_HEIGHT - (Size.Y + 5));
     }
 

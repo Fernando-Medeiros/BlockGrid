@@ -33,15 +33,15 @@ public sealed class CommandHUD : IGameObject, IDisposable
         foreach (var (icon, command, position) in Collection)
         {
             var sprite = Content.GetResource(icon);
-            sprite.Color = Colors.GoldRod;
+            sprite.Color = Factory.Color(EColor.GoldRod);
             sprite.Position = position;
             window.Draw(sprite);
 
             window.Draw(new Text(command, Font, 14)
             {
                 OutlineThickness = 1f,
-                FillColor = Colors.White,
-                OutlineColor = Colors.Black,
+                FillColor = Factory.Color(EColor.White),
+                OutlineColor = Factory.Color(EColor.Black),
                 Position = position,
             });
         }

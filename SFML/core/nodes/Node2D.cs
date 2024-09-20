@@ -76,7 +76,7 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
                 Texture = sprite.Texture,
                 Radius = Global.RECT / 2 - 2,
                 OutlineThickness = 1f,
-                OutlineColor = Colors.White,
+                OutlineColor = Factory.Color(EColor.White),
             });
             return;
         }

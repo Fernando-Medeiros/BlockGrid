@@ -23,8 +23,8 @@ public sealed class PlayerHUD : IGameObject, IDisposable
         {
             Size = new(250, 25),
             OutlineThickness = 1f,
-            OutlineColor = Colors.White,
-            FillColor = Colors.Tomate,
+            OutlineColor = Factory.Color(EColor.White),
+            FillColor = Factory.Color(EColor.Tomate),
             Position = new(posX, posY),
         };
 
@@ -34,8 +34,8 @@ public sealed class PlayerHUD : IGameObject, IDisposable
         {
             Size = new(150, 18),
             OutlineThickness = 1f,
-            OutlineColor = Colors.White,
-            FillColor = Colors.CornFlowerBlue,
+            OutlineColor = Factory.Color(EColor.White),
+            FillColor = Factory.Color(EColor.CornFlowerBlue),
             Position = new(posX, posY),
         };
 
@@ -45,8 +45,8 @@ public sealed class PlayerHUD : IGameObject, IDisposable
         {
             Size = new(150, 18),
             OutlineThickness = 1f,
-            OutlineColor = Colors.White,
-            FillColor = Colors.GoldRod,
+            OutlineColor = Factory.Color(EColor.White),
+            FillColor = Factory.Color(EColor.GoldRod),
             Position = new(posX, posY),
         };
 
@@ -63,19 +63,19 @@ public sealed class PlayerHUD : IGameObject, IDisposable
 
         window.Draw(new Text($"HP: {Data?.Hp} / {Data?.MaxHp}", Font, 18)
         {
-            FillColor = Colors.White,
+            FillColor = Factory.Color(EColor.White),
             Position = (Vector2f)(HpBar!.Position + Offset),
         });
 
         window.Draw(new Text($"MP: {Data?.Mp} / {Data?.MaxMp}", Font, 14)
         {
-            FillColor = Colors.White,
+            FillColor = Factory.Color(EColor.White),
             Position = (Vector2f)(MpBar!.Position + Offset),
         });
 
         window.Draw(new Text($"EX: {Data?.Exp} / {Data?.MaxExp}", Font, 14)
         {
-            FillColor = Colors.White,
+            FillColor = Factory.Color(EColor.White),
             Position = (Vector2f)(ExpBar!.Position + Offset),
         });
     }
@@ -91,7 +91,7 @@ public sealed class PlayerHUD : IGameObject, IDisposable
     public void Dispose()
     {
         Global.UnSubscribe(EEvent.BasicStatus, OnBasicStatusChanged);
-        
+
         HpBar?.Dispose();
         MpBar?.Dispose();
         ExpBar?.Dispose();
