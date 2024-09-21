@@ -3,6 +3,5 @@
 public enum ELogger : byte
 {
     Dialog,
-    Debug,
     General,
 }

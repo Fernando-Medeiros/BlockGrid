@@ -3,7 +3,7 @@
 public sealed class TextButton(object id) : IButton, IDisposable
 {
     private Text? Graphic { get; set; }
-    private bool Selected { get; set; } = false;
+    private bool Focused { get; set; } = false;
 
     #region Property
     public object Id { get; init; } = id;
@@ -12,13 +12,13 @@ public sealed class TextButton(object id) : IButton, IDisposable
     public EColor Color { get; set; } = EColor.White;
     public EFont Font { get; set; } = EFont.Romulus;
     public Vector2f Position { get; set; } = new Vector2f();
-    public EColor SelectedColor { get; set; } = EColor.GoldRod;
+    public EColor FocusedColor { get; set; } = EColor.GoldRod;
     #endregion
 
     #region Build
     public void LoadEvents()
     {
-        Global.Subscribe(EEvent.MouseMoved, OnButtonSelected);
+        Global.Subscribe(EEvent.MouseMoved, OnFocusChanged);
         Global.Subscribe(EEvent.MouseButtonPressed, OnButtonClicked);
     }
 
@@ -31,7 +31,7 @@ public sealed class TextButton(object id) : IButton, IDisposable
             OutlineThickness = 1f,
             DisplayedString = Text,
             Font = Content.GetResource(Font),
-            FillColor = Selected ? Factory.Color(SelectedColor) : Factory.Color(Color),
+            FillColor = Focused ? Factory.Color(FocusedColor) : Factory.Color(Color),
             OutlineColor = Factory.Color(EColor.Black),
         });
     }
@@ -39,7 +39,7 @@ public sealed class TextButton(object id) : IButton, IDisposable
 
     #region Event
     public event Action<object?>? OnClicked;
-    public event Action<object?>? OnSelected;
+    public event Action<object?>? OnFocus;
 
     private void OnButtonClicked(object? sender)
     {
@@ -54,13 +54,18 @@ public sealed class TextButton(object id) : IButton, IDisposable
         }
     }
 
-    private void OnButtonSelected(object? sender)
+    private void OnFocusChanged(object? sender)
     {
         if (sender is MouseDTO mouse)
         {
-            Selected = Graphic?.GetGlobalBounds().Contains(mouse) ?? false;
+            if (Graphic?.GetGlobalBounds().Contains(mouse) ?? false)
+            {
+                Focused = true;
+                OnFocus?.Invoke(Id);
+                return;
+            }
 
-            if (Selected) OnSelected?.Invoke(true);
+            Focused = false;
         }
     }
     #endregion
@@ -70,7 +75,7 @@ public sealed class TextButton(object id) : IButton, IDisposable
     {
         Graphic?.Dispose();
         Graphic = null;
-        Global.UnSubscribe(EEvent.MouseMoved, OnButtonSelected);
+        Global.UnSubscribe(EEvent.MouseMoved, OnFocusChanged);
         Global.UnSubscribe(EEvent.MouseButtonPressed, OnButtonClicked);
     }
     #endregion

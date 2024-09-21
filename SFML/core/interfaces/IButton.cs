@@ -3,7 +3,7 @@
 public interface IButton
 {
     event Action<object?>? OnClicked;
-    event Action<object?>? OnSelected;
+    event Action<object?>? OnFocus;
 
     void Dispose();
     void LoadEvents();

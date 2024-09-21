@@ -1,94 +1,106 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-// TODO :: Alterar o design da caixa de logs;
-
-public sealed class LoggerHUD : RectangleShape, IGameObject, IDisposable
+public sealed class LoggerHUD : IGameObject, IDisposable
 {
-    private ELogger Guide { get; set; }
+    private IList<IButton> Buttons { get; } = [];
+    private ELogger SelectedGuide { get; set; } = ELogger.General;
     private Dictionary<ELogger, List<string>> Loggers { get; } = [];
+    private (float X, float Y, float Width, float Height) Rect { get; set; } = new(0, 0, 0, 0);
 
     #region Build
-    public void LoadEvents()
-    {
-        Global.Subscribe(EEvent.Logger, OnLoggerReceive);
-        Global.Subscribe(EEvent.MouseButtonPressed, OnGuideClicked);
-    }
-
     public void LoadContent()
     {
-        foreach (var key in Enum.GetValues<ELogger>()) Loggers.Add(key, []);
+        Rect = new(5f, Global.WINDOW_HEIGHT - 160f, 200f, 160f);
 
-        Size = new(200, 150);
-        FillColor = Factory.Color(EColor.Transparent);
-        Position = new(5, Global.WINDOW_HEIGHT - (Size.Y + 5));
+        var (posX, space) = (5f, 70f);
+
+        foreach (var guide in Enum.GetValues<ELogger>())
+        {
+            Loggers.Add(guide, []);
+
+            Buttons.Add(new TextButton(guide)
+            {
+                Size = 20,
+                Font = EFont.Romulus,
+                Position = new(posX, Rect.Y),
+                Text = Enum.GetName(guide)!,
+            });
+            posX += space;
+        }
+    }
+
+    public void LoadEvents()
+    {
+        foreach (IButton button in Buttons)
+        {
+            button.LoadEvents();
+            button.OnClicked += OnButtonClicked;
+        }
+
+        Global.Subscribe(EEvent.Logger, OnLoggerReceive);
     }
 
     public void Draw(RenderWindow window)
     {
-        window.Draw(this);
+        foreach (IButton button in Buttons) button.Draw(window);
 
-        int horizontal = 10;
-        foreach (var guide in Enum.GetValues<ELogger>())
+        int gap = 24;
+        foreach (var logger in Loggers[SelectedGuide].Take(^10..))
         {
-            var text = new Text($"{guide}", Content.GetResource(EFont.OpenSansSemibold), 12)
+            window.Draw(new Text(logger, Content.GetResource(EFont.OpenSansRegular), 12)
             {
-                FillColor = guide == Guide ? Color.Green : Color.White,
-                Position = Position + new Vector2f(horizontal, 01),
-            };
-            horizontal += 67;
-            window.Draw(text);
-        }
-
-        int vertical = 18;
-        foreach (var logger in Loggers[Guide].Take(^10..))
-        {
-            var text = new Text(logger, Content.GetResource(EFont.OpenSansRegular), 10)
-            {
-                FillColor = Color.White,
-                Position = Position + new Vector2f(05, vertical),
-            };
-            vertical += 11;
-            window.Draw(text);
+                FillColor = Factory.Color(EColor.White),
+                Position = new Vector2f(Rect.X, Rect.Y + gap),
+            });
+            gap += 11;
         }
     }
     #endregion
 
     #region Event
-    private void OnGuideClicked(object? sender)
+    private void OnButtonClicked(object? sender)
     {
-        if (sender is MouseDTO mouse)
+        if (sender is ELogger guide)
         {
-            if (mouse.Button != EMouse.Left) return;
+            SelectedGuide = guide;
 
-            if (GetGlobalBounds().Contains(mouse.X, mouse.Y))
-                Guide = (int)Guide switch
+            foreach (TextButton button in Buttons)
+            {
+                if (button.Id == sender)
                 {
-                    0 => ELogger.Debug,
-                    1 => ELogger.General,
-                    _ => ELogger.Dialog,
-                };
+                    button.Color = EColor.CornFlowerBlue;
+                    continue;
+                }
+                button.Color = EColor.White;
+            }
         }
     }
 
     private void OnLoggerReceive(object? sender)
     {
-        if (sender is LoggerDTO x)
+        if (sender is LoggerDTO dto)
         {
-            if (Loggers[x.Guide].Count >= 50)
-                Loggers[x.Guide].RemoveRange(0, 25);
+            if (Loggers[dto.Guide].Count >= 50)
+                Loggers[dto.Guide].RemoveRange(0, 25);
 
-            Loggers[x.Guide].Add(x.Message);
+            Loggers[dto.Guide].Add(dto.Message);
         }
     }
     #endregion
 
     #region Dispose
-    public new void Dispose()
+    public void Dispose()
     {
         Global.UnSubscribe(EEvent.Logger, OnLoggerReceive);
-        Global.UnSubscribe(EEvent.MouseButtonPressed, OnGuideClicked);
 
-        foreach (var key in Enum.GetValues<ELogger>()) Loggers[key].Clear();
+        foreach (IButton button in Buttons)
+        {
+            button.OnClicked -= OnButtonClicked;
+            button.Dispose();
+        }
+
+        Buttons.Clear();
+        Loggers.Clear();
     }
     #endregion
 }
