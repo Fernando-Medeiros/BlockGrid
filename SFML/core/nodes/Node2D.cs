@@ -5,7 +5,7 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
     #region Property
     private ESprite? Terrain { get; set; }
     public IBody2D? Body { get; private set; }
-    public EOpacity Opacity { get; private set; }
+    public EOpacity Opacity { get; private set; } = EOpacity.Opaque;
     public Position2D Position2D { get; init; } = position2D;
 
     // TODO :: Refatorar
@@ -96,11 +96,18 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
     #endregion
 
     #region Dispose
-    public void Dispose()
+    public void Clear()
     {
         Body = null;
         Terrain = null;
         GameItems.Clear();
+        Opacity = EOpacity.Opaque;
+    }
+
+    public void Dispose()
+    {
+        Body?.Dispose();
+        Clear();
         NavigationHandler = (_, _) => null;
     }
     #endregion

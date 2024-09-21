@@ -4,8 +4,7 @@ public sealed class RegionSchema
 {
     public string Name { get; set; } = string.Empty;
     public EBiome Biome { get; set; } = EBiome.Forest;
-    public List<List<NodeSchema>> Nodes { get; set; } = [];
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public List<NodeSchema> Nodes { get; set; } = [];
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }
 
@@ -13,7 +12,6 @@ public sealed class NodeSchema
 {
     public byte Row { get; set; } = 0;
     public byte Column { get; set; } = 0;
-    public bool Discovered { get; set; } = false;
     public BodySchema? Body { get; set; } = null;
     public List<ItemSchema> Items { get; set; } = [];
 }

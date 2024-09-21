@@ -16,6 +16,8 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
         Movement = new MovementComponent();
 
         Global.Subscribe(EEvent.KeyPressed, Execute);
+
+        Light?.VisibilityTo(this, EOpacity.Light);
     }
 
     #region Property
@@ -54,7 +56,7 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
 
     public void Dispose()
     {
-        Light?.VisibilityTo(this, EOpacity.Regular);
+        Light?.VisibilityTo(this, EOpacity.Opaque);
 
         Type = null;
         Light = null;

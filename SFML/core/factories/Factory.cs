@@ -5,7 +5,6 @@ public static class Factory
     #region Color
     public static Color Color(EOpacity opacity) => opacity switch
     {
-        EOpacity.Dark => new(255, 255, 255, Convert.ToByte(opacity)),
         EOpacity.Light => new(255, 255, 255, Convert.ToByte(opacity)),
         EOpacity.Opaque => new(255, 255, 255, Convert.ToByte(opacity)),
         EOpacity.Regular => new(255, 255, 255, Convert.ToByte(opacity)),

@@ -61,12 +61,9 @@ public class WorldView(FloatRect viewRect)
         float minY = Center.Y - height;
         float maxY = Center.Y + height;
 
-        foreach (var nodeList in Collection)
-            foreach (var node in nodeList)
+        foreach (var nodes in Collection)
+            foreach (var node in nodes)
             {
-                if (node.Opacity == EOpacity.Dark)
-                    continue;
-
                 var posX = node.Position2D.X;
                 var posY = node.Position2D.Y;
 
@@ -82,46 +79,41 @@ public class WorldView(FloatRect viewRect)
     // TODO :: Refatorar
     private void OnRegionSaved(object? sender)
     {
-        var schema = new RegionSchema
+        var regionSchema = new RegionSchema
         {
             Name = "0",
-            Biome = App.CurrentBiome
+            Biome = App.CurrentBiome,
         };
 
-        foreach (var nodeList in Collection)
-        {
-            schema.Nodes.Add([]);
-
-            foreach (var node in nodeList)
+        foreach (var nodes in Collection)
+            foreach (var node in nodes)
             {
+                if (node.Body is null && node.GameItems.Count == 0) continue;
+
                 node.Position2D.Deconstruct(out var row, out var column, out _, out _);
 
                 var nodeSchema = new NodeSchema()
                 {
                     Row = row,
                     Column = column,
-                    Discovered = node.Opacity != EOpacity.Dark,
                 };
 
-                if (node.Body != null)
+                if (node.Body is IBody2D body)
                     nodeSchema.Body = new()
                     {
-                        Type = node.Body.Type ?? default,
-                        Sprite = node.Body.Sprite ?? default
+                        Type = (EBody)body.Type,
+                        Sprite = (ESprite)body.Sprite
                     };
 
                 foreach (var item in node.GameItems)
                     nodeSchema.Items.Add(new() { Sprite = item.Sprite });
 
-                schema.Nodes.ElementAt(row).Add(nodeSchema);
+                regionSchema.Nodes.Add(nodeSchema);
 
-                node.SetBody(null);
-                node.GameItems.Clear();
-                node.SetOpacity(EOpacity.Dark);
+                node.Clear();
             }
-        }
 
-        Content.SerializeSchema(schema, "0");
+        Content.SerializeSchema(regionSchema);
     }
 
     // TODO :: Refatorar
@@ -131,37 +123,34 @@ public class WorldView(FloatRect viewRect)
         {
             Global.Invoke(EEvent.Transport, regionSchema.Biome);
 
-            foreach (var nodeSchemas in regionSchema.Nodes)
-                foreach (var schema in nodeSchemas)
+            foreach (var schema in regionSchema.Nodes)
+            {
+                var node = Collection.ElementAt(schema.Row).ElementAt(schema.Column);
+
+                node.Clear();
+
+                foreach (var itemSchema in schema.Items)
+                    node.GameItems.Add(new GameItem() { Sprite = itemSchema.Sprite });
+
+                if (schema.Body is null) continue;
+
+                if (schema.Body.Type is EBody.Player)
                 {
-                    var node = Collection.ElementAt(schema.Row).ElementAt(schema.Column);
-
-                    node.SetBody(null);
-                    node.GameItems.Clear();
-                    node.SetOpacity(schema.Discovered ? EOpacity.Regular : EOpacity.Dark);
-
-                    foreach (var itemSchema in schema.Items)
-                        node.GameItems.Add(new GameItem() { Sprite = itemSchema.Sprite });
-
-                    if (schema.Body is null) continue;
-
-                    if (schema.Body.Type is EBody.Player)
-                    {
-                        App.CurrentPlayer?.Dispose();
-                        Global.Invoke(EEvent.Transport, Factory.Build(schema.Body.Type, node));
-                        Global.Invoke(EEvent.Camera, node.Position2D);
-                        continue;
-                    }
-
-                    Factory.Build(schema.Body.Type, node);
+                    App.CurrentPlayer?.Dispose();
+                    Global.Invoke(EEvent.Transport, Factory.Build(schema.Body.Type, node));
+                    Global.Invoke(EEvent.Camera, node.Position2D);
+                    continue;
                 }
-        }
 
-        if (App.CurrentPlayer == null)
-        {
-            var node = Collection.ElementAt(Global.MAX_ROW / 2).ElementAt(Global.MAX_COLUMN / 2);
-            Global.Invoke(EEvent.Transport, Factory.Build(EBody.Player, node));
-            Global.Invoke(EEvent.Camera, node.Position2D);
+                Factory.Build(schema.Body.Type, node);
+            };
+
+            if (App.CurrentPlayer == null)
+            {
+                var node = Collection.ElementAt(Global.MAX_ROW / 2).ElementAt(Global.MAX_COLUMN / 2);
+                Global.Invoke(EEvent.Transport, Factory.Build(EBody.Player, node));
+                Global.Invoke(EEvent.Camera, node.Position2D);
+            }
         }
     }
 
@@ -227,8 +216,8 @@ public class WorldView(FloatRect viewRect)
         Global.UnSubscribe(EEvent.KeyPressed, OnZoomChanged);
         Global.UnSubscribe(EEvent.MouseButtonPressed, OnNodeSelected);
 
-        foreach (var nodeList in Collection)
-            foreach (var node in nodeList)
+        foreach (var nodes in Collection)
+            foreach (var node in nodes)
                 node.Dispose();
 
         Collection.Clear();

@@ -65,9 +65,9 @@ public static class Content
         }
     }
 
-    public static void SerializeSchema(RegionSchema schema, string fileName)
+    public static void SerializeSchema(RegionSchema schema)
     {
-        string path = $"./resources/raw/{fileName}.xml";
+        string path = $"./resources/raw/{schema.Name}.xml";
 
         var serializer = new XmlSerializer(typeof(RegionSchema));
 
