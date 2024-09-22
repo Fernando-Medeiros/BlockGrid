@@ -5,7 +5,6 @@ namespace SFMLGame.core;
 
 public static class Content
 {
-    private static bool _started;
     private static readonly Dictionary<EFont, Font> FontResources = [];
     private static readonly Dictionary<EIcon, Sprite> IconResources = [];
     private static readonly Dictionary<ESprite, Sprite> SpriteResources = [];
@@ -25,7 +24,6 @@ public static class Content
 
     public static void LoadResources()
     {
-        if (_started) return;
         Load(FontResources);
         Load(IconResources);
         Load(SpriteResources);
@@ -33,11 +31,21 @@ public static class Content
         Load(PictureResources);
         Load(TerrainResources);
         Load(GraphicResources);
-        _started = true;
     }
     #endregion
 
     #region Build
+    private static Music? Music;
+    public static void PlayMusic()
+    {
+        Music?.Stop();
+        Music?.Dispose();
+
+        Music = new Music($"./resources/music/{Enum.GetName(App.CurrentBiome)}.mp3".ToLower());
+        Music.Loop = true;
+        Music.Play();
+    }
+
     private static void Load<T, C>(Dictionary<T, C> container) where T : Enum where C : class
     {
         Type keyType = typeof(T);
@@ -61,7 +69,7 @@ public static class Content
             }
             if (keyType == typeof(ESound))
             {
-                container.Add(key, new Sound(new SoundBuffer(path)) as C);
+                container.Add(key, new Sound(new SoundBuffer(path)) { Volume = 50 } as C);
                 continue;
             }
             container.Add(key, new Sprite(new Texture(path)) as C);

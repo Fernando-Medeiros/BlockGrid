@@ -41,7 +41,7 @@ internal sealed partial class App
             {
                 if (x is IBody2D body) CurrentPlayer = body;
                 if (x is INode2D node) SelectedNode = node;
-                if (x is EBiome biome) CurrentBiome = biome;
+                if (x is EBiome biome) { CurrentBiome = biome; Content.PlayMusic(); }
                 if (x is Position2D position) CurrentPosition = position;
             });
     }
