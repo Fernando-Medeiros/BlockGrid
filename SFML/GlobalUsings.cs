@@ -1,13 +1,12 @@
 ﻿global using SFML.Graphics;
 global using SFML.System;
 global using SFML.Window;
-global using SFMLGame.common;
 global using SFMLGame.core;
 global using SFMLGame.core.components;
 global using SFMLGame.core.entities;
 global using SFMLGame.core.enums;
 global using SFMLGame.core.factories;
 global using SFMLGame.core.interfaces;
-global using SFMLGame.core.objects;
 global using SFMLGame.core.nodes;
+global using SFMLGame.core.objects;
 global using SFMLGame.core.widgets;

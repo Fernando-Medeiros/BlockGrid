@@ -12,11 +12,11 @@ public sealed class ActionComponent : IActionComponent
         {
             node = body.Metadata?.ResolveDirection(body, position);
 
-            if (Is.Type<IBody2D>(node?.Body)) break;
+            if (node?.Body is not null) break;
         }
 
-        if (Is.Null(node) || Is.Null(node?.Body)) return;
+        if (node is null || node.Body is null) return;
 
-        node?.Body?.Status?.ReceiveDamage(1);
+        node.Body?.Status?.ReceiveDamage(1);
     }
 }
