@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.interfaces;
 
-public interface IGameItem
+public interface IObject2D
 {
     ESprite Sprite { get; }
 }

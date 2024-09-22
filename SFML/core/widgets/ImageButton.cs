@@ -1,18 +1,14 @@
 ﻿namespace SFMLGame.core.widgets;
 
-public sealed class TextButton : IButton, IDisposable
+public sealed class ImageButton : IButton, IDisposable
 {
-    private Text? Graphic { get; set; }
-    private bool Focused { get; set; } = false;
+    private Sprite? Graphic { get; set; }
+    private bool Focused { get; set; }
 
     #region Property
     public required object Id { get; init; }
-    public required string Text { get; set; }
+    public required Enum Image { get; set; }
     public required Vector2f Position { get; set; }
-    public uint Size { get; set; } = 12;
-    public EColor Color { get; set; } = EColor.White;
-    public EFont Font { get; set; } = EFont.Romulus;
-    public EColor FocusedColor { get; set; } = EColor.GoldRod;
     #endregion
 
     #region Build
@@ -24,16 +20,25 @@ public sealed class TextButton : IButton, IDisposable
 
     public void Draw(RenderWindow window)
     {
-        window.Draw(Graphic = new Text()
+        var sprite = Image switch
         {
-            Position = Position,
-            CharacterSize = Size,
-            OutlineThickness = 1f,
-            DisplayedString = Text,
-            Font = Content.GetResource(Font),
-            FillColor = Focused ? Factory.Color(FocusedColor) : Factory.Color(Color),
-            OutlineColor = Factory.Color(EColor.Black),
-        });
+            EIcon resource => Content.GetResource(resource),
+            ESprite resource => Content.GetResource(resource),
+            EPicture resource => Content.GetResource(resource),
+            EGraphic resource => Content.GetResource(resource),
+            _ => throw new Exception()
+        };
+        sprite.Position = Position;
+        sprite.Color = Factory.Color(EOpacity.Light);
+        window.Draw(Graphic = sprite);
+
+        if (Focused)
+        {
+            sprite = Content.GetResource(EGraphic.SelectedNode);
+            sprite.Position = Position;
+            sprite.Color = Factory.Color(EOpacity.Light);
+            window.Draw(sprite);
+        }
     }
     #endregion
 
@@ -75,7 +80,6 @@ public sealed class TextButton : IButton, IDisposable
     #region Dispose
     public void Dispose()
     {
-        Graphic?.Dispose();
         Graphic = null;
         OnFocus = null;
         OnClicked = null;

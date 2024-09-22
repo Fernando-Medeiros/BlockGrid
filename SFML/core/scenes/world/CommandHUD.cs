@@ -2,85 +2,68 @@
 
 public sealed class CommandHUD : IGameObject, IDisposable
 {
-    private Font? Font { get; set; }
-    private IList<(EIcon, string, Vector2f)> Collection { get; } = [];
+    private IList<IButton> Buttons { get; } = [];
+    private Rect Rect { get; set; } = Rect.Empty;
 
     #region Build
-    public void LoadEvents()
-    {
-        Global.Subscribe(EEvent.MouseButtonPressed, OnCommandClicked);
-    }
-
     public void LoadContent()
     {
-        var (posX, posY, space) = ((float)(Global.WINDOW_WIDTH - Global.RECT), (float)Global.WINDOW_HEIGHT, 5f);
-        posX -= space;
+        Rect = new(X: Global.WINDOW_WIDTH - Global.RECT - 5, Y: Global.WINDOW_HEIGHT - 5, Width: 0f, Height: 0f);
 
-        posY -= Global.RECT + space;
-        Collection.Add((EIcon.Exit, Key.Escape[..3], new(posX, posY)));
+        var (posY, space) = (Rect.Y, 5f);
 
-        posY -= Global.RECT + space;
-        Collection.Add((EIcon.ZoomOut, Key.X, new(posX, posY)));
+        foreach (EIcon icon in Enum.GetValues<EIcon>())
+        {
+            posY -= Global.RECT + space;
 
-        posY -= Global.RECT + space;
-        Collection.Add((EIcon.ZoomIn, Key.Z, new(posX, posY)));
+            Buttons.Add(new ImageButton()
+            {
+                Id = icon,
+                Image = icon,
+                Position = new(Rect.X, posY),
+            });
+        }
+    }
 
-        Font = Content.GetResource(EFont.OpenSansSemibold);
+    public void LoadEvents()
+    {
+        foreach (IButton button in Buttons)
+        {
+            button.LoadEvents();
+            button.OnClicked += OnButtonClicked;
+        }
     }
 
     public void Draw(RenderWindow window)
     {
-        foreach (var (icon, command, position) in Collection)
-        {
-            var sprite = Content.GetResource(icon);
-            sprite.Color = Factory.Color(EColor.GoldRod);
-            sprite.Position = position;
-            window.Draw(sprite);
-
-            window.Draw(new Text(command, Font, 14)
-            {
-                OutlineThickness = 1f,
-                FillColor = Factory.Color(EColor.White),
-                OutlineColor = Factory.Color(EColor.Black),
-                Position = position,
-            });
-        }
+        foreach (IButton button in Buttons) button.Draw(window);
     }
     #endregion
 
     #region Event
-    private void OnCommandClicked(object? sender)
+    private void OnButtonClicked(object? sender)
     {
-        if (sender is MouseDTO mouse)
+        if (sender is EIcon.Exit)
         {
-            if (mouse.Button != EMouse.Left) return;
+            Global.Invoke(EEvent.SaveGame, null);
+            Global.Invoke(EEvent.Scene, EScene.Main);
+        };
 
-            foreach (var (icon, _, pos) in Collection)
-            {
-                if (mouse.X >= pos.X && mouse.X <= pos.X + Global.RECT &&
-                    mouse.Y >= pos.Y && mouse.Y <= pos.Y + Global.RECT)
-                {
-                    if (icon == EIcon.Exit)
-                    {
-                        Global.Invoke(EEvent.SaveGame, null);
-                        Global.Invoke(EEvent.Scene, EScene.Main);
-                        break;
-                    };
-                    if (icon == EIcon.ZoomIn) Global.Invoke(EEvent.KeyPressed, Key.Z);
-                    if (icon == EIcon.ZoomOut) Global.Invoke(EEvent.KeyPressed, Key.X);
-                }
-            }
-        }
+        if (sender is EIcon.ZoomIn) Global.Invoke(EEvent.KeyPressed, Key.Z);
+        if (sender is EIcon.ZoomOut) Global.Invoke(EEvent.KeyPressed, Key.X);
     }
     #endregion
 
     #region Dispose
     public void Dispose()
     {
-        Global.UnSubscribe(EEvent.MouseButtonPressed, OnCommandClicked);
+        foreach (IButton button in Buttons)
+        {
+            button.OnClicked -= OnButtonClicked;
+            button.Dispose();
+        }
 
-        Font = null;
-        Collection.Clear();
+        Buttons.Clear();
     }
     #endregion
 }

@@ -3,7 +3,7 @@
 public sealed class BackgroundView : IGameObject, IDisposable
 {
     private (byte Row, byte Column) Center { get; set; } = (0, 0);
-    private IList<IList<(ESprite, Position2D)>> Collection { get; } = [];
+    private IList<IList<(ETerrain, Position2D)>> Collection { get; } = [];
     private int MaxRow { get; } = Global.WINDOW_HEIGHT / Global.RECT + 1;
     private int MaxColumn { get; } = Global.WINDOW_WIDTH / Global.RECT + 1;
 

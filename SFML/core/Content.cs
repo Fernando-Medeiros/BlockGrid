@@ -10,6 +10,7 @@ public static class Content
     private static readonly Dictionary<EIcon, Sprite> IconResources = [];
     private static readonly Dictionary<ESprite, Sprite> SpriteResources = [];
     private static readonly Dictionary<EPicture, Sprite> PictureResources = [];
+    private static readonly Dictionary<ETerrain, Sprite> TerrainResources = [];
     private static readonly Dictionary<ESound, Sound> SoundResources = [];
     private static readonly Dictionary<EGraphic, Sprite> GraphicResources = [];
 
@@ -17,6 +18,7 @@ public static class Content
     public static Font GetResource(EFont font) => FontResources[font];
     public static Sprite GetResource(EIcon icon) => IconResources[icon];
     public static Sprite GetResource(ESprite sprite) => SpriteResources[sprite];
+    public static Sprite GetResource(ETerrain terrain) => TerrainResources[terrain];
     public static Sound GetResource(ESound sound) => SoundResources[sound];
     public static Sprite GetResource(EPicture picture) => PictureResources[picture];
     public static Sprite GetResource(EGraphic graphic) => GraphicResources[graphic];
@@ -29,6 +31,7 @@ public static class Content
         Load(SpriteResources);
         Load(SoundResources);
         Load(PictureResources);
+        Load(TerrainResources);
         Load(GraphicResources);
         _started = true;
     }

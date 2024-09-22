@@ -6,14 +6,13 @@ public sealed class MovementComponent : IMovementComponent
     {
         var node = body.Metadata?.ResolveDirection(body, keyCode);
 
-        if (Is.Null(node) || Is.Type<IBody2D>(node?.Body)) return;
+        if (node is null || node.Body is not null) return;
 
         body.SetBody(null);
         body.SetNode(node);
         body.SetBody(body);
 
-        var sound = Content.GetResource(ESound.StepLeaves0);
-        sound.Volume = 10;
+        var sound = Content.GetResource(Factory.Shuffle((ETerrain)node.Terrain));
         sound.Play();
     }
 }

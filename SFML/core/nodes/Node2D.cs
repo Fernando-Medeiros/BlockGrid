@@ -3,17 +3,18 @@
 public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
 {
     #region Property
-    private ESprite? Terrain { get; set; }
+    public EBiome? Biome { get; private set; }
+    public ETerrain? Terrain { get; private set; }
     public IBody2D? Body { get; private set; }
     public EOpacity Opacity { get; private set; } = EOpacity.Opaque;
     public Position2D Position2D { get; init; } = position2D;
 
     // TODO :: Refatorar
-    public IList<IGameItem> GameItems { get; init; } = [];
+    public IList<IObject2D> Objects { get; init; } = [];
     #endregion
 
     #region Static Common
-    public static Func<EDirection, Position2D, INode2D?> NavigationHandler = (_, _) => null;
+    public static Func<EDirection, Position2D, INode2D?>? Navigation;
     #endregion
 
     #region Action
@@ -25,7 +26,7 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
     {
         INode2D? node = this;
         foreach (var direction in directions)
-            node = node is INode2D ? NavigationHandler(direction, node.Position2D) : node;
+            node = node is INode2D ? Navigation?.Invoke(direction, node.Position2D) : node;
         return node;
     }
 
@@ -41,9 +42,13 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
     #region Canva Layers
     private void DrawDynamicBiome(RenderWindow window)
     {
-        if (Terrain is null) Terrain ??= Factory.Shuffle(App.CurrentBiome);
+        if (Biome != App.CurrentBiome)
+        {
+            Biome = App.CurrentBiome;
+            Terrain = Factory.Shuffle(App.CurrentBiome);
+        }
 
-        var sprite = Content.GetResource((ESprite)Terrain);
+        var sprite = Content.GetResource((ETerrain)Terrain);
         sprite.Color = Factory.Color(Opacity);
         sprite.Position = Position2D;
         window.Draw(sprite);
@@ -51,7 +56,7 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
 
     private void DrawItems(RenderWindow window)
     {
-        foreach (var gameItem in GameItems)
+        foreach (var gameItem in Objects)
         {
             var sprite = Content.GetResource(gameItem.Sprite);
             sprite.Color = Factory.Color(Opacity);
@@ -64,9 +69,10 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
     {
         if (Body is null) return;
 
-        if (Opacity is EOpacity.Regular && Body.Type != EBody.Player) return;
+        if (Opacity is EOpacity.Opaque or EOpacity.Regular && Body.Type != EBody.Player) return;
 
         var sprite = Content.GetResource((ESprite)Body.Sprite);
+        sprite.Color = Factory.Color(Opacity);
 
         if (Body.Type != EBody.Static)
         {
@@ -100,7 +106,7 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
     {
         Body = null;
         Terrain = null;
-        GameItems.Clear();
+        Objects.Clear();
         Opacity = EOpacity.Opaque;
     }
 
@@ -108,7 +114,6 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
     {
         Body?.Dispose();
         Clear();
-        NavigationHandler = (_, _) => null;
     }
     #endregion
 }

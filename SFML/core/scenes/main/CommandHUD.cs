@@ -6,20 +6,24 @@ public sealed class CommandHUD : IGameObject, IDisposable
 
     private Text Title { get; set; } = new();
     private IList<IButton> Buttons { get; } = [];
+    private Rect Rect { get; set; } = Rect.Empty;
 
     #region Build
     public void LoadContent()
     {
-        var (posX, posY, space) = (Global.WINDOW_WIDTH / 2, Global.WINDOW_HEIGHT / 3f, 60f);
+        Rect = new(X: Global.WINDOW_WIDTH / 2, Y: Global.WINDOW_HEIGHT / 3, Width: 0f, Height: 0f);
+
+        var (posY, space) = (Global.WINDOW_HEIGHT / 3f, 60f);
 
         foreach (var cmd in Enum.GetValues<ECmd>())
         {
-            Buttons.Add(new TextButton(cmd)
+            Buttons.Add(new TextButton()
             {
+                Id = cmd,
                 Size = 35,
                 Text = cmd.ToString(),
                 Font = EFont.Romulus,
-                Position = new(posX, posY),
+                Position = new(Rect.X, posY),
             });
             posY += space;
         }

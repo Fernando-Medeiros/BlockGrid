@@ -34,7 +34,8 @@ public sealed class WorldScene : View, IGameObject, IDisposable
         Collection.Add(new EnemyHUD());
         Collection.Add(new LoggerHUD());
         Collection.Add(new CommandHUD());
-        //Collection.Add(new WorldMapHUD()); // TODO :: Refazer o mapa para um formato simples e eficiente.
+        Collection.Add(new WorldMapHUD());
+        Collection.Add(new DeveloperHUD());
 
         foreach (var gameObject in Collection) gameObject.LoadContent();
     }

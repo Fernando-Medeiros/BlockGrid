@@ -10,11 +10,23 @@ public sealed record Position2D(byte Row, byte Column, float X, float Y)
     }
 };
 
+public sealed record Rect(float X, float Y, float Width, float Height)
+{
+    public (float X, float Y) Center => (X + (Width / 2), Y + (Height / 2));
+
+    public static Rect Empty => new(0, 0, 0, 0);
+
+    public static implicit operator Vector2f(Rect rect)
+    {
+        return new(rect.X, rect.Y);
+    }
+};
+
 public sealed record MouseDTO(EMouse Button, int X, int Y)
 {
-    public static implicit operator Vector2f(MouseDTO postion)
+    public static implicit operator Vector2f(MouseDTO mouse)
     {
-        return new(postion.X, postion.Y);
+        return new(mouse.X, mouse.Y);
     }
 }
 

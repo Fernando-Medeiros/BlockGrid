@@ -24,20 +24,49 @@ public static class Factory
     #endregion
 
     #region Shuffle
-    public static ESprite Shuffle(EBiome biome) => biome switch
+    public static ESound Shuffle(ETerrain terrain) => terrain switch
     {
-        EBiome.BorealForest => App.Shuffle([ESprite.BorealForestA, ESprite.BorealForestB, ESprite.BorealForestC, ESprite.BorealForestD]),
-        EBiome.DarkForest => App.Shuffle([ESprite.DarkForestA, ESprite.DarkForestB, ESprite.DarkForestC, ESprite.DarkForestD]),
-        EBiome.Desert => App.Shuffle([ESprite.DesertA, ESprite.DesertB, ESprite.DesertC, ESprite.DesertD]),
-        EBiome.Forest => App.Shuffle([ESprite.ForestA, ESprite.ForestB, ESprite.ForestC, ESprite.ForestD]),
-        EBiome.GrassLand => App.Shuffle([ESprite.GrassLandA, ESprite.GrassLandB, ESprite.GrassLandC, ESprite.GrassLandD]),
-        EBiome.Highland => App.Shuffle([ESprite.HighlandA, ESprite.HighlandB, ESprite.HighlandC, ESprite.HighlandD]),
-        EBiome.Mountain => App.Shuffle([ESprite.MountainA, ESprite.MountainB, ESprite.MountainC, ESprite.MountainD]),
-        EBiome.Savanna => App.Shuffle([ESprite.SavannaA, ESprite.SavannaB, ESprite.SavannaC, ESprite.SavannaD,]),
-        EBiome.Snow => App.Shuffle([ESprite.SnowA, ESprite.SnowB, ESprite.SnowC, ESprite.SnowD]),
-        EBiome.Swamp => App.Shuffle([ESprite.SwampA, ESprite.SwampB, ESprite.SwampC, ESprite.SwampD]),
-        EBiome.TropicalForest => App.Shuffle([ESprite.TropicalForestA, ESprite.TropicalForestB, ESprite.TropicalForestC, ESprite.TropicalForestD]),
-        EBiome.Tundra => App.Shuffle([ESprite.TundraA, ESprite.TundraB, ESprite.TundraC, ESprite.TundraD]),
+        ETerrain.BorealForestA or ETerrain.BorealForestB => App.Shuffle([ESound.StepLeavesA, ESound.StepLeavesB]),
+        ETerrain.BorealForestC or ETerrain.BorealForestD => App.Shuffle([ESound.StepLeavesA, ESound.StepLeavesB]),
+        ETerrain.DarkForestA or ETerrain.DarkForestB => App.Shuffle([ESound.StepLeavesA, ESound.StepLeavesB]),
+        ETerrain.DarkForestC or ETerrain.DarkForestD => App.Shuffle([ESound.StepLeavesA, ESound.StepLeavesB]),
+        ETerrain.DesertA or ETerrain.DesertB => App.Shuffle([ESound.StepSandA, ESound.StepSandB]),
+        ETerrain.DesertC or ETerrain.DesertD => App.Shuffle([ESound.StepSandC, ESound.StepSandD]),
+        ETerrain.ForestA or ETerrain.ForestB => App.Shuffle([ESound.StepLeavesA, ESound.StepLeavesB]),
+        ETerrain.ForestC or ETerrain.ForestD => App.Shuffle([ESound.StepLeavesA, ESound.StepLeavesB]),
+        ETerrain.GrassLandA or ETerrain.GrassLandB => App.Shuffle([ESound.StepLeavesA, ESound.StepLeavesB]),
+        ETerrain.GrassLandC or ETerrain.GrassLandD => App.Shuffle([ESound.StepLeavesA, ESound.StepLeavesB]),
+        ETerrain.HighlandA or ETerrain.HighlandB => App.Shuffle([ESound.StepLeavesA, ESound.StepDirtA]),
+        ETerrain.HighlandC or ETerrain.HighlandD => App.Shuffle([ESound.StepLeavesA, ESound.StepDirtB]),
+        ETerrain.MountainA or ETerrain.MountainB => App.Shuffle([ESound.StepLeavesA, ESound.StepLeavesB]),
+        ETerrain.MountainC or ETerrain.MountainD => App.Shuffle([ESound.StepLeavesA, ESound.StepLeavesB]),
+        ETerrain.SavannaA or ETerrain.SavannaB => App.Shuffle([ESound.StepLeavesA, ESound.StepDirtC]),
+        ETerrain.SavannaC or ETerrain.SavannaD => App.Shuffle([ESound.StepLeavesA, ESound.StepDirtD]),
+        ETerrain.SnowA or ETerrain.SnowB => App.Shuffle([ESound.StepSnowA, ESound.StepSnowB]),
+        ETerrain.SnowC or ETerrain.SnowD => App.Shuffle([ESound.StepSnowC, ESound.StepSnowD]),
+        ETerrain.SwampA or ETerrain.SwampB => App.Shuffle([ESound.StepMudA, ESound.StepMudB]),
+        ETerrain.SwampC or ETerrain.SwampD => App.Shuffle([ESound.StepMudC, ESound.StepMudD]),
+        ETerrain.TropicalForestA or ETerrain.TropicalForestB => App.Shuffle([ESound.StepLeavesA, ESound.StepLeavesB]),
+        ETerrain.TropicalForestC or ETerrain.TropicalForestD => App.Shuffle([ESound.StepLeavesA, ESound.StepLeavesB]),
+        ETerrain.TundraA or ETerrain.TundraB => App.Shuffle([ESound.StepIceA, ESound.StepIceB]),
+        ETerrain.TundraC or ETerrain.TundraD => App.Shuffle([ESound.StepIceC, ESound.StepIceD]),
+        _ => throw new Exception()
+    };
+
+    public static ETerrain Shuffle(EBiome biome) => biome switch
+    {
+        EBiome.BorealForest => App.Shuffle([ETerrain.BorealForestA, ETerrain.BorealForestB, ETerrain.BorealForestC, ETerrain.BorealForestD]),
+        EBiome.DarkForest => App.Shuffle([ETerrain.DarkForestA, ETerrain.DarkForestB, ETerrain.DarkForestC, ETerrain.DarkForestD]),
+        EBiome.Desert => App.Shuffle([ETerrain.DesertA, ETerrain.DesertB, ETerrain.DesertC, ETerrain.DesertD]),
+        EBiome.Forest => App.Shuffle([ETerrain.ForestA, ETerrain.ForestB, ETerrain.ForestC, ETerrain.ForestD]),
+        EBiome.GrassLand => App.Shuffle([ETerrain.GrassLandA, ETerrain.GrassLandB, ETerrain.GrassLandC, ETerrain.GrassLandD]),
+        EBiome.Highland => App.Shuffle([ETerrain.HighlandA, ETerrain.HighlandB, ETerrain.HighlandC, ETerrain.HighlandD]),
+        EBiome.Mountain => App.Shuffle([ETerrain.MountainA, ETerrain.MountainB, ETerrain.MountainC, ETerrain.MountainD]),
+        EBiome.Savanna => App.Shuffle([ETerrain.SavannaA, ETerrain.SavannaB, ETerrain.SavannaC, ETerrain.SavannaD,]),
+        EBiome.Snow => App.Shuffle([ETerrain.SnowA, ETerrain.SnowB, ETerrain.SnowC, ETerrain.SnowD]),
+        EBiome.Swamp => App.Shuffle([ETerrain.SwampA, ETerrain.SwampB, ETerrain.SwampC, ETerrain.SwampD]),
+        EBiome.TropicalForest => App.Shuffle([ETerrain.TropicalForestA, ETerrain.TropicalForestB, ETerrain.TropicalForestC, ETerrain.TropicalForestD]),
+        EBiome.Tundra => App.Shuffle([ETerrain.TundraA, ETerrain.TundraB, ETerrain.TundraC, ETerrain.TundraD]),
         _ => throw new Exception()
     };
     #endregion
@@ -49,6 +78,12 @@ public static class Factory
         EBody.Static => new StaticBody2D(node),
         EBody.Player => new PlayerBody2D(node),
         EBody.Enemy => new EnemyBody2D(node),
+        _ => throw new Exception()
+    };
+
+    public static IObject2D Build(ESprite sprite) => sprite switch
+    {
+        ESprite.Road => new Object2D() { Sprite = sprite },
         _ => throw new Exception()
     };
     #endregion

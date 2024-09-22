@@ -5,21 +5,22 @@ public sealed class LoggerHUD : IGameObject, IDisposable
     private IList<IButton> Buttons { get; } = [];
     private ELogger SelectedGuide { get; set; } = ELogger.General;
     private Dictionary<ELogger, List<string>> Loggers { get; } = [];
-    private (float X, float Y, float Width, float Height) Rect { get; set; } = new(0, 0, 0, 0);
+    private Rect Rect { get; set; } = Rect.Empty;
 
     #region Build
     public void LoadContent()
     {
-        Rect = new(5f, Global.WINDOW_HEIGHT - 160f, 200f, 160f);
+        Rect = new(X: 5f, Y: Global.WINDOW_HEIGHT - 160f, Width: 200f, Height: 160f);
 
-        var (posX, space) = (5f, 70f);
+        var (posX, space) = (Rect.X, 70f);
 
         foreach (var guide in Enum.GetValues<ELogger>())
         {
             Loggers.Add(guide, []);
 
-            Buttons.Add(new TextButton(guide)
+            Buttons.Add(new TextButton()
             {
+                Id = guide,
                 Size = 20,
                 Font = EFont.Romulus,
                 Position = new(posX, Rect.Y),

@@ -21,28 +21,12 @@ public class WorldView(FloatRect viewRect)
                 Collection.ElementAt(row).Add(new Node2D(position2D));
             }
         }
-
-        Node2D.NavigationHandler = INode2D? (EDirection direction, Position2D position2D) =>
-    {
-        position2D.Deconstruct(out var row, out var column, out _, out _);
-
-        return direction switch
-        {
-            EDirection.Left => Collection.ElementAtOrDefault(row)?.ElementAtOrDefault(column - 1),
-            EDirection.Right => Collection.ElementAtOrDefault(row)?.ElementAtOrDefault(column + 1),
-            EDirection.Top => Collection.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column),
-            EDirection.TopLeft => Collection.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column - 1),
-            EDirection.TopRight => Collection.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column + 1),
-            EDirection.Bottom => Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column),
-            EDirection.BottomLeft => Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column - 1),
-            EDirection.BottomRight => Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column + 1),
-            _ => null
-        };
-    };
     }
 
     public virtual void LoadEvents()
     {
+        Node2D.Navigation += OnNodeNavigation;
+
         Global.Subscribe(EEvent.Region, OnRegionChanged);
         Global.Subscribe(EEvent.SaveGame, OnRegionSaved);
         Global.Subscribe(EEvent.Camera, OnCameraChanged);
@@ -76,6 +60,24 @@ public class WorldView(FloatRect viewRect)
     #endregion
 
     #region Event
+    private INode2D? OnNodeNavigation(EDirection direction, Position2D position2D)
+    {
+        position2D.Deconstruct(out var row, out var column, out _, out _);
+
+        return direction switch
+        {
+            EDirection.Left => Collection.ElementAtOrDefault(row)?.ElementAtOrDefault(column - 1),
+            EDirection.Right => Collection.ElementAtOrDefault(row)?.ElementAtOrDefault(column + 1),
+            EDirection.Top => Collection.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column),
+            EDirection.TopLeft => Collection.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column - 1),
+            EDirection.TopRight => Collection.ElementAtOrDefault(row - 1)?.ElementAtOrDefault(column + 1),
+            EDirection.Bottom => Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column),
+            EDirection.BottomLeft => Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column - 1),
+            EDirection.BottomRight => Collection.ElementAtOrDefault(row + 1)?.ElementAtOrDefault(column + 1),
+            _ => null
+        };
+    }
+
     // TODO :: Refatorar
     private void OnRegionSaved(object? sender)
     {
@@ -88,7 +90,7 @@ public class WorldView(FloatRect viewRect)
         foreach (var nodes in Collection)
             foreach (var node in nodes)
             {
-                if (node.Body is null && node.GameItems.Count == 0) continue;
+                if (node.Body is null && node.Objects.Count == 0) continue;
 
                 node.Position2D.Deconstruct(out var row, out var column, out _, out _);
 
@@ -105,8 +107,8 @@ public class WorldView(FloatRect viewRect)
                         Sprite = (ESprite)body.Sprite
                     };
 
-                foreach (var item in node.GameItems)
-                    nodeSchema.Items.Add(new() { Sprite = item.Sprite });
+                foreach (var item in node.Objects)
+                    nodeSchema.Objects.Add(new() { Sprite = item.Sprite });
 
                 regionSchema.Nodes.Add(nodeSchema);
 
@@ -129,8 +131,8 @@ public class WorldView(FloatRect viewRect)
 
                 node.Clear();
 
-                foreach (var itemSchema in schema.Items)
-                    node.GameItems.Add(new GameItem() { Sprite = itemSchema.Sprite });
+                foreach (var itemSchema in schema.Objects)
+                    node.Objects.Add(new Object2D() { Sprite = itemSchema.Sprite });
 
                 if (schema.Body is null) continue;
 
@@ -144,13 +146,13 @@ public class WorldView(FloatRect viewRect)
 
                 Factory.Build(schema.Body.Type, node);
             };
+        }
 
-            if (App.CurrentPlayer == null)
-            {
-                var node = Collection.ElementAt(Global.MAX_ROW / 2).ElementAt(Global.MAX_COLUMN / 2);
-                Global.Invoke(EEvent.Transport, Factory.Build(EBody.Player, node));
-                Global.Invoke(EEvent.Camera, node.Position2D);
-            }
+        if (App.CurrentPlayer == null)
+        {
+            var node = Collection.ElementAt(Global.MAX_ROW / 2).ElementAt(Global.MAX_COLUMN / 2);
+            Global.Invoke(EEvent.Transport, Factory.Build(EBody.Player, node));
+            Global.Invoke(EEvent.Camera, node.Position2D);
         }
     }
 
@@ -210,6 +212,8 @@ public class WorldView(FloatRect viewRect)
     #region Dispose
     public new void Dispose()
     {
+        Node2D.Navigation -= OnNodeNavigation;
+
         Global.UnSubscribe(EEvent.Region, OnRegionChanged);
         Global.UnSubscribe(EEvent.SaveGame, OnRegionSaved);
         Global.UnSubscribe(EEvent.Camera, OnCameraChanged);
@@ -223,19 +227,4 @@ public class WorldView(FloatRect viewRect)
         Collection.Clear();
     }
     #endregion
-}
-
-// TODO :: Otimizar a renderização e o uso do processador.
-// Este objeto é redundante porque renderiza o world, porem o exibe em uma escala menor.
-public sealed class WorldMapView : WorldView
-{
-    public WorldMapView(FloatRect rect) : base(rect)
-    {
-        Viewport = new(0.85f, 0, 0.15f, 0.15f);
-    }
-
-    public override void LoadEvents()
-    {
-        Global.Subscribe(EEvent.Camera, OnCameraChanged);
-    }
 }
