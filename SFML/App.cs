@@ -22,8 +22,6 @@ internal sealed partial class App
 
     public void ConfigureResources()
     {
-        Content.LoadResources();
-
         Scenes[EScene.Main].LoadContent();
     }
 

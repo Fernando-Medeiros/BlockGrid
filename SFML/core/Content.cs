@@ -5,6 +5,7 @@ namespace SFMLGame.core;
 
 public static class Content
 {
+    private static Music? Music;
     private static readonly Dictionary<EFont, Font> FontResources = [];
     private static readonly Dictionary<EIcon, Sprite> IconResources = [];
     private static readonly Dictionary<ESprite, Sprite> SpriteResources = [];
@@ -14,28 +15,14 @@ public static class Content
     private static readonly Dictionary<EGraphic, Sprite> GraphicResources = [];
 
     #region Action
-    public static Font GetResource(EFont font) => FontResources[font];
-    public static Sprite GetResource(EIcon icon) => IconResources[icon];
-    public static Sprite GetResource(ESprite sprite) => SpriteResources[sprite];
-    public static Sprite GetResource(ETerrain terrain) => TerrainResources[terrain];
-    public static Sound GetResource(ESound sound) => SoundResources[sound];
-    public static Sprite GetResource(EPicture picture) => PictureResources[picture];
-    public static Sprite GetResource(EGraphic graphic) => GraphicResources[graphic];
+    public static Font GetResource(EFont font) => Load(font, FontResources);
+    public static Sprite GetResource(EIcon icon) => Load(icon, IconResources);
+    public static Sprite GetResource(ESprite sprite) => Load(sprite, SpriteResources);
+    public static Sprite GetResource(ETerrain terrain) => Load(terrain, TerrainResources);
+    public static Sound GetResource(ESound sound) => Load(sound, SoundResources);
+    public static Sprite GetResource(EPicture picture) => Load(picture, PictureResources);
+    public static Sprite GetResource(EGraphic graphic) => Load(graphic, GraphicResources);
 
-    public static void LoadResources()
-    {
-        Load(FontResources);
-        Load(IconResources);
-        Load(SpriteResources);
-        Load(SoundResources);
-        Load(PictureResources);
-        Load(TerrainResources);
-        Load(GraphicResources);
-    }
-    #endregion
-
-    #region Build
-    private static Music? Music;
     public static void PlayMusic()
     {
         Music?.Stop();
@@ -45,37 +32,38 @@ public static class Content
         Music.Loop = true;
         Music.Play();
     }
+    #endregion
 
-    private static void Load<T, C>(Dictionary<T, C> container) where T : Enum where C : class
+    #region Resource
+    private static Sprite Load<T>(T enumValue, Dictionary<T, Sprite> container) where T : Enum
     {
-        Type keyType = typeof(T);
+        if (container.TryGetValue(enumValue, out Sprite? value)) return value;
 
-        var suffix = keyType == typeof(EFont) ? ".ttf"
-            : keyType == typeof(ESound) ? ".ogg"
-            : ".png";
-
-        foreach (T key in Enum.GetValues(keyType))
-        {
-            var folder = keyType.Name[1..];
-
-            var fileName = Enum.GetName(keyType, key);
-
-            var path = $"./resources/{folder}/{fileName}{suffix}".ToLower();
-
-            if (keyType == typeof(EFont))
-            {
-                container.Add(key, new Font(path) as C);
-                continue;
-            }
-            if (keyType == typeof(ESound))
-            {
-                container.Add(key, new Sound(new SoundBuffer(path)) { Volume = 50 } as C);
-                continue;
-            }
-            container.Add(key, new Sprite(new Texture(path)) as C);
-        }
+        Sprite resource = new(new Texture(Path(enumValue, "png")));
+        container.Add(enumValue, resource);
+        return resource;
     }
 
+    private static Font Load<T>(T enumValue, Dictionary<T, Font> container) where T : Enum
+    {
+        if (container.TryGetValue(enumValue, out Font? value)) return value;
+
+        Font resource = new(Path(enumValue, "ttf"));
+        container.Add(enumValue, resource);
+        return resource;
+    }
+
+    private static Sound Load<T>(T enumValue, Dictionary<T, Sound> container) where T : Enum
+    {
+        if (container.TryGetValue(enumValue, out Sound? value)) return value;
+
+        Sound resource = new(new SoundBuffer(Path(enumValue, "ogg"))) { Volume = 50 };
+        container.Add(enumValue, resource);
+        return resource;
+    }
+    #endregion
+
+    #region Region
     public static void SerializeSchema(RegionSchema schema)
     {
         string path = $"./resources/raw/{schema.Name}.xml";
@@ -109,4 +97,15 @@ public static class Content
         Global.Invoke(EEvent.Logger, new LoggerDTO(ELogger.General, $"Region {schema?.Name} Loaded"));
     }
     #endregion
+
+    private static string Path(Enum resource, string suffix)
+    {
+        Type type = resource.GetType();
+
+        var folder = type.Name[1..];
+
+        var name = Enum.GetName(type, resource);
+
+        return $"./resources/{folder}/{name}.{suffix}".ToLower();
+    }
 }
