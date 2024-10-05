@@ -4,8 +4,8 @@ public sealed class BackgroundView : IGameObject, IDisposable
 {
     private (byte Row, byte Column) Center { get; set; } = (0, 0);
     private IList<IList<(ETerrain, Position2D)>> Collection { get; } = [];
-    private int MaxRow { get; } = Global.WINDOW_HEIGHT / Global.RECT + 1;
-    private int MaxColumn { get; } = Global.WINDOW_WIDTH / Global.RECT + 1;
+    private int MaxRow { get; } = (Global.WINDOW_HEIGHT / Global.RECT) + 1;
+    private int MaxColumn { get; } = (Global.WINDOW_WIDTH / Global.RECT) + 1;
 
     #region Build
     public void LoadContent()
@@ -57,7 +57,7 @@ public sealed class BackgroundView : IGameObject, IDisposable
 
                 int dx = position.Column - Center.Column;
                 int dy = position.Row - Center.Row;
-                double distance = Math.Sqrt(dx * dx + dy * dy);
+                double distance = Math.Sqrt((dx * dx) + (dy * dy));
 
                 if (distance < Radius + 4)
                     opacity = Factory.Color(EOpacity.Regular);
@@ -98,6 +98,7 @@ public sealed class BackgroundView : IGameObject, IDisposable
         Global.UnSubscribe(EEvent.MouseMoved, OnMouseMoved);
         Center = (0, 0);
         Collection.Clear();
+        GC.Collect(GC.GetGeneration(Collection), GCCollectionMode.Forced);
     }
     #endregion
 }

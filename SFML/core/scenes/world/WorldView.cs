@@ -38,8 +38,8 @@ public class WorldView(FloatRect viewRect)
     {
         window.SetView(this);
 
-        float width = Size.X / 2 + Global.RECT;
-        float height = Size.Y / 2 + Global.RECT;
+        float width = (Size.X / 2) + Global.RECT;
+        float height = (Size.Y / 2) + Global.RECT;
         float minX = Center.X - width;
         float maxX = Center.X + width;
         float minY = Center.Y - height;
@@ -225,6 +225,7 @@ public class WorldView(FloatRect viewRect)
                 node.Dispose();
 
         Collection.Clear();
+        GC.Collect(GC.GetGeneration(Collection), GCCollectionMode.Aggressive);
     }
     #endregion
 }

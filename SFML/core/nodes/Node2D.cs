@@ -80,7 +80,7 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
             {
                 Position = Position2D + new Vector2f(2, 2),
                 Texture = sprite.Texture,
-                Radius = Global.RECT / 2 - 2,
+                Radius = (Global.RECT / 2) - 2,
                 OutlineThickness = 1f,
                 OutlineColor = Factory.Color(EColor.White),
             });
@@ -113,7 +113,7 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
     public void Dispose()
     {
         Body?.Dispose();
-        Clear();
+        Clear();        
     }
     #endregion
 }

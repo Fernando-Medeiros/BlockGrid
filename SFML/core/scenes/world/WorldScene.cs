@@ -1,8 +1,9 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class WorldScene : View, IGameObject, IDisposable
+public sealed class WorldScene : View, IGameObject
 {
     private IGameObject? World { get; set; }
+
     private FloatRect ViewRect { get; init; }
     private IList<IGameObject> Collection { get; } = [];
 
@@ -10,19 +11,23 @@ public sealed class WorldScene : View, IGameObject, IDisposable
     {
         ViewRect = viewRect;
 
-        Global.Subscribe(EEvent.Scene, (sender) =>
-        {
-            if (sender is EScene.World)
-            {
-                LoadContent();
-                LoadEvents();
-                Content.DeserializeSchema("0");
-                return;
-            }
-
-            Dispose();
-        });
+        Global.Subscribe(EEvent.Scene, OnSceneChanged);
     }
+
+    #region Initialize
+    private void OnSceneChanged(object? sender)
+    {
+        if (sender is EScene.World)
+        {
+            LoadContent();
+            LoadEvents();
+            Content.DeserializeSchema("0");
+            return;
+        }
+
+        Dispose();
+    }
+    #endregion
 
     #region Build
     public void LoadContent()
@@ -61,9 +66,12 @@ public sealed class WorldScene : View, IGameObject, IDisposable
     public new void Dispose()
     {
         foreach (var gameObject in Collection) gameObject.Dispose();
+
         Collection.Clear();
         World?.Dispose();
         World = null;
+
+        GC.Collect(GC.GetGeneration(Collection), GCCollectionMode.Aggressive);
     }
     #endregion
 }

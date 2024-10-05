@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.scenes.main;
 
-public sealed class MainScene : View, IGameObject, IDisposable
+public sealed class MainScene : View, IGameObject
 {
     private FloatRect ViewRect { get; init; }
     private IList<IGameObject> Collection { get; } = [];
@@ -9,18 +9,22 @@ public sealed class MainScene : View, IGameObject, IDisposable
     {
         ViewRect = viewRect;
 
-        Global.Subscribe(EEvent.Scene, (sender) =>
-        {
-            if (sender is EScene.Main)
-            {
-                LoadContent();
-                LoadEvents();
-                return;
-            }
-
-            Dispose();
-        });
+        Global.Subscribe(EEvent.Scene, OnSceneChanged);
     }
+
+    #region Initialize
+    private void OnSceneChanged(object? sender)
+    {
+        if (sender is EScene.Main)
+        {
+            LoadContent();
+            LoadEvents();
+            return;
+        }
+
+        Dispose();
+    }
+    #endregion
 
     #region Build
     public void LoadContent()
@@ -49,6 +53,7 @@ public sealed class MainScene : View, IGameObject, IDisposable
     {
         foreach (var gameObject in Collection) gameObject.Dispose();
         Collection.Clear();
+        GC.Collect(GC.GetGeneration(Collection), GCCollectionMode.Forced);
     }
     #endregion
 }
