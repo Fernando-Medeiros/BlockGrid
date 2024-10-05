@@ -6,19 +6,28 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<NoWarn>CS8629</NoWarn>
+	
+	<VersionPrefix>0.1</VersionPrefix>
+	<VersionSuffix>beta</VersionSuffix>
+	<Company>Fernando A. Medeiros</Company>
+	<Authors>Fernando A. Medeiros</Authors>
+	<AssemblyName>Realms-Of-Storms</AssemblyName>
+	 <ApplicationIcon>resources/icon/favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="SFML.Net" Version="2.6.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="resources\raw\" />
-  </ItemGroup>
-
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
 	  <Exec Command="if not exist $(TargetDir)resources mkdir $(TargetDir)resources" />
 	  <Exec Command="xcopy /E /I /Y $(ProjectDir)resources $(TargetDir)resources\" />
   </Target>
+
+  <ItemGroup>
+	<None Update="resources\**\*">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
+  </ItemGroup>
 
 </Project>
