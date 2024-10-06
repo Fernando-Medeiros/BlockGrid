@@ -93,7 +93,7 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
 
     private void DrawSelected(RenderWindow window)
     {
-        if (App.SelectedNode != this) return;
+        if (App.SelectedNode != this || App.SelectedNode?.Opacity != EOpacity.Light) return;
 
         var sprite = Content.GetResource(EGraphic.SelectedNode);
         sprite.Position = Position2D;
@@ -113,7 +113,7 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
     public void Dispose()
     {
         Body?.Dispose();
-        Clear();        
+        Clear();
     }
     #endregion
 }

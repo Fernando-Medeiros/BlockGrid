@@ -7,9 +7,7 @@ public sealed class DeveloperHUD : IGameObject
     private EGuide SelectedGuide { get; set; }
     private ESprite? SelectedEnemy { get; set; }
     private ESprite? SelectedObject { get; set; }
-
     private Rect Rect { get; set; } = Rect.Empty;
-
     private IList<IButton> Guides { get; } = [];
     private Dictionary<EGuide, IList<IButton>> Buttons { get; } = [];
 

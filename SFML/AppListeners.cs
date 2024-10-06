@@ -31,18 +31,18 @@ internal sealed partial class App
 
     private void OnResume()
     {
-        Global.Subscribe(EEvent.Scene, (x) =>
-            { if (x is EScene scene) CurrentScene = scene; });
+        Global.Subscribe(EEvent.Scene, (sender) =>
+            { if (sender is EScene scene) CurrentScene = scene; });
 
-        Global.Subscribe(EEvent.Camera, (x) =>
-            { if (x is Position2D position) CurrentPosition = position; });
+        Global.Subscribe(EEvent.Camera, (sender) =>
+            { if (sender is Position2D position) CurrentPosition = position; });
 
-        Global.Subscribe(EEvent.Transport, (x) =>
+        Global.Subscribe(EEvent.Transport, (sender) =>
             {
-                if (x is IBody2D body) CurrentPlayer = body;
-                if (x is INode2D node) SelectedNode = node;
-                if (x is EBiome biome) { CurrentBiome = biome; Content.PlayMusic(); }
-                if (x is Position2D position) CurrentPosition = position;
+                if (sender is IBody2D body) CurrentPlayer = body;
+                if (sender is INode2D node) SelectedNode = node;
+                if (sender is Position2D position) CurrentPosition = position;
+                if (sender is EBiome biome) { CurrentBiome = biome; Content.PlayMusic(); }
             });
     }
 
@@ -50,7 +50,7 @@ internal sealed partial class App
 
     private void OnDestroy()
     {
-        Global.Subscribe(EEvent.EndGame, (x) => Window.Close());
+        Global.Subscribe(EEvent.EndGame, (sender) => Window.Close());
     }
     #endregion
 }

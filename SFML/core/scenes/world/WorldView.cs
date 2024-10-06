@@ -4,7 +4,6 @@ public class WorldView(FloatRect viewRect)
     : View(viewRect), IGameObject, IDisposable
 {
     private FloatRect ViewRect { get; } = viewRect;
-
     private static IList<IList<INode2D>> Collection { get; } = [];
 
     #region Build 
@@ -48,8 +47,7 @@ public class WorldView(FloatRect viewRect)
         foreach (var nodes in Collection)
             foreach (var node in nodes)
             {
-                var posX = node.Position2D.X;
-                var posY = node.Position2D.Y;
+                var (posX, posY) = node.Position2D.TopLeft;
 
                 if (posX < minX || posX > maxX || posY < minY || posY > maxY)
                     continue;
@@ -62,7 +60,7 @@ public class WorldView(FloatRect viewRect)
     #region Event
     private INode2D? OnNodeNavigation(EDirection direction, Position2D position2D)
     {
-        position2D.Deconstruct(out var row, out var column, out _, out _);
+        var (row, column) = position2D.Matrix;
 
         return direction switch
         {
@@ -92,7 +90,7 @@ public class WorldView(FloatRect viewRect)
             {
                 if (node.Body is null && node.Objects.Count == 0) continue;
 
-                node.Position2D.Deconstruct(out var row, out var column, out _, out _);
+                var (row, column) = node.Position2D.Matrix;
 
                 var nodeSchema = new NodeSchema()
                 {
@@ -172,7 +170,8 @@ public class WorldView(FloatRect viewRect)
 
             INode2D node = Collection.ElementAt(row).ElementAt(column);
 
-            Global.Invoke(EEvent.Transport, node);
+            if (node.Opacity is EOpacity.Light)
+                Global.Invoke(EEvent.Transport, node);
         }
     }
 
@@ -195,12 +194,12 @@ public class WorldView(FloatRect viewRect)
 
     protected void OnCameraChanged(object? sender)
     {
-        App.CurrentPosition.Deconstruct(out _, out _, out var posX, out var posY);
+        var (X, Y) = App.CurrentPosition.TopLeft;
 
         var (width, height) = (Size.X, Size.Y);
 
-        float scrollX = posX - (width / 2);
-        float scrollY = posY - (height / 2);
+        float scrollX = X - (width / 2);
+        float scrollY = Y - (height / 2);
 
         scrollX = Math.Max(0, Math.Min(scrollX, Global.WORLD_WIDTH - width));
         scrollY = Math.Max(0, Math.Min(scrollY, Global.WORLD_HEIGHT - height));
