@@ -4,6 +4,7 @@ public sealed class TextButton : IButton, IDisposable
 {
     private Text? Graphic { get; set; }
     private bool Focused { get; set; } = false;
+    private bool Enabled { get; set; } = true;
 
     #region Property
     public required object Id { get; init; }
@@ -13,6 +14,10 @@ public sealed class TextButton : IButton, IDisposable
     public EColor Color { get; set; } = EColor.White;
     public EFont Font { get; set; } = EFont.Romulus;
     public EColor FocusedColor { get; set; } = EColor.GoldRod;
+    #endregion
+
+    #region Action
+    public void IsEnabled(bool value) => Enabled = value;
     #endregion
 
     #region Build
@@ -43,6 +48,8 @@ public sealed class TextButton : IButton, IDisposable
 
     private void OnButtonClicked(object? sender)
     {
+        if (Enabled is false) return;
+
         if (sender is MouseDTO mouse)
         {
             if (mouse.Button != EMouse.Left) return;
@@ -58,6 +65,8 @@ public sealed class TextButton : IButton, IDisposable
 
     private void OnFocusChanged(object? sender)
     {
+        if (Enabled is false) return;
+
         if (sender is MouseDTO mouse)
         {
             if (Graphic?.GetGlobalBounds().Contains(mouse) ?? false)

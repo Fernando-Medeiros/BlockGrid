@@ -3,12 +3,17 @@
 public sealed class ImageButton : IButton, IDisposable
 {
     private Sprite? Graphic { get; set; }
-    private bool Focused { get; set; }
+    private bool Focused { get; set; } = false;
+    private bool Enabled { get; set; } = true;
 
     #region Property
     public required object Id { get; init; }
     public required Enum Image { get; set; }
     public required Vector2f Position { get; set; }
+    #endregion
+
+    #region Action
+    public void IsEnabled(bool value) => Enabled = value;
     #endregion
 
     #region Build
@@ -25,9 +30,11 @@ public sealed class ImageButton : IButton, IDisposable
             EIcon resource => Content.GetResource(resource),
             ESprite resource => Content.GetResource(resource),
             EPicture resource => Content.GetResource(resource),
+            ETerrain resource => Content.GetResource(resource),
             EGraphic resource => Content.GetResource(resource),
             _ => throw new Exception()
         };
+
         sprite.Position = Position;
         sprite.Color = Factory.Color(EOpacity.Light);
         window.Draw(Graphic = sprite);
@@ -48,6 +55,8 @@ public sealed class ImageButton : IButton, IDisposable
 
     private void OnButtonClicked(object? sender)
     {
+        if (Enabled is false) return;
+
         if (sender is MouseDTO mouse)
         {
             if (mouse.Button != EMouse.Left) return;
@@ -63,6 +72,8 @@ public sealed class ImageButton : IButton, IDisposable
 
     private void OnFocusChanged(object? sender)
     {
+        if (Enabled is false) return;
+
         if (sender is MouseDTO mouse)
         {
             if (Graphic?.GetGlobalBounds().Contains(mouse) ?? false)
