@@ -10,9 +10,12 @@ public sealed class TextButton : IButton, IDisposable
     public required object Id { get; init; }
     public required string Text { get; set; }
     public required Vector2f Position { get; set; }
+
     public uint Size { get; set; } = 12;
-    public EColor Color { get; set; } = EColor.White;
+    public float OutlineThickness { get; set; } = 1f;
     public EFont Font { get; set; } = EFont.Romulus;
+    public EColor Color { get; set; } = EColor.White;
+    public EColor OutlineColor { get; set; } = EColor.Black;
     public EColor FocusedColor { get; set; } = EColor.GoldRod;
     #endregion
 
@@ -33,11 +36,11 @@ public sealed class TextButton : IButton, IDisposable
         {
             Position = Position,
             CharacterSize = Size,
-            OutlineThickness = 1f,
             DisplayedString = Text,
+            OutlineThickness = OutlineThickness,
             Font = Content.GetResource(Font),
+            OutlineColor = Factory.Color(OutlineColor),
             FillColor = Focused ? Factory.Color(FocusedColor) : Factory.Color(Color),
-            OutlineColor = Factory.Color(EColor.Black),
         });
     }
     #endregion

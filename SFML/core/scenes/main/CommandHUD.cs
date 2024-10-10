@@ -2,11 +2,10 @@
 
 public sealed class CommandHUD : IGameObject, IDisposable
 {
-    private enum ECmd : byte { NewGame, LoadGame, Options, Quit }
+    private enum ECommand : byte { New_Game, Load_Game, Options, Quit }
 
     #region Property
     private Text Title { get; set; } = new();
-    private bool Enabled { get; set; } = true;
     private IList<IButton> Buttons { get; } = [];
     private Rect Rect { get; set; } = Rect.Empty;
     private RectangleShape Background { get; set; } = new();
@@ -17,34 +16,34 @@ public sealed class CommandHUD : IGameObject, IDisposable
     {
         Rect = new(
             Width: 300f,
-            Height: 400f,
-            X: App.CurrentWidth / 2f,
-            Y: App.CurrentHeight / 3f);
+            Height: 500f,
+            X: 100f,
+            Y: 100f);
 
-        var (posY, space) = (Rect.Y, 60f);
-
-        foreach (var cmd in Enum.GetValues<ECmd>())
+        foreach (var command in Enum.GetValues<ECommand>())
         {
+            var gap = ((byte)command * 50f) + 20f;
+
+            var text = command.ToString().Replace("_", " ");
+
             Buttons.Add(new TextButton()
             {
-                Id = cmd,
-                Size = 35,
-                Text = cmd.ToString(),
-                Font = EFont.Romulus,
-                Position = new(Rect.X, posY),
+                Size = 25,
+                Text = text,
+                Id = command,
+                OutlineThickness = 0f,
+                OutlineColor = EColor.Transparent,
+                Position = new(Rect.X + 10, Rect.Y + gap),
             });
-            posY += space;
         }
 
         Title = new Text()
         {
-            CharacterSize = 100,
-            OutlineThickness = 1f,
+            CharacterSize = 30,
             DisplayedString = Global.TITLE,
             FillColor = Factory.Color(EColor.White),
-            OutlineColor = Factory.Color(EColor.Black),
             Font = Content.GetResource(EFont.Romulus),
-            Position = new Vector2f(App.CurrentWidth / 3f, 25),
+            Position = new(Rect.X - 40, Rect.Y - (Rect.Height / 10f)),
         };
 
         Background = new RectangleShape()
@@ -66,10 +65,8 @@ public sealed class CommandHUD : IGameObject, IDisposable
 
     public void Draw(RenderWindow window)
     {
-        if (Enabled is false) return;
-
-        window.Draw(Title);
         window.Draw(Background);
+        window.Draw(Title);
 
         foreach (IButton button in Buttons) button.Draw(window);
     }
@@ -78,17 +75,11 @@ public sealed class CommandHUD : IGameObject, IDisposable
     #region Event
     private void OnButtonClicked(object? sender)
     {
-        if (Enabled is false) return;
-
-        if (sender is ECmd.NewGame) Global.Invoke(EEvent.Scene, EScene.World);
-        if (sender is ECmd.LoadGame) return;
-        if (sender is ECmd.Options) return;
-        if (sender is ECmd.Quit) Global.Invoke(EEvent.EndGame, null);
+        if (sender is ECommand.New_Game) Global.Invoke(EEvent.Scene, EScene.World);
+        if (sender is ECommand.Load_Game) return;
+        if (sender is ECommand.Options) return;
+        if (sender is ECommand.Quit) Global.Invoke(EEvent.EndGame, null);
     }
-    #endregion
-
-    #region Command
-    public void SetEnabled(bool value) => Enabled = value;
     #endregion
 
     #region Dispose
