@@ -28,7 +28,8 @@ public static class Content
         Music?.Stop();
         Music?.Dispose();
 
-        Music = new Music($"./resources/music/{Enum.GetName(App.CurrentBiome)}.mp3".ToLower());
+        Music = new($"./resources/music/{Enum.GetName(App.CurrentBiome)}.mp3".ToLower());
+        Music.Volume = App.CurrentMusicVolume;
         Music.Loop = true;
         Music.Play();
     }
@@ -57,7 +58,7 @@ public static class Content
     {
         if (container.TryGetValue(enumValue, out Sound? value)) return value;
 
-        Sound resource = new(new SoundBuffer(Path(enumValue, "ogg"))) { Volume = 50 };
+        Sound resource = new(new SoundBuffer(Path(enumValue, "ogg")));
         container.Add(enumValue, resource);
         return resource;
     }

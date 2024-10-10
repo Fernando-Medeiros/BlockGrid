@@ -10,10 +10,12 @@ internal sealed partial class App
 
     static App()
     {
-        var size = new FloatRect(0, 0, Global.WINDOW_WIDTH, Global.WINDOW_HEIGHT);
+        var size = new FloatRect(0, 0, CurrentWidth, CurrentHeight);
 
-        Window = new(new(Global.WINDOW_WIDTH, Global.WINDOW_HEIGHT), Global.TITLE, Styles.Fullscreen);
-        Window.SetFramerateLimit(30);
+        Window = new(
+            new VideoMode((uint)size.Width, (uint)size.Height),
+            Global.TITLE,
+            Styles.Fullscreen);
 
         Scenes = [];
         Scenes.Add(EScene.Main, new MainScene(size));
@@ -27,11 +29,7 @@ internal sealed partial class App
 
     public void ConfigureListeners()
     {
-        OnCreate();
-        OnStart();
-        OnResume();
-        OnPause();
-        OnDestroy();
+        LoadEvents();
 
         Scenes[EScene.Main].LoadEvents();
     }
@@ -40,6 +38,8 @@ internal sealed partial class App
     {
         while (Window.IsOpen)
         {
+            Window.SetFramerateLimit(CurrentFPS);
+
             Window.DispatchEvents();
             Window.Clear(Factory.Color(EColor.Black));
 

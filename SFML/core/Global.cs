@@ -24,11 +24,13 @@ public readonly struct Key
 public static class Global
 {
     public const byte RECT = 32;
+    public const byte MAX_FPS = 144;
+    public const byte MAX_VOLUME = 100;
     public const byte MAX_ROW = 255;
-    public const string TITLE = "Realms of Storms";
     public const byte MAX_COLUMN = 255;
-    public const int WINDOW_HEIGHT = 1080;
+    public const string TITLE = "Realms of Storms";
     public const int WINDOW_WIDTH = 1920;
+    public const int WINDOW_HEIGHT = 1080;
     public const float WORLD_HEIGHT = MAX_ROW * RECT;
     public const float WORLD_WIDTH = MAX_COLUMN * RECT;
 

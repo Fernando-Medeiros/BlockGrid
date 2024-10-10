@@ -2,5 +2,7 @@
 
 public enum EGraphic : byte
 {
+    BackgroundHUD,
     SelectedNode,
+    SplitScrollbar,
 }

@@ -31,6 +31,7 @@ public sealed class MainScene : View, IGameObject
     {
         Collection.Add(new BackgroundView());
         Collection.Add(new CommandHUD());
+        Collection.Add(new ConfigurationHUD());
 
         foreach (var gameObject in Collection) gameObject.LoadContent();
     }
@@ -52,6 +53,7 @@ public sealed class MainScene : View, IGameObject
     public new void Dispose()
     {
         foreach (var gameObject in Collection) gameObject.Dispose();
+
         Collection.Clear();
         GC.Collect(GC.GetGeneration(Collection), GCCollectionMode.Forced);
     }
