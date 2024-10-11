@@ -5,7 +5,6 @@ namespace SFMLGame.core;
 
 public static class Content
 {
-    private static Music? Music;
     private static readonly Dictionary<EFont, Font> FontResources = [];
     private static readonly Dictionary<EIcon, Sprite> IconResources = [];
     private static readonly Dictionary<ESprite, Sprite> SpriteResources = [];
@@ -25,13 +24,14 @@ public static class Content
 
     public static void PlayMusic()
     {
-        Music?.Stop();
-        Music?.Dispose();
+        App.CurrentSoundtrack?.Stop();
+        App.CurrentSoundtrack?.Dispose();
 
-        Music = new($"./resources/music/{Enum.GetName(App.CurrentBiome)}.mp3".ToLower());
-        Music.Volume = App.CurrentMusicVolume;
-        Music.Loop = true;
-        Music.Play();
+        App.CurrentSoundtrack = new($"./resources/music/{Enum.GetName(App.CurrentBiome)}.mp3".ToLower());
+
+        App.CurrentSoundtrack.Volume = App.CurrentSoundtrackVolume;
+        App.CurrentSoundtrack.Loop = true;
+        App.CurrentSoundtrack.Play();
     }
     #endregion
 

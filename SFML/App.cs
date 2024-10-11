@@ -38,7 +38,10 @@ internal sealed partial class App
     {
         while (Window.IsOpen)
         {
-            Window.SetFramerateLimit(CurrentFPS);
+            if (CurrentSoundtrack != null)
+                CurrentSoundtrack.Volume = CurrentSoundtrackVolume;
+
+            Window.SetFramerateLimit(CurrentFrame);
 
             Window.DispatchEvents();
             Window.Clear(Factory.Color(EColor.Black));

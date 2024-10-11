@@ -64,7 +64,9 @@ public sealed class ImageButton : IButton, IDisposable
             if (Graphic?.GetGlobalBounds().Contains(mouse) ?? default)
             {
                 OnClicked?.Invoke(Id);
+
                 var sound = Content.GetResource(ESound.ButtonClicked);
+                sound.Volume = App.CurrentSoundVolume;
                 sound.Play();
             }
         }
