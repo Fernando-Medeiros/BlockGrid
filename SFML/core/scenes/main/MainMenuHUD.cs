@@ -1,8 +1,10 @@
 ﻿namespace SFMLGame.core.scenes.main;
 
-public sealed class CommandHUD : IGameObject, IDisposable
+public sealed class MainMenuHUD : IHud, IDisposable
 {
-    private enum ECommand : byte { New_Game, Load_Game, Options, Quit }
+    #region Field
+    private bool enable = true;
+    #endregion
 
     #region Property
     private Text Title { get; set; } = new();
@@ -12,7 +14,7 @@ public sealed class CommandHUD : IGameObject, IDisposable
     #endregion
 
     #region Build
-    public void LoadContent()
+    public void Build()
     {
         Rect = new(
             Width: 300f,
@@ -20,7 +22,7 @@ public sealed class CommandHUD : IGameObject, IDisposable
             X: 100f,
             Y: 100f);
 
-        foreach (var command in Enum.GetValues<ECommand>())
+        foreach (var command in Enum.GetValues<EMainMenu>())
         {
             var gap = ((byte)command * 50f) + 20f;
 
@@ -42,7 +44,7 @@ public sealed class CommandHUD : IGameObject, IDisposable
             CharacterSize = 30,
             DisplayedString = Global.TITLE,
             FillColor = Factory.Color(EColor.White),
-            Font = Content.GetResource(EFont.Romulus),
+            Font = core.Content.GetResource(EFont.Romulus),
             Position = new(Rect.X - 40, Rect.Y - (Rect.Height / 10f)),
         };
 
@@ -50,41 +52,56 @@ public sealed class CommandHUD : IGameObject, IDisposable
         {
             Size = new(Rect.Width, Rect.Height),
             Position = new(Rect.X - (Rect.Width / 3.5f), Rect.Y - (Rect.Height / 6f)),
-            Texture = Content.GetResource(EGraphic.BackgroundHUD).Texture,
+            Texture = core.Content.GetResource(EGraphic.BackgroundHUD).Texture,
         };
     }
 
-    public void LoadEvents()
+    public void Event()
     {
         foreach (IButton button in Buttons)
         {
-            button.LoadEvents();
+            button.Event();
             button.OnClicked += OnButtonClicked;
         }
     }
 
-    public void Draw(RenderWindow window)
+    public void Render(RenderWindow window)
     {
+        if (enable is false) return;
+
         window.Draw(Background);
         window.Draw(Title);
 
-        foreach (IButton button in Buttons) button.Draw(window);
+        foreach (IButton button in Buttons) button.Render(window);
+    }
+    #endregion
+
+    #region State
+    public void VisibilityChanged()
+    {
+        enable = !enable;
+
+        foreach (IButton button in Buttons) button.Enabled(enable);
     }
     #endregion
 
     #region Event
+    public event Action<object?>? OnClicked;
+
     private void OnButtonClicked(object? sender)
     {
-        if (sender is ECommand.New_Game) Global.Invoke(EEvent.Scene, EScene.World);
-        if (sender is ECommand.Load_Game) return;
-        if (sender is ECommand.Options) return;
-        if (sender is ECommand.Quit) Global.Invoke(EEvent.EndGame, null);
+        if (sender is EMainMenu.New_Game) Global.Invoke(EEvent.Scene, EScene.World);
+        if (sender is EMainMenu.Load_Game) OnClicked?.Invoke(EMainMenu.Load_Game);
+        if (sender is EMainMenu.Options) OnClicked?.Invoke(EMainMenu.Options);
+        if (sender is EMainMenu.Quit) Global.Invoke(EEvent.EndGame, null);
     }
     #endregion
 
     #region Dispose
     public void Dispose()
     {
+        OnClicked = null;
+
         foreach (IButton button in Buttons)
         {
             button.OnClicked -= OnButtonClicked;

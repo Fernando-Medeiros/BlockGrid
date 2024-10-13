@@ -1,13 +1,13 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
 public class WorldView(FloatRect viewRect)
-    : View(viewRect), IGameObject, IDisposable
+    : View(viewRect), IView, IDisposable
 {
     private FloatRect ViewRect { get; } = viewRect;
     private static IList<IList<INode2D>> Collection { get; } = [];
 
     #region Build 
-    public void LoadContent()
+    public void Build()
     {
         for (byte row = 0; row < Global.MAX_ROW; row++)
         {
@@ -22,7 +22,7 @@ public class WorldView(FloatRect viewRect)
         }
     }
 
-    public virtual void LoadEvents()
+    public virtual void Event()
     {
         Node2D.Navigation += OnNodeNavigation;
 
@@ -33,7 +33,7 @@ public class WorldView(FloatRect viewRect)
         Global.Subscribe(EEvent.MouseButtonPressed, OnNodeSelected);
     }
 
-    public void Draw(RenderWindow window)
+    public void Render(RenderWindow window)
     {
         window.SetView(this);
 
@@ -113,7 +113,7 @@ public class WorldView(FloatRect viewRect)
                 node.Clear();
             }
 
-        Content.SerializeSchema(regionSchema);
+        core.Content.SerializeSchema(regionSchema);
     }
 
     // TODO :: Refatorar

@@ -24,14 +24,14 @@ public static class Content
 
     public static void PlayMusic()
     {
-        App.CurrentSoundtrack?.Stop();
-        App.CurrentSoundtrack?.Dispose();
+        App.CurrentMusic?.Stop();
+        App.CurrentMusic?.Dispose();
 
-        App.CurrentSoundtrack = new($"./resources/music/{Enum.GetName(App.CurrentBiome)}.mp3".ToLower());
+        App.CurrentMusic = new($"./resources/music/{Enum.GetName(App.CurrentBiome)}.mp3".ToLower());
 
-        App.CurrentSoundtrack.Volume = App.CurrentSoundtrackVolume;
-        App.CurrentSoundtrack.Loop = true;
-        App.CurrentSoundtrack.Play();
+        App.CurrentMusic.Volume = App.CurrentMusicVolume;
+        App.CurrentMusic.Loop = true;
+        App.CurrentMusic.Play();
     }
     #endregion
 

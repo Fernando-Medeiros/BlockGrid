@@ -1,12 +1,12 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class CommandHUD : IGameObject, IDisposable
+public sealed class CommandHUD : IView, IDisposable
 {
     private IList<IButton> Buttons { get; } = [];
     private Rect Rect { get; set; } = Rect.Empty;
 
     #region Build
-    public void LoadContent()
+    public void Build()
     {
         Rect = new(X: Global.WINDOW_WIDTH - Global.RECT - 5, Y: Global.WINDOW_HEIGHT - 5, Width: 0f, Height: 0f);
 
@@ -25,18 +25,18 @@ public sealed class CommandHUD : IGameObject, IDisposable
         }
     }
 
-    public void LoadEvents()
+    public void Event()
     {
         foreach (IButton button in Buttons)
         {
-            button.LoadEvents();
+            button.Event();
             button.OnClicked += OnButtonClicked;
         }
     }
 
-    public void Draw(RenderWindow window)
+    public void Render(RenderWindow window)
     {
-        foreach (IButton button in Buttons) button.Draw(window);
+        foreach (IButton button in Buttons) button.Render(window);
     }
     #endregion
 

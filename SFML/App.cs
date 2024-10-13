@@ -6,7 +6,7 @@ namespace SFMLGame;
 internal sealed partial class App
 {
     private static RenderWindow Window { get; }
-    private static Dictionary<EScene, IGameObject> Scenes { get; }
+    private static Dictionary<EScene, IView> Scenes { get; }
 
     static App()
     {
@@ -24,29 +24,29 @@ internal sealed partial class App
 
     public void ConfigureResources()
     {
-        Scenes[EScene.Main].LoadContent();
+        Scenes[EScene.Main].Build();
     }
 
     public void ConfigureListeners()
     {
         LoadEvents();
 
-        Scenes[EScene.Main].LoadEvents();
+        Scenes[EScene.Main].Event();
     }
 
     public void Start()
     {
         while (Window.IsOpen)
         {
-            if (CurrentSoundtrack != null)
-                CurrentSoundtrack.Volume = CurrentSoundtrackVolume;
+            if (CurrentMusic != null)
+                CurrentMusic.Volume = CurrentMusicVolume;
 
             Window.SetFramerateLimit(CurrentFrame);
 
             Window.DispatchEvents();
             Window.Clear(Factory.Color(EColor.Black));
 
-            Scenes[CurrentScene].Draw(Window);
+            Scenes[CurrentScene].Render(Window);
 
             Window.Display();
         }

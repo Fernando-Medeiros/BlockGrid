@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.scenes.main;
 
-public sealed class BackgroundView : IGameObject, IDisposable
+public sealed class BackgroundView : IView, IDisposable
 {
     private (byte Row, byte Column) Center { get; set; } = (0, 0);
     private IList<IList<(ETerrain, Position2D)>> Collection { get; } = [];
@@ -8,7 +8,7 @@ public sealed class BackgroundView : IGameObject, IDisposable
     private int MaxColumn { get; } = (Global.WINDOW_WIDTH / Global.RECT) + 1;
 
     #region Build
-    public void LoadContent()
+    public void Build()
     {
         for (byte row = 0; row < MaxRow; row++)
         {
@@ -40,7 +40,7 @@ public sealed class BackgroundView : IGameObject, IDisposable
         }
     }
 
-    public void LoadEvents()
+    public void Event()
     {
         Global.Subscribe(EEvent.MouseMoved, OnMouseMoved);
     }
@@ -48,7 +48,7 @@ public sealed class BackgroundView : IGameObject, IDisposable
     private float Speed { get; set; }
     private float Radius { get; set; } = 7;
 
-    public void Draw(RenderWindow window)
+    public void Render(RenderWindow window)
     {
         foreach (var nodeList in Collection)
             foreach (var (resource, position) in nodeList)
@@ -65,7 +65,7 @@ public sealed class BackgroundView : IGameObject, IDisposable
                 if (distance < Radius)
                     opacity = Factory.Color(EOpacity.Light);
 
-                var sprite = Content.GetResource(resource);
+                var sprite = core.Content.GetResource(resource);
                 sprite.Color = opacity;
                 sprite.Position = position;
                 window.Draw(sprite);

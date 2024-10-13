@@ -1,13 +1,16 @@
 ﻿namespace SFMLGame.core.interfaces;
 
-public interface IButton
+public interface IView
 {
-    void Enabled(bool value);
-
+    void Build();
     void Event();
     void Dispose();
     void Render(RenderWindow window);
+}
+
+public interface IHud : IView
+{
+    void VisibilityChanged();
 
     event Action<object?>? OnClicked;
-    event Action<object?>? OnFocus;
 }

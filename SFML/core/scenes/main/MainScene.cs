@@ -1,14 +1,11 @@
 ﻿namespace SFMLGame.core.scenes.main;
 
-public sealed class MainScene : View, IGameObject
+public sealed class MainScene : View, IView
 {
-    private FloatRect ViewRect { get; init; }
-    private IList<IGameObject> Collection { get; } = [];
+    private IList<IView> Collection { get; } = [];
 
     public MainScene(FloatRect viewRect) : base(viewRect)
     {
-        ViewRect = viewRect;
-
         Global.Subscribe(EEvent.Scene, OnSceneChanged);
     }
 
@@ -17,8 +14,8 @@ public sealed class MainScene : View, IGameObject
     {
         if (sender is EScene.Main)
         {
-            LoadContent();
-            LoadEvents();
+            Build();
+            Event();
             return;
         }
 
@@ -27,34 +24,54 @@ public sealed class MainScene : View, IGameObject
     #endregion
 
     #region Build
-    public void LoadContent()
+    public void Build()
     {
         Collection.Add(new BackgroundView());
-        Collection.Add(new CommandHUD());
-        Collection.Add(new ConfigurationHUD());
+        Collection.Add(new MainMenuHUD());
+        Collection.Add(new OptionsHUD());
 
-        foreach (var gameObject in Collection) gameObject.LoadContent();
+        foreach (var view in Collection) view.Build();
     }
 
-    public void LoadEvents()
+    public void Event()
     {
-        foreach (var gameObject in Collection) gameObject.LoadEvents();
+        foreach (IView view in Collection)
+            view.Event();
+
+        foreach (var hud in Collection.OfType<IHud>())
+            hud.OnClicked += OnHudChanged;
     }
 
-    public void Draw(RenderWindow window)
+    public void Render(RenderWindow window)
     {
         window.SetView(this);
 
-        foreach (var gameObject in Collection) gameObject.Draw(window);
+        foreach (var view in Collection) view.Render(window);
+    }
+    #endregion
+
+    #region Event
+    private void OnHudChanged(object? sender)
+    {
+        if (sender is EMainMenu.Options)
+        {
+            foreach (IHud hud in Collection.Where(v => v is OptionsHUD or MainMenuHUD))
+                hud.VisibilityChanged();
+        }
     }
     #endregion
 
     #region Dispose
     public new void Dispose()
     {
-        foreach (var gameObject in Collection) gameObject.Dispose();
+        foreach (var view in Collection)
+            view.Dispose();
+
+        foreach (var hud in Collection.OfType<IHud>())
+            hud.OnClicked -= OnHudChanged;
 
         Collection.Clear();
+
         GC.Collect(GC.GetGeneration(Collection), GCCollectionMode.Forced);
     }
     #endregion

@@ -1,17 +1,17 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class WorldMapHUD : IGameObject, IDisposable
+public sealed class WorldMapHUD : IView, IDisposable
 {
     #region Build
-    public void LoadContent()
+    public void Build()
     {
     }
 
-    public void LoadEvents()
+    public void Event()
     {
     }
 
-    public void Draw(RenderWindow window)
+    public void Render(RenderWindow window)
     {
 
     }

@@ -1,11 +1,10 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class WorldScene : View, IGameObject
+public sealed class WorldScene : View, IView
 {
-    private IGameObject? World { get; set; }
-
+    private IView? World { get; set; }
     private FloatRect ViewRect { get; init; }
-    private IList<IGameObject> Collection { get; } = [];
+    private IList<IView> Collection { get; } = [];
 
     public WorldScene(FloatRect viewRect) : base(viewRect)
     {
@@ -19,8 +18,8 @@ public sealed class WorldScene : View, IGameObject
     {
         if (sender is EScene.World)
         {
-            LoadContent();
-            LoadEvents();
+            Build();
+            Event();
             Content.DeserializeSchema("0");
             return;
         }
@@ -30,10 +29,10 @@ public sealed class WorldScene : View, IGameObject
     #endregion
 
     #region Build
-    public void LoadContent()
+    public void Build()
     {
         World = new WorldView(ViewRect);
-        World?.LoadContent();
+        World?.Build();
 
         Collection.Add(new PlayerHUD());
         Collection.Add(new EnemyHUD());
@@ -42,32 +41,33 @@ public sealed class WorldScene : View, IGameObject
         Collection.Add(new WorldMapHUD());
         Collection.Add(new DeveloperHUD());
 
-        foreach (var gameObject in Collection) gameObject.LoadContent();
+        foreach (var view in Collection) view.Build();
     }
 
-    public void LoadEvents()
+    public void Event()
     {
-        World?.LoadEvents();
+        World?.Event();
 
-        foreach (var gameObject in Collection) gameObject.LoadEvents();
+        foreach (var view in Collection) view.Event();
     }
 
-    public void Draw(RenderWindow window)
+    public void Render(RenderWindow window)
     {
-        World?.Draw(window);
+        World?.Render(window);
 
         window.SetView(this);
 
-        foreach (var gameObject in Collection) gameObject.Draw(window);
+        foreach (var view in Collection) view.Render(window);
     }
     #endregion
 
     #region Dispose
     public new void Dispose()
     {
-        foreach (var gameObject in Collection) gameObject.Dispose();
+        foreach (var view in Collection) view.Dispose();
 
         Collection.Clear();
+
         World?.Dispose();
         World = null;
 

@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class DeveloperHUD : IGameObject
+public sealed class DeveloperHUD : IView
 {
     private enum EGuide : byte { Biomes, Enemies, Objects }
 
@@ -12,7 +12,7 @@ public sealed class DeveloperHUD : IGameObject
     private Dictionary<EGuide, IList<IButton>> Buttons { get; } = [];
 
     #region Build
-    public void LoadContent()
+    public void Build()
     {
         Rect = new(X: Global.WINDOW_WIDTH - 200, Y: 5f, Width: 200f, Height: 0f);
 
@@ -69,28 +69,28 @@ public sealed class DeveloperHUD : IGameObject
         }
     }
 
-    public void LoadEvents()
+    public void Event()
     {
         foreach (IButton button in Guides)
         {
-            button.LoadEvents();
+            button.Event();
             button.OnClicked += OnButtonClicked;
         }
 
         foreach (var guide in Enum.GetValues<EGuide>())
             foreach (var button in Buttons[guide])
             {
-                button.LoadEvents();
+                button.Event();
                 button.OnClicked += OnButtonClicked;
             }
 
         Global.Subscribe(EEvent.Transport, OnSelectedNodeChanged);
     }
 
-    public void Draw(RenderWindow window)
+    public void Render(RenderWindow window)
     {
-        foreach (IButton button in Guides) button.Draw(window);
-        foreach (IButton button in Buttons[SelectedGuide]) button.Draw(window);
+        foreach (IButton button in Guides) button.Render(window);
+        foreach (IButton button in Buttons[SelectedGuide]) button.Render(window);
     }
     #endregion
 
@@ -128,7 +128,7 @@ public sealed class DeveloperHUD : IGameObject
         {
             foreach (var guide in Enum.GetValues<EGuide>())
                 foreach (var button in Buttons[guide])
-                    button.IsEnabled(guide == SelectedGuide);
+                    button.Enabled(guide == SelectedGuide);
         }
     }
     #endregion

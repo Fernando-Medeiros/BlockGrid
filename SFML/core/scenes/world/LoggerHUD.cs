@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class LoggerHUD : IGameObject, IDisposable
+public sealed class LoggerHUD : IView, IDisposable
 {
     private IList<IButton> Buttons { get; } = [];
     private ELogger SelectedGuide { get; set; } = ELogger.General;
@@ -8,7 +8,7 @@ public sealed class LoggerHUD : IGameObject, IDisposable
     private Rect Rect { get; set; } = Rect.Empty;
 
     #region Build
-    public void LoadContent()
+    public void Build()
     {
         Rect = new(X: 5f, Y: Global.WINDOW_HEIGHT - 160f, Width: 200f, Height: 160f);
 
@@ -30,25 +30,25 @@ public sealed class LoggerHUD : IGameObject, IDisposable
         }
     }
 
-    public void LoadEvents()
+    public void Event()
     {
         foreach (IButton button in Buttons)
         {
-            button.LoadEvents();
+            button.Event();
             button.OnClicked += OnButtonClicked;
         }
 
         Global.Subscribe(EEvent.Logger, OnLoggerReceive);
     }
 
-    public void Draw(RenderWindow window)
+    public void Render(RenderWindow window)
     {
-        foreach (IButton button in Buttons) button.Draw(window);
+        foreach (IButton button in Buttons) button.Render(window);
 
         int gap = 24;
         foreach (var logger in Loggers[SelectedGuide].Take(^10..))
         {
-            window.Draw(new Text(logger, Content.GetResource(EFont.OpenSansRegular), 12)
+            window.Draw(new Text(logger, core.Content.GetResource(EFont.OpenSansRegular), 12)
             {
                 FillColor = Factory.Color(EColor.White),
                 Position = new Vector2f(Rect.X, Rect.Y + gap),

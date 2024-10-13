@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-public sealed class PlayerHUD : IGameObject, IDisposable
+public sealed class PlayerHUD : IView, IDisposable
 {
     private Font? Font { get; set; }
     private Vector2f? Offset { get; set; }
@@ -10,12 +10,12 @@ public sealed class PlayerHUD : IGameObject, IDisposable
     private RectangleShape? ExpBar { get; set; }
 
     #region Build
-    public void LoadEvents()
+    public void Event()
     {
         Global.Subscribe(EEvent.BasicStatus, OnBasicStatusChanged);
     }
 
-    public void LoadContent()
+    public void Build()
     {
         var (posX, posY, space) = (5f, 5f, 5f);
 
@@ -52,10 +52,10 @@ public sealed class PlayerHUD : IGameObject, IDisposable
 
         Offset = new(space, 0);
         Data = new(string.Empty, 0, 0, 0, 0, 0, 0, 0);
-        Font = Content.GetResource(EFont.OpenSansSemibold);
+        Font = core.Content.GetResource(EFont.OpenSansSemibold);
     }
 
-    public void Draw(RenderWindow window)
+    public void Render(RenderWindow window)
     {
         window.Draw(HpBar);
         window.Draw(MpBar);

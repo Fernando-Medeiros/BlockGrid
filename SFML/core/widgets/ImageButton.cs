@@ -2,9 +2,9 @@
 
 public sealed class ImageButton : IButton, IDisposable
 {
+    private bool enabled = true;
     private Sprite? Graphic { get; set; }
     private bool Focused { get; set; } = false;
-    private bool Enabled { get; set; } = true;
 
     #region Property
     public required object Id { get; init; }
@@ -13,17 +13,17 @@ public sealed class ImageButton : IButton, IDisposable
     #endregion
 
     #region Action
-    public void IsEnabled(bool value) => Enabled = value;
+    public void Enabled(bool value) => enabled = value;
     #endregion
 
     #region Build
-    public void LoadEvents()
+    public void Event()
     {
         Global.Subscribe(EEvent.MouseMoved, OnFocusChanged);
         Global.Subscribe(EEvent.MouseButtonPressed, OnButtonClicked);
     }
 
-    public void Draw(RenderWindow window)
+    public void Render(RenderWindow window)
     {
         var sprite = Image switch
         {
@@ -55,7 +55,7 @@ public sealed class ImageButton : IButton, IDisposable
 
     private void OnButtonClicked(object? sender)
     {
-        if (Enabled is false) return;
+        if (enabled is false) return;
 
         if (sender is MouseDTO mouse)
         {
@@ -74,7 +74,7 @@ public sealed class ImageButton : IButton, IDisposable
 
     private void OnFocusChanged(object? sender)
     {
-        if (Enabled is false) return;
+        if (enabled is false) return;
 
         if (sender is MouseDTO mouse)
         {
