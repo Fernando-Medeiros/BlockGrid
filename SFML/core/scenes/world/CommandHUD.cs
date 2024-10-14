@@ -12,7 +12,9 @@ public sealed class CommandHUD : IView, IDisposable
 
         var (posY, space) = (Rect.Y, 5f);
 
-        foreach (EIcon icon in Enum.GetValues<EIcon>())
+        EIcon[] icons = [EIcon.Exit, EIcon.ZoomOut, EIcon.ZoomIn];
+
+        foreach (EIcon icon in icons)
         {
             posY -= Global.RECT + space;
 
