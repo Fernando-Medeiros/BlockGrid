@@ -90,7 +90,7 @@ public sealed class MainMenuHUD : IHud, IDisposable
 
     private void OnButtonClicked(object? sender)
     {
-        if (sender is EMainMenu.New_Game) Global.Invoke(EEvent.Scene, EScene.World);
+        if (sender is EMainMenu.New_Game) OnClicked?.Invoke(EMainMenu.New_Game);
         if (sender is EMainMenu.Load_Game) OnClicked?.Invoke(EMainMenu.Load_Game);
         if (sender is EMainMenu.Options) OnClicked?.Invoke(EMainMenu.Options);
         if (sender is EMainMenu.Quit) Global.Invoke(EEvent.EndGame, null);

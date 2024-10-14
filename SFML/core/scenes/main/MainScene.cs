@@ -28,6 +28,8 @@ public sealed class MainScene : View, IView
     {
         Collection.Add(new BackgroundView());
         Collection.Add(new MainMenuHUD());
+        Collection.Add(new NewGameHUD());
+        Collection.Add(new LoadGameHUD());
         Collection.Add(new OptionsHUD());
 
         foreach (var view in Collection) view.Build();
@@ -53,10 +55,17 @@ public sealed class MainScene : View, IView
     #region Event
     private void OnHudChanged(object? sender)
     {
-        if (sender is EMainMenu.Options)
+        var collection = sender switch
         {
-            foreach (IHud hud in Collection.Where(v => v is OptionsHUD or MainMenuHUD))
-                hud.VisibilityChanged();
+            EMainMenu.New_Game => Collection.Where(x => x is NewGameHUD or MainMenuHUD),
+            EMainMenu.Load_Game => Collection.Where(x => x is LoadGameHUD or MainMenuHUD),
+            EMainMenu.Options => Collection.Where(x => x is OptionsHUD or MainMenuHUD),
+            _ => []
+        };
+
+        foreach (IHud hud in collection)
+        {
+            hud.VisibilityChanged();
         }
     }
     #endregion
