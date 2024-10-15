@@ -65,7 +65,7 @@ public sealed class BackgroundView : IView, IDisposable
                 if (distance < Radius)
                     opacity = Factory.Color(EOpacity.Light);
 
-                var sprite = core.Content.GetResource(resource);
+                var sprite = Content.GetResource(resource);
                 sprite.Color = opacity;
                 sprite.Position = position;
                 window.Draw(sprite);
@@ -96,8 +96,10 @@ public sealed class BackgroundView : IView, IDisposable
     public void Dispose()
     {
         Global.UnSubscribe(EEvent.MouseMoved, OnMouseMoved);
+
         Center = (0, 0);
         Collection.Clear();
+
         GC.Collect(GC.GetGeneration(Collection), GCCollectionMode.Forced);
     }
     #endregion
