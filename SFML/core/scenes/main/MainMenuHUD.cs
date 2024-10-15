@@ -52,7 +52,7 @@ public sealed class MainMenuHUD : IHud, IDisposable
         {
             Size = new(Rect.Width, Rect.Height),
             Position = new(Rect.X - (Rect.Width / 3.5f), Rect.Y - (Rect.Height / 6f)),
-            Texture = core.Content.GetResource(EGraphic.BackgroundHUD).Texture,
+            Texture = Content.GetResource(EGraphic.BackgroundHUD).Texture,
         };
     }
 
