@@ -1,5 +1,4 @@
-﻿using SFMLGame.core.scenes.main;
-using SFMLGame.core.scenes.world;
+﻿using SFMLGame.core.scenes;
 
 namespace SFMLGame;
 

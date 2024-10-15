@@ -1,4 +1,6 @@
-﻿namespace SFMLGame.core.scenes.main;
+﻿using SFMLGame.core.scenes.main;
+
+namespace SFMLGame.core.scenes;
 
 public sealed class MainScene : View, IView
 {
