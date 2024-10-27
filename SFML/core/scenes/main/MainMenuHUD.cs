@@ -16,15 +16,13 @@ public sealed class MainMenuHUD : IHud, IDisposable
     #region Build
     public void Build()
     {
-        Rect = new(
-            Width: 300f,
-            Height: 500f,
-            X: 100f,
-            Y: 100f);
+        Rect = new Rect()
+            .WithSize(width: 500f, height: 700f, padding: 68f)
+            .WithCenter();
 
         foreach (var command in Enum.GetValues<EMainMenu>())
         {
-            var gap = ((byte)command * 50f) + 20f;
+            var gap = ((byte)command * 50f) + 60f;
 
             var text = command.ToString().Replace("_", " ");
 
@@ -35,23 +33,23 @@ public sealed class MainMenuHUD : IHud, IDisposable
                 Id = command,
                 OutlineThickness = 0f,
                 OutlineColor = EColor.Transparent,
-                Position = new(Rect.X + 10, Rect.Y + gap),
+                Position = new(Rect.WidthLeft, Rect.HeightTop + gap),
             });
         }
 
         Title = new Text()
         {
-            CharacterSize = 30,
+            CharacterSize = 40,
             DisplayedString = Global.TITLE,
             FillColor = Factory.Color(EColor.White),
-            Font = core.Content.GetResource(EFont.Romulus),
-            Position = new(Rect.X - 40, Rect.Y - (Rect.Height / 10f)),
+            Font = Content.GetResource(EFont.Romulus),
+            Position = new(Rect.WidthLeft, Rect.HeightTop),
         };
 
         Background = new RectangleShape()
         {
+            Position = new(Rect.X, Rect.Y),
             Size = new(Rect.Width, Rect.Height),
-            Position = new(Rect.X - (Rect.Width / 3.5f), Rect.Y - (Rect.Height / 6f)),
             Texture = Content.GetResource(EGraphic.BackgroundHUD).Texture,
         };
     }

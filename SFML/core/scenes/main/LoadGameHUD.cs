@@ -1,5 +1,4 @@
-﻿
-namespace SFMLGame.core.scenes.main;
+﻿namespace SFMLGame.core.scenes.main;
 
 public sealed class LoadGameHUD : IHud
 {
@@ -16,24 +15,22 @@ public sealed class LoadGameHUD : IHud
     #region Build
     public void Build()
     {
-        Rect = new(
-            Width: 500f,
-            Height: 600f,
-            X: App.CurrentWidth / 2f,
-            Y: App.CurrentHeight / 3f);
+        Rect = new Rect()
+          .WithSize(width: 500f, height: 700f, padding: 68f)
+          .WithCenter();
 
         Buttons.Add(new ImageButton()
         {
             Id = EIcon.Close,
             Image = EIcon.Close,
-            Position = new(Rect.X + Global.RECT + (Rect.Width / 2f), Rect.Y - Global.RECT),
+            Position = new(Rect.WidthRight, Rect.HeightTop),
         });
 
         Background = new RectangleShape()
         {
+            Position = new(Rect.X, Rect.Y),
             Size = new(Rect.Width, Rect.Height),
-            Position = new(Rect.X - (Rect.Width / 3.5f), Rect.Y - (Rect.Height / 6f)),
-            Texture = core.Content.GetResource(EGraphic.BackgroundHUD).Texture,
+            Texture = Content.GetResource(EGraphic.BackgroundHUD).Texture,
         };
     }
 

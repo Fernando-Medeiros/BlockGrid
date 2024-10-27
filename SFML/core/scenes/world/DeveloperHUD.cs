@@ -14,7 +14,7 @@ public sealed class DeveloperHUD : IView
     #region Build
     public void Build()
     {
-        Rect = new(X: Global.WINDOW_WIDTH - 200, Y: 5f, Width: 200f, Height: 0f);
+        Rect = new(x: Global.WINDOW_WIDTH - 200, y: 5f, width: 200f, height: 0f);
 
         var (posX, space) = (Rect.X, 70f);
         foreach (var guide in Enum.GetValues<EGuide>())

@@ -10,7 +10,7 @@ public sealed class LoggerHUD : IView, IDisposable
     #region Build
     public void Build()
     {
-        Rect = new(X: 5f, Y: Global.WINDOW_HEIGHT - 160f, Width: 200f, Height: 160f);
+        Rect = new(x: 5f, y: Global.WINDOW_HEIGHT - 160f, width: 200f, height: 160f);
 
         var (posX, space) = (Rect.X, 70f);
 

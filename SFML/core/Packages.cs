@@ -10,13 +10,55 @@ public sealed record Position2D(byte Row, byte Column, float X, float Y)
     public static implicit operator Vector2f(Position2D postion) => new(postion.X, postion.Y);
 };
 
-public sealed record Rect(float X, float Y, float Width, float Height)
+public sealed class Rect()
 {
-    public (float X, float Y) Center => (X + (Width / 2), Y + (Height / 2));
+    #region Main Property
+    public float X { get; private set; }
+    public float Y { get; private set; }
+    public float Width { get; private set; }
+    public float Height { get; private set; }
+    public float Padding { get; private set; }
+    #endregion
 
-    public static Rect Empty => new(0, 0, 0, 0);
+    #region Secondary Property
+    public float WidthLeft => X + Padding;
+    public float WidthRight => X + Width - Padding;
+    public float WidthCenter => X + (Width / 2f) + (Padding / 2f);
+    public float HeightTop => Y + Padding;
+    public float HeightBottom => Y + Height - Padding;
+    public float HeightCenter => Y + (Height / 2f) + (Padding / 2f);
+    #endregion
+
+    public Rect(float x, float y, float width, float height) : this()
+    {
+        X = x;
+        Y = y;
+        Width = width;
+        Height = height;
+    }
+
+    #region Extension
+    public static Rect Empty => new();
 
     public static implicit operator Vector2f(Rect rect) => new(rect.X, rect.Y);
+    #endregion
+
+    #region Builder
+    public Rect WithSize(float width, float height, float padding)
+    {
+        Width = width;
+        Height = height;
+        Padding = padding;
+        return this;
+    }
+
+    public Rect WithCenter()
+    {
+        X = (App.CurrentWidth / 2f) - (Width / 2f);
+        Y = (App.CurrentHeight / 2f) - (Height / 2f);
+        return this;
+    }
+    #endregion
 };
 
 public sealed record MouseDTO(EMouse Button, int X, int Y)

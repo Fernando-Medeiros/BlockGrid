@@ -24,11 +24,9 @@ public sealed class OptionsHUD : IHud
     #region Build
     public void Build()
     {
-        Rect = new(
-            Width: 500f,
-            Height: 600f,
-            X: App.CurrentWidth / 2f,
-            Y: App.CurrentHeight / 3f);
+        Rect = new Rect()
+          .WithSize(width: 500f, height: 700f, padding: 68f)
+          .WithCenter();
 
         int count = 0;
 
@@ -43,8 +41,8 @@ public sealed class OptionsHUD : IHud
                 CharacterSize = 25,
                 DisplayedString = text,
                 FillColor = Factory.Color(EColor.White),
-                Font = core.Content.GetResource(EFont.Romulus),
-                Position = new(Rect.X, Rect.Y + offset),
+                Font = Content.GetResource(EFont.Romulus),
+                Position = new(Rect.WidthLeft, Rect.HeightTop + offset),
             });
             count++;
         }
@@ -60,7 +58,7 @@ public sealed class OptionsHUD : IHud
                 Size = 25,
                 Id = command,
                 Text = $"{(byte)command}",
-                Position = new(Rect.X + offset, Rect.Y + 30f),
+                Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 30f),
 
                 Color = App.CurrentMusicVolume == (byte)command ? EColor.CornFlowerBlue : EColor.White,
             });
@@ -78,7 +76,7 @@ public sealed class OptionsHUD : IHud
                 Size = 25,
                 Id = command,
                 Text = $"{(byte)command}",
-                Position = new(Rect.X + offset, Rect.Y + 100f),
+                Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 100f),
 
                 Color = App.CurrentSoundVolume == (byte)command ? EColor.CornFlowerBlue : EColor.White,
             });
@@ -96,7 +94,7 @@ public sealed class OptionsHUD : IHud
                 Size = 25,
                 Id = command,
                 Text = $"{(byte)command}",
-                Position = new(Rect.X + offset, Rect.Y + 170f),
+                Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 170f),
 
                 Color = App.CurrentFrame == (byte)command ? EColor.CornFlowerBlue : EColor.White,
             });
@@ -116,7 +114,7 @@ public sealed class OptionsHUD : IHud
                 Size = 25,
                 Text = text,
                 Id = command,
-                Position = new(Rect.X + offset, Rect.Y + 240f),
+                Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 240f),
 
                 Color = App.CurrentLanguage == command ? EColor.CornFlowerBlue : EColor.White,
             });
@@ -127,14 +125,14 @@ public sealed class OptionsHUD : IHud
         {
             Id = EIcon.Close,
             Image = EIcon.Close,
-            Position = new(Rect.X + Global.RECT + (Rect.Width / 2f), Rect.Y - Global.RECT),
+            Position = new(Rect.WidthRight, Rect.HeightTop),
         });
 
         Background = new RectangleShape()
         {
+            Position = new(Rect.X, Rect.Y),
             Size = new(Rect.Width, Rect.Height),
-            Position = new(Rect.X - (Rect.Width / 3.5f), Rect.Y - (Rect.Height / 6f)),
-            Texture = core.Content.GetResource(EGraphic.BackgroundHUD).Texture,
+            Texture = Content.GetResource(EGraphic.BackgroundHUD).Texture,
         };
     }
 
