@@ -18,7 +18,7 @@ public sealed class MainMenuHUD : IHud, IDisposable
     {
         Rect = new Rect()
             .WithSize(width: 500f, height: 700f, padding: 68f)
-            .WithCenter();
+            .WithAlignment();
 
         foreach (var command in Enum.GetValues<EMainMenu>())
         {

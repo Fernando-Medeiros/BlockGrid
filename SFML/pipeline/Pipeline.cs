@@ -1,12 +1,5 @@
 ﻿namespace SFMLGame.pipeline;
 
-public enum EMainFolder : byte
-{
-    Config,
-    Data,
-    Logs,
-}
-
 public sealed class Pipeline
 {
     public string Folder => Global.TITLE;
@@ -19,7 +12,7 @@ public sealed class Pipeline
         if (Directory.Exists(mainFolder) is false)
             Directory.CreateDirectory(mainFolder);
 
-        foreach (var innerFolder in Enum.GetNames<EMainFolder>())
+        foreach (var innerFolder in Enum.GetNames<EFolder>())
         {
             string currentFolder = $"{mainFolder}/{innerFolder}";
 

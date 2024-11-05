@@ -26,7 +26,7 @@ public sealed class OptionsHUD : IHud
     {
         Rect = new Rect()
           .WithSize(width: 500f, height: 700f, padding: 68f)
-          .WithCenter();
+          .WithAlignment();
 
         int count = 0;
 

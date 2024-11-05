@@ -52,10 +52,24 @@ public sealed class Rect()
         return this;
     }
 
-    public Rect WithCenter()
+    /// <summary>
+    /// Default -> Center
+    /// </summary>
+    /// <returns><see cref="Rect"/> -> this</returns>
+    public Rect WithAlignment(EDirection? alignment = null)
     {
-        X = (App.CurrentWidth / 2f) - (Width / 2f);
-        Y = (App.CurrentHeight / 2f) - (Height / 2f);
+        (X, Y) = alignment switch
+        {
+            EDirection.Top => ((App.CurrentWidth / 2f) - (Width / 2f), 0),
+            EDirection.TopLeft => (0, 0),
+            EDirection.TopRight => (App.CurrentWidth - Width, 0),
+            EDirection.Bottom => ((App.CurrentWidth / 2f) - (Width / 2f), App.CurrentHeight - Height),
+            EDirection.BottomLeft => (0, App.CurrentHeight - Height),
+            EDirection.BottomRight => (App.CurrentWidth - Width, App.CurrentHeight - Height),
+            EDirection.Left => (0, (App.CurrentHeight / 2f) - (Height / 2f)),
+            EDirection.Right => (App.CurrentWidth - Width, (App.CurrentHeight / 2f) - (Height / 2f)),
+            _ => ((App.CurrentWidth / 2f) - (Width / 2f), (App.CurrentHeight / 2f) - (Height / 2f)),
+        };
         return this;
     }
     #endregion

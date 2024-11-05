@@ -67,7 +67,7 @@ public static class Content
     #region Region
     public static void SerializeSchema(RegionSchema schema)
     {
-        string path = Path("region", $"{schema.Name}.xml");
+        string path = Path(EFolder.Data, $"{schema.Name}.xml");
 
         var serializer = new XmlSerializer(typeof(RegionSchema));
 
@@ -80,7 +80,7 @@ public static class Content
 
     public static void DeserializeSchema(string fileName)
     {
-        string path = Path("region", $"{fileName}.xml");
+        string path = Path(EFolder.Data, $"{fileName}.xml");
 
         RegionSchema? schema = null;
 
@@ -100,13 +100,11 @@ public static class Content
     #endregion
 
     #region IO
-    private static string Path(string folder, string file)
+    private static string Path(EFolder folder, string file)
     {
         string document = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
         string path = $"{document}/{folder}";
-
-        if (Directory.Exists(path) is false) Directory.CreateDirectory(path);
 
         return $"{path}/{file}";
     }

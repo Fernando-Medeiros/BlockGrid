@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.enums;
 
-public enum EWorldLength : byte
+public enum EWorldSize : byte
 {
     Tiny = 8,
     Small = 16,
