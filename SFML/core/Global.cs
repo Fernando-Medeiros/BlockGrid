@@ -42,6 +42,7 @@ public static class Global
     private static event Action<object?>? OnEndGame;
     private static event Action<object?>? OnSaveGame;
     private static event Action<object?>? OnBasicStatus;
+    private static event Action<object?>? OnTextEntered;
     private static event Action<object?>? OnKeyPressed;
     private static event Action<object?>? OnKeyReleased;
     private static event Action<object?>? OnMouseMoved;
@@ -60,6 +61,7 @@ public static class Global
             case EEvent.EndGame: OnEndGame += action; break;
             case EEvent.SaveGame: OnSaveGame += action; break;
             case EEvent.BasicStatus: OnBasicStatus += action; break;
+            case EEvent.TextEntered: OnTextEntered += action; break;
             case EEvent.KeyPressed: OnKeyPressed += action; break;
             case EEvent.KeyReleased: OnKeyReleased += action; break;
             case EEvent.MouseMoved: OnMouseMoved += action; break;
@@ -80,6 +82,7 @@ public static class Global
             case EEvent.EndGame: OnEndGame -= action; break;
             case EEvent.SaveGame: OnSaveGame -= action; break;
             case EEvent.BasicStatus: OnBasicStatus -= action; break;
+            case EEvent.TextEntered: OnTextEntered -= action; break;
             case EEvent.KeyPressed: OnKeyPressed -= action; break;
             case EEvent.KeyReleased: OnKeyReleased -= action; break;
             case EEvent.MouseMoved: OnMouseMoved -= action; break;
@@ -100,6 +103,7 @@ public static class Global
             case EEvent.EndGame: OnEndGame?.Invoke(sender); break;
             case EEvent.SaveGame: OnSaveGame?.Invoke(sender); break;
             case EEvent.BasicStatus: OnBasicStatus?.Invoke(sender); break;
+            case EEvent.TextEntered: OnTextEntered?.Invoke(sender); break;
             case EEvent.KeyPressed: OnKeyPressed?.Invoke(sender); break;
             case EEvent.KeyReleased: OnKeyReleased?.Invoke(sender); break;
             case EEvent.MouseMoved: OnMouseMoved?.Invoke(sender); break;

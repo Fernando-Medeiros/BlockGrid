@@ -1,11 +1,16 @@
-﻿namespace SFMLGame;
+﻿using SFML.Window;
+
+namespace SFMLGame;
 
 internal sealed partial class App
 {
     private void LoadEvents()
     {
+        Window.TextEntered += (sender, e) =>
+            Global.Invoke(EEvent.TextEntered, e.Unicode[0]);
+
         Window.KeyPressed += (_, e) =>
-           Global.Invoke(EEvent.KeyPressed, Enum.GetName(e.Code));
+            Global.Invoke(EEvent.KeyPressed, Enum.GetName(e.Code));
 
         Window.KeyReleased += (_, e) =>
             Global.Invoke(EEvent.KeyReleased, Enum.GetName(e.Code));
@@ -14,7 +19,7 @@ internal sealed partial class App
             Global.Invoke(EEvent.MouseMoved, new MouseDTO(default, e.X, e.Y));
 
         Window.MouseWheelScrolled += (_, e) =>
-           Global.Invoke(EEvent.MouseWheelScrolled, new MouseDTO(Enum.Parse<EMouse>($"{e.Delta}"), e.X, e.Y));
+            Global.Invoke(EEvent.MouseWheelScrolled, new MouseDTO(Enum.Parse<EMouse>($"{e.Delta}"), e.X, e.Y));
 
         Window.MouseButtonPressed += (_, e) =>
             Global.Invoke(EEvent.MouseButtonPressed, new MouseDTO(Enum.Parse<EMouse>(Enum.GetName(e.Button)), e.X, e.Y));

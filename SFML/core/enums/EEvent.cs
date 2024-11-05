@@ -10,6 +10,7 @@ public enum EEvent : byte
     EndGame,
     SaveGame,
     BasicStatus,
+    TextEntered,
     KeyPressed,
     KeyReleased,
     MouseMoved,

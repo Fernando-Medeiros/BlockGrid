@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.core.widgets;
 
-public sealed class TextButton : IButton, IDisposable
+public class TextButton : IButton, IDisposable
 {
     private bool enabled = true;
     private Text? Graphic { get; set; }
@@ -24,7 +24,7 @@ public sealed class TextButton : IButton, IDisposable
     #endregion
 
     #region Build
-    public void Event()
+    public virtual void Event()
     {
         Global.Subscribe(EEvent.MouseMoved, OnFocusChanged);
         Global.Subscribe(EEvent.MouseButtonPressed, OnButtonClicked);
@@ -87,7 +87,7 @@ public sealed class TextButton : IButton, IDisposable
     #endregion
 
     #region Dispose
-    public void Dispose()
+    public virtual void Dispose()
     {
         Graphic?.Dispose();
         Graphic = null;
