@@ -193,15 +193,6 @@ public sealed class NewGameHUD : IHud
             Texture = Content.GetResource(CharacterProfession).Texture,
             Position = new(Rect.WidthRight - 54 - Rect.Padding, Rect.HeightTop + 32),
         });
-
-
-        //// World
-        //window.Draw(new RectangleShape()
-        //{
-        //    Size = new Vector2f(100, 100),
-        //    Texture = Content.GetResource(EIcon.World).Texture,
-        //    Position = new(Rect.WidthCenter - 50 - (Rect.Padding / 2f), Rect.HeightBottom - 250f),
-        //});
     }
     #endregion
 
@@ -242,6 +233,7 @@ public sealed class NewGameHUD : IHud
 
         if (sender is EMainMenu.New_Game)
         {
+            Global.Invoke(EEvent.Scene, EScene.World);
             return;
         }
 

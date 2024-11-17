@@ -8,7 +8,7 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
         Node.SetBody(this);
 
         Type = EBody.Player;
-        Sprite = ESprite.Dwarf;
+        Sprite = ESprite.Spider;
         Light = new LightComponent();
         Action = new ActionComponent();
         Status = new StatusComponent(this);
