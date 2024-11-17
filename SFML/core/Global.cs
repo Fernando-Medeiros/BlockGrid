@@ -17,6 +17,11 @@ public readonly struct Key
     public const string Space = "Space";
     public const string Escape = "Escape";
 
+    public const string CTab = "\t";
+    public const string CEnter = "\n";
+    public const string CBackspace = "\b";
+    public const string CEscape = "\u001B";
+
     public static readonly IReadOnlyList<string> Actions = [Space];
     public static readonly IReadOnlyList<string> Movement = [W, S, A, D];
 }

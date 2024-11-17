@@ -19,6 +19,8 @@ public static class Factory
         EColor.Tomate => new(255, 99, 71),
         EColor.Transparent => new(0, 0, 0, 0),
         EColor.White => new(255, 255, 255),
+        EColor.DarkSeaGreen => new(0, 114, 119, 47),
+        EColor.Gray => new(102, 102, 102),
         _ => throw new Exception()
     };
     #endregion

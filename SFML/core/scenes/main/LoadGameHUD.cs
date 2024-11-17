@@ -58,7 +58,7 @@ public sealed class LoadGameHUD : IHud
     {
         enable = !enable;
 
-        foreach (IButton button in Buttons) button.Enabled(enable);
+        foreach (IButton button in Buttons) button.SetActivated(enable);
     }
     #endregion
 

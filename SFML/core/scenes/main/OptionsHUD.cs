@@ -59,8 +59,7 @@ public sealed class OptionsHUD : IHud
                 Id = command,
                 Text = $"{(byte)command}",
                 Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 30f),
-
-                Color = App.CurrentMusicVolume == (byte)command ? EColor.CornFlowerBlue : EColor.White,
+                Selected = App.CurrentMusicVolume == (byte)command
             });
             count++;
         }
@@ -77,8 +76,7 @@ public sealed class OptionsHUD : IHud
                 Id = command,
                 Text = $"{(byte)command}",
                 Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 100f),
-
-                Color = App.CurrentSoundVolume == (byte)command ? EColor.CornFlowerBlue : EColor.White,
+                Selected = App.CurrentSoundVolume == (byte)command,
             });
             count++;
         }
@@ -95,8 +93,7 @@ public sealed class OptionsHUD : IHud
                 Id = command,
                 Text = $"{(byte)command}",
                 Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 170f),
-
-                Color = App.CurrentFrame == (byte)command ? EColor.CornFlowerBlue : EColor.White,
+                Selected = App.CurrentFrame == (byte)command,
             });
             count++;
         }
@@ -115,8 +112,7 @@ public sealed class OptionsHUD : IHud
                 Text = text,
                 Id = command,
                 Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 240f),
-
-                Color = App.CurrentLanguage == command ? EColor.CornFlowerBlue : EColor.White,
+                Selected = App.CurrentLanguage == command,
             });
             count++;
         }
@@ -162,7 +158,7 @@ public sealed class OptionsHUD : IHud
     {
         enable = !enable;
 
-        foreach (IButton button in Buttons) button.Enabled(enable);
+        foreach (IButton button in Buttons) button.SetActivated(enable);
     }
     #endregion
 
@@ -186,14 +182,9 @@ public sealed class OptionsHUD : IHud
         if (sender is EMusicVolume musicVolume)
             App.CurrentMusicVolume = (byte)musicVolume;
 
-
-        foreach (var button in Buttons.OfType<TextButton>())
+        foreach (var button in Buttons.OfType<TextButton>().Where(x => x.Id.GetType() == sender?.GetType()))
         {
-            if (button.Id.Equals(sender))
-                button.Color = EColor.CornFlowerBlue;
-
-            else if (button.Id.GetType() == sender?.GetType())
-                button.Color = EColor.White;
+            button.Selected = button.Id.Equals(sender);
         }
     }
     #endregion

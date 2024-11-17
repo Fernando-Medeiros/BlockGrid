@@ -2,12 +2,14 @@
 
 public interface IButton
 {
-    void Enabled(bool value);
+    event Action<object?>? OnClicked;
+    event Action<object?>? OnFocused;
+    event Action<object?>? OnChanged;
+
+    bool Equal(object? value);
+    void SetActivated(bool value);
 
     void Event();
     void Dispose();
     void Render(RenderWindow window);
-
-    event Action<object?>? OnClicked;
-    event Action<object?>? OnFocus;
 }

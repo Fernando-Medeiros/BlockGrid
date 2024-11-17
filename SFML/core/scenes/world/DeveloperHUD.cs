@@ -128,7 +128,7 @@ public sealed class DeveloperHUD : IView
         {
             foreach (var guide in Enum.GetValues<EGuide>())
                 foreach (var button in Buttons[guide])
-                    button.Enabled(guide == SelectedGuide);
+                    button.SetActivated(guide == SelectedGuide);
         }
     }
     #endregion

@@ -7,47 +7,137 @@ public sealed class NewGameHUD : IHud
     #endregion
 
     #region Property
-    private EWorldSize WorldSize { get; set; } = EWorldSize.Small;
-    private IList<IList<(ETerrain, Position2D)>> Collection { get; } = [];
-
     private IList<IButton> Buttons { get; } = [];
+    private IList<CircleShape> Images { get; } = [];
     private Rect Rect { get; set; } = Rect.Empty;
     private RectangleShape Background { get; set; } = new();
+
+    private string WorldName { get; set; } = string.Empty;
+    private string CharacterName { get; set; } = string.Empty;
+    private EWorldSize WorldSize { get; set; } = EWorldSize.Tiny;
+    private ERace CharacterRace { get; set; } = ERace.Dwarf;
+    private EAlignment CharacterAlignment { get; set; } = EAlignment.Neutral;
+    private EProfession CharacterProfession { get; set; } = EProfession.Guardian;
     #endregion
 
     #region Build
     public void Build()
     {
         Rect = new Rect()
-            .WithSize(width: 650f, height: 950f, padding: 68f)
+            .WithSize(width: 500f, height: 700f, padding: 60f)
             .WithAlignment();
 
-        var offset = 0f;
+        float offset = 0f;
+        float posY = 200f;
+
+        #region Character Options
+        foreach (var command in Enum.GetValues<ERace>())
+        {
+            Buttons.Add(new ImageButton()
+            {
+                Id = command,
+                Image = command,
+                Position = new(Rect.WidthLeft + offset, Rect.HeightCenter - posY),
+                Selected = CharacterRace == command,
+            });
+            offset += 32f;
+        }
+
+        offset = 0f;
+        posY -= 50f;
+        foreach (var command in Enum.GetValues<EAlignment>())
+        {
+            Buttons.Add(new ImageButton()
+            {
+                Id = command,
+                Image = command,
+                Position = new(Rect.WidthCenter - (Rect.Padding * 2) + offset, Rect.HeightCenter - posY),
+                Selected = CharacterAlignment == command,
+            });
+            offset += 32f;
+        }
+
+        offset = 0f;
+        posY -= 50f;
+        foreach (var command in Enum.GetValues<EProfession>())
+        {
+            Buttons.Add(new ImageButton()
+            {
+                Id = command,
+                Image = command,
+                Position = new(Rect.WidthLeft + offset, Rect.HeightCenter - posY),
+                Selected = CharacterProfession == command,
+            });
+            offset += 32f;
+        }
+
+        posY -= 50f;
+        Buttons.Add(new TextEntry()
+        {
+            Size = 25,
+            Id = nameof(ERace),
+            Placeholder = "Entry character name:",
+            BorderSize = new(Rect.Width - (Rect.Padding * 2), 25),
+            Position = new(Rect.WidthLeft, Rect.HeightCenter - posY),
+        });
+        #endregion
+
+        #region World Options
+        offset = 0f;
+        posY = 150f;
+
         foreach (var command in Enum.GetValues<EWorldSize>())
         {
+            float radius = (byte)command >= 24 ? (float)command / 1.5f : (float)command;
+
+            Images.Add(new()
+            {
+                Radius = radius,
+                Texture = Content.GetResource(EIcon.World).Texture,
+                Position = new(Rect.WidthLeft + offset, Rect.HeightBottom - posY - (radius * 2)),
+            });
+
             Buttons.Add(new TextButton()
             {
-                Size = 20,
+                Size = 25,
                 Id = command,
-                Text = $"{(byte)command}x{(byte)command}",
-                Position = new(Rect.WidthLeft, Rect.HeightTop + offset),
+                Text = $"{(int)command:D2}x{(int)command:D2}²",
+                Position = new(Rect.WidthLeft + offset, Rect.HeightBottom - posY),
+                Selected = WorldSize == command,
             });
-            offset += 25f;
+            offset += 75f;
         }
+
+        posY -= 50f;
 
         Buttons.Add(new TextEntry()
         {
             Size = 25,
-            Text = "World name..",
-            Id = EEvent.TextEntered,
-            Position = new(Rect.WidthLeft, Rect.HeightBottom - 32),
+            Id = nameof(EWorldSize),
+            Placeholder = "Entry world name:",
+            BorderSize = new(Rect.Width - (Rect.Padding * 2), 25f),
+            Position = new(Rect.WidthLeft, Rect.HeightBottom - posY),
         });
+        #endregion
 
+        #region View Options
         Buttons.Add(new ImageButton()
         {
             Id = EIcon.Close,
             Image = EIcon.Close,
-            Position = new(Rect.WidthRight, Rect.HeightTop),
+            Position = new(Rect.WidthRight - 8f, Rect.HeightTop),
+        });
+
+        Buttons.Add(new Button()
+        {
+            Size = 23,
+            Disabled = true,
+            Color = EColor.White,
+            Text = "TO ADVENTURE",
+            Id = EMainMenu.New_Game,
+            BackgroundColor = EColor.DarkSeaGreen,
+            BorderSize = new(Rect.Width - (Rect.Padding * 2), 25),
+            Position = new(Rect.WidthLeft, Rect.HeightBottom - 30),
         });
 
         Background = new RectangleShape()
@@ -56,6 +146,7 @@ public sealed class NewGameHUD : IHud
             Size = new(Rect.Width, Rect.Height),
             Texture = Content.GetResource(EGraphic.BackgroundHUD).Texture,
         };
+        #endregion
     }
 
     public void Event()
@@ -64,6 +155,7 @@ public sealed class NewGameHUD : IHud
         {
             button.Event();
             button.OnClicked += OnButtonClicked;
+            button.OnChanged += OnButtonChanged;
         }
     }
 
@@ -75,15 +167,41 @@ public sealed class NewGameHUD : IHud
 
         foreach (IButton button in Buttons) button.Render(window);
 
-        for (byte row = 0; row < Collection.Count; row++)
-            for (byte column = 0; column < Collection[row].Count; column++)
-            {
-                var (resource, position) = Collection[row][column];
-                var sprite = Content.GetResource(resource);
-                sprite.Position = position;
-                sprite.Color = Factory.Color(EOpacity.Light);
-                window.Draw(sprite);
-            }
+        foreach (CircleShape circles in Images) window.Draw(circles);
+
+        // Portrait
+        window.Draw(new RectangleShape()
+        {
+            Size = new Vector2f(64, 64),
+            OutlineThickness = 1,
+            Texture = Content.GetResource(CharacterRace).Texture,
+            Position = new(Rect.WidthCenter - 32 - (Rect.Padding / 2f), Rect.HeightTop),
+        });
+
+        window.Draw(new RectangleShape()
+        {
+            Size = new Vector2f(54, 54),
+            OutlineThickness = 1,
+            Texture = Content.GetResource(CharacterAlignment).Texture,
+            Position = new(Rect.WidthLeft + Rect.Padding, Rect.HeightTop + 32),
+        });
+
+        window.Draw(new RectangleShape()
+        {
+            Size = new Vector2f(54, 54),
+            OutlineThickness = 1,
+            Texture = Content.GetResource(CharacterProfession).Texture,
+            Position = new(Rect.WidthRight - 54 - Rect.Padding, Rect.HeightTop + 32),
+        });
+
+
+        //// World
+        //window.Draw(new RectangleShape()
+        //{
+        //    Size = new Vector2f(100, 100),
+        //    Texture = Content.GetResource(EIcon.World).Texture,
+        //    Position = new(Rect.WidthCenter - 50 - (Rect.Padding / 2f), Rect.HeightBottom - 250f),
+        //});
     }
     #endregion
 
@@ -92,49 +210,73 @@ public sealed class NewGameHUD : IHud
     {
         enable = !enable;
 
-        foreach (IButton button in Buttons) button.Enabled(enable);
+        foreach (IButton button in Buttons) button.SetActivated(enable);
     }
     #endregion
 
-    #region Event
+    #region HUD Event
     public event Action<object?>? OnClicked;
 
-    private void OnWorldChanged(EWorldSize worldSize)
+    private void OnButtonChanged(object? sender)
     {
-        Collection.Clear();
-        WorldSize = worldSize;
+        var entry = (TextEntry)Buttons.First(btn => btn.Equal(sender));
 
-        var biomes = Enum.GetValues<EBiome>();
+        var button = (Button)Buttons.First(btn => btn.Equal(EMainMenu.New_Game));
 
-        for (byte row = 0; row < (byte)WorldSize; row++)
-        {
-            Collection.Add([]);
+        if (sender is nameof(EWorldSize))
+            WorldName = entry.Text;
 
-            for (byte column = 0; column < (byte)WorldSize; column++)
-            {
-                var position2D = new Position2D(row, column, Rect.WidthLeft + (column * Global.RECT), Rect.HeightTop + 60f + (row * Global.RECT));
-                var sprite = Factory.Shuffle(App.Shuffle(biomes));
+        if (sender is nameof(ERace))
+            CharacterName = entry.Text;
 
-                Collection.ElementAt(row).Add((sprite, position2D));
-            }
-        }
+        button.Disabled = CharacterName.Length < 4 || WorldName.Length < 4;
     }
 
     private void OnButtonClicked(object? sender)
     {
         if (sender is EIcon.Close)
-            OnClicked?.Invoke(EMainMenu.New_Game);
-
-        if (sender is EWorldSize worldSize)
-            OnWorldChanged(worldSize);
-
-        foreach (var button in Buttons.OfType<TextButton>())
         {
-            if (button.Id.Equals(sender))
-                button.Color = EColor.CornFlowerBlue;
+            OnClicked?.Invoke(EMainMenu.New_Game);
+            return;
+        }
 
-            else if (button.Id.GetType() == sender?.GetType())
-                button.Color = EColor.White;
+        if (sender is EMainMenu.New_Game)
+        {
+            return;
+        }
+
+        if (sender is nameof(ERace) or nameof(EWorldSize))
+        {
+            foreach (var button in Buttons.OfType<TextEntry>())
+                button.Selected = button.Id.Equals(sender);
+        }
+
+        if (sender is EWorldSize size)
+        {
+            WorldSize = size;
+            foreach (var button in Buttons.OfType<TextButton>().Where(x => x.Id is EWorldSize))
+                button.Selected = button.Equal(size);
+        }
+
+        if (sender is ERace race)
+        {
+            CharacterRace = race;
+            foreach (var button in Buttons.OfType<ImageButton>().Where(x => x.Id is ERace))
+                button.Selected = button.Equal(race);
+        }
+
+        if (sender is EAlignment alignment)
+        {
+            CharacterAlignment = alignment;
+            foreach (var button in Buttons.OfType<ImageButton>().Where(x => x.Id is EAlignment))
+                button.Selected = button.Equal(alignment);
+        }
+
+        if (sender is EProfession profession)
+        {
+            CharacterProfession = profession;
+            foreach (var button in Buttons.OfType<ImageButton>().Where(x => x.Id is EProfession))
+                button.Selected = button.Equal(profession);
         }
     }
     #endregion
@@ -147,9 +289,11 @@ public sealed class NewGameHUD : IHud
         foreach (IButton button in Buttons)
         {
             button.OnClicked -= OnButtonClicked;
+            button.OnChanged -= OnButtonChanged;
             button.Dispose();
         }
 
+        Images.Clear();
         Buttons.Clear();
         Background.Dispose();
     }

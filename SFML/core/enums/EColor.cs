@@ -8,4 +8,6 @@ public enum EColor : byte
     Tomate,
     Transparent,
     White,
+    DarkSeaGreen,
+    Gray,
 }

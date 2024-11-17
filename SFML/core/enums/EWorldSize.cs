@@ -2,7 +2,9 @@
 
 public enum EWorldSize : byte
 {
-    Tiny = 8,
-    Small = 16,
-    //Default = 24,
+    Tiny = 12,
+    Small = 24,
+    Default = 32,
+    Large = 48,
+    VeryLarge = 64,
 }

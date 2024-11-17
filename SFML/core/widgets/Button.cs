@@ -1,23 +1,23 @@
 ﻿namespace SFMLGame.core.widgets;
 
-public sealed class TextEntry : IButton, IDisposable
+public sealed class Button : IButton, IDisposable
 {
     private Text? Graphic { get; set; }
     private RectangleShape? Border { get; set; }
 
     #region Control Property
-    public bool LengthReached { get; private set; }
     public bool Activated { get; private set; } = true;
     public bool Focused { get; set; }
-    public bool Selected { get; set; }
+    public bool Disabled { get; set; }
     #endregion
 
     #region Required Property
     public required object Id { get; init; }
-    public string Text { get; set; } = string.Empty;
-    public required string Placeholder { get; set; }
+    public required string Text { get; set; }
     public required Vector2f Position { get; set; }
     public required Vector2f BorderSize { get; set; }
+    public required EColor BackgroundColor { get; set; }
+    public required EColor Color { get; set; }
     #endregion
 
     #region Custom Property
@@ -26,11 +26,9 @@ public sealed class TextEntry : IButton, IDisposable
     public float Outline { get; set; } = 1f;
 
     public EFont Font { get; set; } = EFont.Romulus;
-    public EColor Color { get; set; } = EColor.White;
+    public EColor DisabledColor { get; set; } = EColor.Gray;
     public EColor OutlineColor { get; set; } = EColor.Black;
     public EColor FocusedColor { get; set; } = EColor.GoldRod;
-    public EColor SelectedColor { get; set; } = EColor.CornFlowerBlue;
-    public EColor LengthReachedColor { get; set; } = EColor.Tomate;
     #endregion
 
     #region Action
@@ -41,7 +39,6 @@ public sealed class TextEntry : IButton, IDisposable
     #region Build
     public void Event()
     {
-        Global.Subscribe(EEvent.TextEntered, OnTextEntered);
         Global.Subscribe(EEvent.MouseMoved, OnFocusChanged);
         Global.Subscribe(EEvent.MouseButtonPressed, OnButtonClicked);
     }
@@ -53,23 +50,21 @@ public sealed class TextEntry : IButton, IDisposable
             Size = BorderSize,
             Position = Position,
             OutlineThickness = Outline,
-            FillColor = Factory.Color(EColor.Transparent),
-            OutlineColor = Focused ? Factory.Color(FocusedColor)
-                : LengthReached ? Factory.Color(LengthReachedColor)
-                : Factory.Color(Color),
+            OutlineColor = Factory.Color(OutlineColor),
+            FillColor = Disabled ? Factory.Color(DisabledColor)
+                : Focused ? Factory.Color(FocusedColor)
+                : Factory.Color(BackgroundColor),
         });
 
         window.Draw(Graphic = new()
         {
             CharacterSize = Size,
+            DisplayedString = Text,
             OutlineThickness = Outline,
             Font = Content.GetResource(Font),
-            Position = Position + new Vector2f(Padding, -Padding),
             OutlineColor = Factory.Color(OutlineColor),
-            DisplayedString = Text.Length == 0 ? Placeholder : Text,
-            FillColor = Focused ? Factory.Color(FocusedColor)
-                : Selected ? Factory.Color(SelectedColor)
-                : Factory.Color(Color),
+            Position = Position + new Vector2f(BorderSize.X / 3f, -Padding),
+            FillColor = Disabled ? Factory.Color(DisabledColor) : Factory.Color(Color),
         });
     }
     #endregion
@@ -79,38 +74,9 @@ public sealed class TextEntry : IButton, IDisposable
     public event Action<object?>? OnClicked;
     public event Action<object?>? OnFocused;
 
-    private void OnTextEntered(object? sender)
-    {
-        if (Activated is false || Selected is false) return;
-
-        LengthReached = Graphic?.GetLocalBounds().Width >= Border?.GetGlobalBounds().Width - (Padding * 4);
-
-        string temp = $"{sender}";
-
-        if (temp is Key.CEscape)
-            Selected = false;
-
-        else if (temp is Key.CBackspace)
-        {
-            Text = Text.Length > 0 ? Text.Remove(Text.Length - 1, 1) : Text;
-            LengthReached = false;
-        }
-
-        else if (LengthReached)
-            return;
-
-        else if (temp is Key.CTab || temp is " ")
-            Text += " ";
-
-        else if (temp.Length > 0)
-            Text += temp;
-
-        OnChanged?.Invoke(Id);
-    }
-
     private void OnButtonClicked(object? sender)
     {
-        if (Activated is false) return;
+        if (Activated is false || Disabled) return;
 
         if (sender is MouseDTO mouse)
         {
@@ -118,22 +84,18 @@ public sealed class TextEntry : IButton, IDisposable
 
             if (Border?.GetGlobalBounds().Contains(mouse) ?? default)
             {
-                Selected = true;
                 OnClicked?.Invoke(Id);
 
                 var sound = Content.GetResource(ESound.ButtonClicked);
                 sound.Volume = App.CurrentSoundVolume;
                 sound.Play();
-                return;
             }
-
-            Selected = false;
         }
     }
 
     private void OnFocusChanged(object? sender)
     {
-        if (Activated is false) return;
+        if (Activated is false || Disabled) return;
 
         if (sender is MouseDTO mouse)
         {
@@ -159,7 +121,6 @@ public sealed class TextEntry : IButton, IDisposable
         OnClicked = null;
         OnFocused = null;
         OnChanged = null;
-        Global.UnSubscribe(EEvent.TextEntered, OnTextEntered);
         Global.UnSubscribe(EEvent.MouseMoved, OnFocusChanged);
         Global.UnSubscribe(EEvent.MouseButtonPressed, OnButtonClicked);
     }

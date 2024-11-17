@@ -7,20 +7,28 @@ public static class Content
 {
     private static readonly Dictionary<EFont, Font> FontResources = [];
     private static readonly Dictionary<EIcon, Sprite> IconResources = [];
+    private static readonly Dictionary<ERace, Sprite> RaceResources = [];
     private static readonly Dictionary<ESprite, Sprite> SpriteResources = [];
     private static readonly Dictionary<EPicture, Sprite> PictureResources = [];
     private static readonly Dictionary<ETerrain, Sprite> TerrainResources = [];
     private static readonly Dictionary<ESound, Sound> SoundResources = [];
     private static readonly Dictionary<EGraphic, Sprite> GraphicResources = [];
+    private static readonly Dictionary<EAlignment, Sprite> AlignmentResources = [];
+    private static readonly Dictionary<EProfession, Sprite> ProfessionResources = [];
+    private static readonly Dictionary<EProficiency, Sprite> ProficiencyResources = [];
 
     #region Action
     public static Font GetResource(EFont font) => Load(font, FontResources);
     public static Sprite GetResource(EIcon icon) => Load(icon, IconResources);
+    public static Sprite GetResource(ERace race) => Load(race, RaceResources);
     public static Sprite GetResource(ESprite sprite) => Load(sprite, SpriteResources);
     public static Sprite GetResource(ETerrain terrain) => Load(terrain, TerrainResources);
     public static Sound GetResource(ESound sound) => Load(sound, SoundResources);
     public static Sprite GetResource(EPicture picture) => Load(picture, PictureResources);
     public static Sprite GetResource(EGraphic graphic) => Load(graphic, GraphicResources);
+    public static Sprite GetResource(EAlignment alignment) => Load(alignment, AlignmentResources);
+    public static Sprite GetResource(EProfession profession) => Load(profession, ProfessionResources);
+    public static Sprite GetResource(EProficiency proficiency) => Load(proficiency, ProficiencyResources);
 
     public static void PlayMusic()
     {

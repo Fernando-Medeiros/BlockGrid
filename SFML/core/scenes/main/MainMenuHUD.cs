@@ -28,11 +28,9 @@ public sealed class MainMenuHUD : IHud, IDisposable
 
             Buttons.Add(new TextButton()
             {
-                Size = 25,
+                Size = 30,
                 Text = text,
                 Id = command,
-                OutlineThickness = 0f,
-                OutlineColor = EColor.Transparent,
                 Position = new(Rect.WidthLeft, Rect.HeightTop + gap),
             });
         }
@@ -79,7 +77,7 @@ public sealed class MainMenuHUD : IHud, IDisposable
     {
         enable = !enable;
 
-        foreach (IButton button in Buttons) button.Enabled(enable);
+        foreach (IButton button in Buttons) button.SetActivated(enable);
     }
     #endregion
 
@@ -92,6 +90,9 @@ public sealed class MainMenuHUD : IHud, IDisposable
         if (sender is EMainMenu.Load_Game) OnClicked?.Invoke(EMainMenu.Load_Game);
         if (sender is EMainMenu.Options) OnClicked?.Invoke(EMainMenu.Options);
         if (sender is EMainMenu.Quit) Global.Invoke(EEvent.EndGame, null);
+
+        foreach (var button in Buttons.OfType<TextButton>())
+            button.Selected = button.Id.Equals(sender);
     }
     #endregion
 
