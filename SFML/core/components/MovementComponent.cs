@@ -12,8 +12,8 @@ public sealed class MovementComponent : IMovementComponent
         body.SetNode(node);
         body.SetBody(body);
 
-        var sound = Content.GetResource(Factory.Shuffle((ETerrain)node.Terrain));
-        sound.Volume = App.CurrentSoundVolume;
+        var sound = Content.GetResource<Sound>(Factory.Shuffle((ETerrain)node.Terrain));
+        sound.Volume = App.Configuration.SoundVolume;
         sound.Play();
     }
 }

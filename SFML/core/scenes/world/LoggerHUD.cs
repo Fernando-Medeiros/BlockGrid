@@ -38,7 +38,7 @@ public sealed class LoggerHUD : IView, IDisposable
             button.OnClicked += OnButtonClicked;
         }
 
-        Global.Subscribe(EEvent.Logger, OnLoggerReceive);
+        Global.Subscribe(EEvent.LoggerChanged, OnLoggerReceive);
     }
 
     public void Render(RenderWindow window)
@@ -48,7 +48,7 @@ public sealed class LoggerHUD : IView, IDisposable
         int gap = 24;
         foreach (var logger in Loggers[SelectedGuide].Take(^10..))
         {
-            window.Draw(new Text(logger, core.Content.GetResource(EFont.OpenSansRegular), 12)
+            window.Draw(new Text(logger, Content.GetResource<Font>(EFont.OpenSansRegular), 12)
             {
                 FillColor = Factory.Color(EColor.White),
                 Position = new Vector2f(Rect.X, Rect.Y + gap),
@@ -79,7 +79,7 @@ public sealed class LoggerHUD : IView, IDisposable
 
     private void OnLoggerReceive(object? sender)
     {
-        if (sender is LoggerDTO dto)
+        if (sender is Logger dto)
         {
             if (Loggers[dto.Guide].Count >= 50)
                 Loggers[dto.Guide].RemoveRange(0, 25);
@@ -92,7 +92,7 @@ public sealed class LoggerHUD : IView, IDisposable
     #region Dispose
     public void Dispose()
     {
-        Global.UnSubscribe(EEvent.Logger, OnLoggerReceive);
+        Global.Unsubscribe(EEvent.LoggerChanged, OnLoggerReceive);
 
         foreach (IButton button in Buttons)
         {

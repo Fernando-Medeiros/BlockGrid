@@ -63,7 +63,7 @@ public sealed class TextEntry : IButton, IDisposable
         {
             CharacterSize = Size,
             OutlineThickness = Outline,
-            Font = Content.GetResource(Font),
+            Font = Content.GetResource<Font>(Font),
             Position = Position + new Vector2f(Padding, -Padding),
             OutlineColor = Factory.Color(OutlineColor),
             DisplayedString = Text.Length == 0 ? Placeholder : Text,
@@ -121,8 +121,8 @@ public sealed class TextEntry : IButton, IDisposable
                 Selected = true;
                 OnClicked?.Invoke(Id);
 
-                var sound = Content.GetResource(ESound.ButtonClicked);
-                sound.Volume = App.CurrentSoundVolume;
+                var sound = Content.GetResource<Sound>(ESound.ButtonClicked);
+                sound.Volume = App.Configuration.SoundVolume;
                 sound.Play();
                 return;
             }
@@ -159,9 +159,9 @@ public sealed class TextEntry : IButton, IDisposable
         OnClicked = null;
         OnFocused = null;
         OnChanged = null;
-        Global.UnSubscribe(EEvent.TextEntered, OnTextEntered);
-        Global.UnSubscribe(EEvent.MouseMoved, OnFocusChanged);
-        Global.UnSubscribe(EEvent.MouseButtonPressed, OnButtonClicked);
+        Global.Unsubscribe(EEvent.TextEntered, OnTextEntered);
+        Global.Unsubscribe(EEvent.MouseMoved, OnFocusChanged);
+        Global.Unsubscribe(EEvent.MouseButtonPressed, OnButtonClicked);
     }
     #endregion
 }

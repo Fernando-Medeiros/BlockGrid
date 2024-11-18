@@ -1,8 +1,8 @@
-﻿using SFMLGame;
-using SFMLGame.pipeline;
+﻿App.SubscribeGlobalListeners();
 
 var pipe = new Pipeline();
 pipe.ConfigureFolders();
+pipe.ConfigureOptions();
 
 var app = new App();
 app.ConfigureResources();

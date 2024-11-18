@@ -2,7 +2,9 @@
 
 public enum EFolder : byte
 {
-    Config,
-    Data,
     Logs,
+    Worlds,
+    Options,
+    Regions,
+    Characters,
 }

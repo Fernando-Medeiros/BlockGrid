@@ -1,7 +1,4 @@
-﻿using SFML.Audio;
-using System.Xml.Serialization;
-
-namespace SFMLGame.core;
+﻿namespace SFMLGame.core;
 
 public static class Content
 {
@@ -18,114 +15,72 @@ public static class Content
     private static readonly Dictionary<EProficiency, Sprite> ProficiencyResources = [];
 
     #region Action
-    public static Font GetResource(EFont font) => Load(font, FontResources);
-    public static Sprite GetResource(EIcon icon) => Load(icon, IconResources);
-    public static Sprite GetResource(ERace race) => Load(race, RaceResources);
-    public static Sprite GetResource(ESprite sprite) => Load(sprite, SpriteResources);
-    public static Sprite GetResource(ETerrain terrain) => Load(terrain, TerrainResources);
-    public static Sound GetResource(ESound sound) => Load(sound, SoundResources);
-    public static Sprite GetResource(EPicture picture) => Load(picture, PictureResources);
-    public static Sprite GetResource(EGraphic graphic) => Load(graphic, GraphicResources);
-    public static Sprite GetResource(EAlignment alignment) => Load(alignment, AlignmentResources);
-    public static Sprite GetResource(EProfession profession) => Load(profession, ProfessionResources);
-    public static Sprite GetResource(EProficiency proficiency) => Load(proficiency, ProficiencyResources);
+    public static T GetResource<T>(object? resourceEnum) where T : class
+    {
+        T? valueResult = null;
+
+        if (resourceEnum is EFont font) valueResult = Load(font, FontResources) as T;
+        if (resourceEnum is ESound sound) valueResult = Load(sound, SoundResources) as T;
+        if (resourceEnum is EIcon icon) valueResult = Load(icon, IconResources) as T;
+        if (resourceEnum is ERace race) valueResult = Load(race, RaceResources) as T;
+        if (resourceEnum is ESprite sprite) valueResult = Load(sprite, SpriteResources) as T;
+        if (resourceEnum is ETerrain terrain) valueResult = Load(terrain, TerrainResources) as T;
+        if (resourceEnum is EPicture picture) valueResult = Load(picture, PictureResources) as T;
+        if (resourceEnum is EGraphic graphic) valueResult = Load(graphic, GraphicResources) as T;
+        if (resourceEnum is EAlignment alignment) valueResult = Load(alignment, AlignmentResources) as T;
+        if (resourceEnum is EProfession profession) valueResult = Load(profession, ProfessionResources) as T;
+        if (resourceEnum is EProficiency proficiency) valueResult = Load(proficiency, ProficiencyResources) as T;
+
+        if (valueResult is null)
+            throw new ArgumentException("Tipo de recurso desconhecido", nameof(resourceEnum));
+
+        return valueResult;
+    }
 
     public static void PlayMusic()
     {
         App.CurrentMusic?.Stop();
         App.CurrentMusic?.Dispose();
 
-        App.CurrentMusic = new($"./resources/music/{Enum.GetName(App.CurrentBiome)}.mp3".ToLower());
+        string? name = Enum.GetName(App.Region.Biome);
 
-        App.CurrentMusic.Volume = App.CurrentMusicVolume;
-        App.CurrentMusic.Loop = true;
+        App.CurrentMusic = new($"./resources/music/{name}.mp3".ToLower())
+        {
+            Volume = App.Configuration.MusicVolume,
+            Loop = true
+        };
         App.CurrentMusic.Play();
+
+        Global.Invoke(EEvent.LoggerChanged, new Logger(ELogger.General, $"Load music: {name}"));
     }
     #endregion
 
     #region Resource
-    private static Sprite Load<T>(T enumValue, Dictionary<T, Sprite> container) where T : Enum
+    private static Sprite Load<TEnum>(TEnum enumValue, Dictionary<TEnum, Sprite> container) where TEnum : Enum
     {
         if (container.TryGetValue(enumValue, out Sprite? value)) return value;
 
-        Sprite resource = new(new Texture(Path(enumValue, "png")));
+        Sprite resource = new(new Texture(FileHandler.ResourcePath(enumValue, "png")));
         container.Add(enumValue, resource);
         return resource;
     }
 
-    private static Font Load<T>(T enumValue, Dictionary<T, Font> container) where T : Enum
+    private static Font Load<TEnum>(TEnum enumValue, Dictionary<TEnum, Font> container) where TEnum : Enum
     {
         if (container.TryGetValue(enumValue, out Font? value)) return value;
 
-        Font resource = new(Path(enumValue, "ttf"));
+        Font resource = new(FileHandler.ResourcePath(enumValue, "ttf"));
         container.Add(enumValue, resource);
         return resource;
     }
 
-    private static Sound Load<T>(T enumValue, Dictionary<T, Sound> container) where T : Enum
+    private static Sound Load<TEnum>(TEnum enumValue, Dictionary<TEnum, Sound> container) where TEnum : Enum
     {
         if (container.TryGetValue(enumValue, out Sound? value)) return value;
 
-        Sound resource = new(new SoundBuffer(Path(enumValue, "ogg")));
+        Sound resource = new(new SoundBuffer(FileHandler.ResourcePath(enumValue, "ogg")));
         container.Add(enumValue, resource);
         return resource;
-    }
-    #endregion
-
-    #region Region
-    public static void SerializeSchema(RegionSchema schema)
-    {
-        string path = Path(EFolder.Data, $"{schema.Name}.xml");
-
-        var serializer = new XmlSerializer(typeof(RegionSchema));
-
-        using StreamWriter writer = new(path);
-
-        serializer.Serialize(writer, schema);
-
-        Global.Invoke(EEvent.Logger, new LoggerDTO(ELogger.General, $"Region {schema.Name} Saved"));
-    }
-
-    public static void DeserializeSchema(string fileName)
-    {
-        string path = Path(EFolder.Data, $"{fileName}.xml");
-
-        RegionSchema? schema = null;
-
-        if (File.Exists(path))
-        {
-            var serializer = new XmlSerializer(typeof(RegionSchema));
-
-            using StreamReader reader = new(path);
-
-            schema = serializer.Deserialize(reader) as RegionSchema;
-        }
-
-        Global.Invoke(EEvent.Region, schema);
-
-        Global.Invoke(EEvent.Logger, new LoggerDTO(ELogger.General, $"Region {schema?.Name} Loaded"));
-    }
-    #endregion
-
-    #region IO
-    private static string Path(EFolder folder, string file)
-    {
-        string document = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
-        string path = $"{document}/{folder}";
-
-        return $"{path}/{file}";
-    }
-
-    private static string Path(Enum resource, string suffix)
-    {
-        Type type = resource.GetType();
-
-        var folder = type.Name[1..];
-
-        var name = Enum.GetName(type, resource);
-
-        return $"./resources/{folder}/{name}.{suffix}".ToLower();
     }
     #endregion
 }

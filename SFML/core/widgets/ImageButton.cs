@@ -12,7 +12,7 @@ public sealed class ImageButton : IButton, IDisposable
 
     #region Required Property
     public required object Id { get; init; }
-    public required Enum Image { get; set; }
+    public required System.Enum Image { get; set; }
     public required Vector2f Position { get; set; }
     #endregion
 
@@ -33,19 +33,7 @@ public sealed class ImageButton : IButton, IDisposable
 
     public void Render(RenderWindow window)
     {
-        var sprite = Image switch
-        {
-            EIcon resource => Content.GetResource(resource),
-            ERace resource => Content.GetResource(resource),
-            ESprite resource => Content.GetResource(resource),
-            EPicture resource => Content.GetResource(resource),
-            ETerrain resource => Content.GetResource(resource),
-            EGraphic resource => Content.GetResource(resource),
-            EAlignment resource => Content.GetResource(resource),
-            EProfession resource => Content.GetResource(resource),
-            EProficiency resource => Content.GetResource(resource),
-            _ => throw new Exception()
-        };
+        var sprite = Content.GetResource<Sprite>(Image);
 
         sprite.Position = Position;
         sprite.Color = Factory.Color(EOpacity.Light);
@@ -53,7 +41,7 @@ public sealed class ImageButton : IButton, IDisposable
 
         if (Focused || Selected)
         {
-            sprite = Content.GetResource(EGraphic.SelectedNode);
+            sprite = Content.GetResource<Sprite>(EGraphic.SelectedNode);
             sprite.Position = Position;
             sprite.Color = Factory.Color(EOpacity.Light);
             window.Draw(sprite);
@@ -79,8 +67,8 @@ public sealed class ImageButton : IButton, IDisposable
                 Selected = !Selected;
                 OnClicked?.Invoke(Id);
 
-                var sound = Content.GetResource(ESound.ButtonClicked);
-                sound.Volume = App.CurrentSoundVolume;
+                var sound = Content.GetResource<Sound>(ESound.ButtonClicked);
+                sound.Volume = App.Configuration.SoundVolume;
                 sound.Play();
             }
         }
@@ -111,8 +99,8 @@ public sealed class ImageButton : IButton, IDisposable
         OnClicked = null;
         OnFocused = null;
         OnChanged = null;
-        Global.UnSubscribe(EEvent.MouseMoved, OnFocusChanged);
-        Global.UnSubscribe(EEvent.MouseButtonPressed, OnButtonClicked);
+        Global.Unsubscribe(EEvent.MouseMoved, OnFocusChanged);
+        Global.Unsubscribe(EEvent.MouseButtonPressed, OnButtonClicked);
     }
     #endregion
 }

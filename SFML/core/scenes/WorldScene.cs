@@ -12,7 +12,7 @@ public sealed class WorldScene : View, IView
     {
         ViewRect = viewRect;
 
-        Global.Subscribe(EEvent.Scene, OnSceneChanged);
+        Global.Subscribe(EEvent.SceneChanged, OnSceneChanged);
     }
 
     #region Initialize
@@ -22,7 +22,6 @@ public sealed class WorldScene : View, IView
         {
             Build();
             Event();
-            Content.DeserializeSchema("0");
             return;
         }
 

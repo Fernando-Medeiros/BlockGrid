@@ -93,7 +93,7 @@ public sealed class NewGameHUD : IHud
             Images.Add(new()
             {
                 Radius = radius,
-                Texture = Content.GetResource(EIcon.World).Texture,
+                Texture = Content.GetResource<Sprite>(EIcon.World).Texture,
                 Position = new(Rect.WidthLeft + offset, Rect.HeightBottom - posY - (radius * 2)),
             });
 
@@ -144,7 +144,7 @@ public sealed class NewGameHUD : IHud
         {
             Position = new(Rect.X, Rect.Y),
             Size = new(Rect.Width, Rect.Height),
-            Texture = Content.GetResource(EGraphic.BackgroundHUD).Texture,
+            Texture = Content.GetResource<Sprite>(EGraphic.BackgroundHUD).Texture,
         };
         #endregion
     }
@@ -172,25 +172,25 @@ public sealed class NewGameHUD : IHud
         // Portrait
         window.Draw(new RectangleShape()
         {
-            Size = new Vector2f(64, 64),
             OutlineThickness = 1,
-            Texture = Content.GetResource(CharacterRace).Texture,
+            Size = new Vector2f(64, 64),
+            Texture = Content.GetResource<Sprite>(CharacterRace).Texture,
             Position = new(Rect.WidthCenter - 32 - (Rect.Padding / 2f), Rect.HeightTop),
         });
 
         window.Draw(new RectangleShape()
         {
-            Size = new Vector2f(54, 54),
             OutlineThickness = 1,
-            Texture = Content.GetResource(CharacterAlignment).Texture,
+            Size = new Vector2f(54, 54),
+            Texture = Content.GetResource<Sprite>(CharacterAlignment).Texture,
             Position = new(Rect.WidthLeft + Rect.Padding, Rect.HeightTop + 32),
         });
 
         window.Draw(new RectangleShape()
         {
-            Size = new Vector2f(54, 54),
             OutlineThickness = 1,
-            Texture = Content.GetResource(CharacterProfession).Texture,
+            Size = new Vector2f(54, 54),
+            Texture = Content.GetResource<Sprite>(CharacterProfession).Texture,
             Position = new(Rect.WidthRight - 54 - Rect.Padding, Rect.HeightTop + 32),
         });
     }
@@ -233,7 +233,49 @@ public sealed class NewGameHUD : IHud
 
         if (sender is EMainMenu.New_Game)
         {
-            Global.Invoke(EEvent.Scene, EScene.World);
+            byte maxRect = (byte)WorldSize;
+
+            List<RegionSchema> collection = [];
+
+            for (byte row = 0; row < maxRect; row++)
+                for (byte column = 0; column < maxRect; column++)
+                {
+                    collection.Add(new()
+                    {
+                        Biome = App.Shuffle(Enum.GetValues<EBiome>()),
+                    });
+                }
+
+            var world = new WorldSchema()
+            {
+                Size = WorldSize,
+                Name = WorldName,
+                Region = collection.Select(x => x.Token).ToList(),
+            };
+
+            var region = collection.First();
+
+            var player = new PlayerSchema()
+            {
+                Name = CharacterName,
+                Race = CharacterRace,
+                Alignment = CharacterAlignment,
+                Profession = CharacterProfession,
+                WorldToken = world.Token,
+                RegionToken = region.Token,
+            };
+
+            FileHandler.SerializeSchema(EFolder.Worlds, world, world.Token);
+
+            FileHandler.SerializeSchema(EFolder.Characters, player, player.Token);
+
+            collection.ForEach(schema => { FileHandler.SerializeSchema(EFolder.Regions, schema, schema.Token); });
+
+            Global.Invoke(EEvent.SceneChanged, EScene.World);
+
+            Global.Invoke(EEvent.SchemaChanged, world);
+            Global.Invoke(EEvent.SchemaChanged, player);
+            Global.Invoke(EEvent.SchemaChanged, region);
             return;
         }
 

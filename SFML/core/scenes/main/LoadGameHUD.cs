@@ -7,6 +7,8 @@ public sealed class LoadGameHUD : IHud
     #endregion
 
     #region Property
+    private IList<PlayerSchema> Characters { get; } = [];
+
     private IList<IButton> Buttons { get; } = [];
     private Rect Rect { get; set; } = Rect.Empty;
     private RectangleShape Background { get; set; } = new();
@@ -19,6 +21,32 @@ public sealed class LoadGameHUD : IHud
           .WithSize(width: 500f, height: 700f, padding: 68f)
           .WithAlignment();
 
+        var names = Directory.GetFiles($"{FileHandler.MainFolder}/{EFolder.Characters}")
+            .Select(Path.GetFileNameWithoutExtension)
+            .ToList();
+
+        foreach (string name in names)
+        {
+            Characters.Add(FileHandler.DeserializeSchema<PlayerSchema>(EFolder.Characters, name));
+        }
+
+        float offset = 0f;
+
+        #region Worlds
+        foreach (var schema in Characters)
+        {
+            Buttons.Add(new TextButton()
+            {
+                Size = 20,
+                Id = schema.Token,
+                Text = schema.ToString(),
+                Position = new(Rect.WidthLeft, Rect.HeightTop + offset)
+            });
+            offset += 30;
+        }
+        #endregion
+
+        #region View Options
         Buttons.Add(new ImageButton()
         {
             Id = EIcon.Close,
@@ -30,8 +58,9 @@ public sealed class LoadGameHUD : IHud
         {
             Position = new(Rect.X, Rect.Y),
             Size = new(Rect.Width, Rect.Height),
-            Texture = Content.GetResource(EGraphic.BackgroundHUD).Texture,
+            Texture = Content.GetResource<Sprite>(EGraphic.BackgroundHUD).Texture,
         };
+        #endregion
     }
 
     public void Event()
@@ -68,7 +97,23 @@ public sealed class LoadGameHUD : IHud
     private void OnButtonClicked(object? sender)
     {
         if (sender is EIcon.Close)
+        {
             OnClicked?.Invoke(EMainMenu.Load_Game);
+            return;
+        }
+
+        if (sender is string token)
+        {
+            var player = Characters.First(x => x.Token == token);
+            var world = FileHandler.DeserializeSchema<WorldSchema>(EFolder.Worlds, player.WorldToken);
+            var region = FileHandler.DeserializeSchema<RegionSchema>(EFolder.Regions, player.RegionToken);
+
+            Global.Invoke(EEvent.SceneChanged, EScene.World);
+
+            Global.Invoke(EEvent.SchemaChanged, player);
+            Global.Invoke(EEvent.SchemaChanged, world);
+            Global.Invoke(EEvent.SchemaChanged, region);
+        }
     }
     #endregion
 
@@ -83,6 +128,7 @@ public sealed class LoadGameHUD : IHud
             button.Dispose();
         }
 
+        Characters.Clear();
         Buttons.Clear();
         Background.Dispose();
     }

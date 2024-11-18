@@ -1,6 +1,6 @@
 ﻿using SFMLGame.core.scenes;
 
-namespace SFMLGame;
+namespace SFMLGame.pipeline;
 
 internal sealed partial class App
 {
@@ -9,7 +9,7 @@ internal sealed partial class App
 
     static App()
     {
-        var size = new FloatRect(0, 0, CurrentWidth, CurrentHeight);
+        var size = new FloatRect(0, 0, Configuration.WindowWidth, Configuration.WindowHeight);
 
         Window = new(
             new VideoMode((uint)size.Width, (uint)size.Height),
@@ -23,26 +23,22 @@ internal sealed partial class App
 
     public void ConfigureResources()
     {
-        Scenes[EScene.Main].Build();
+        Scenes[CurrentScene].Build();
     }
 
     public void ConfigureListeners()
     {
-        LoadEvents();
-
-        Scenes[EScene.Main].Event();
+        Scenes[CurrentScene].Event();
     }
 
     public void Start()
     {
         while (Window.IsOpen)
         {
-            if (CurrentMusic != null)
-                CurrentMusic.Volume = CurrentMusicVolume;
-
-            Window.SetFramerateLimit(CurrentFrame);
+            Window.SetFramerateLimit(Configuration.Frame);
 
             Window.DispatchEvents();
+
             Window.Clear(Factory.Color(EColor.Black));
 
             Scenes[CurrentScene].Render(Window);

@@ -2,5 +2,5 @@
 
 public interface IObject2D
 {
-    ESprite Sprite { get; }
+    Enum? Sprite { get; }
 }

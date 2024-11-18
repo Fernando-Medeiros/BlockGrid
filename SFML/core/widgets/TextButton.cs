@@ -47,7 +47,7 @@ public sealed class TextButton : IButton, IDisposable
             CharacterSize = Size,
             DisplayedString = Text,
             OutlineThickness = Outline,
-            Font = Content.GetResource(Font),
+            Font = Content.GetResource<Font>(Font),
             OutlineColor = Factory.Color(OutlineColor),
             FillColor = Focused ? Factory.Color(FocusedColor)
                 : Selected ? Factory.Color(SelectedColor)
@@ -74,8 +74,8 @@ public sealed class TextButton : IButton, IDisposable
                 Selected = !Selected;
                 OnClicked?.Invoke(Id);
 
-                var sound = Content.GetResource(ESound.ButtonClicked);
-                sound.Volume = App.CurrentSoundVolume;
+                var sound = Content.GetResource<Sound>(ESound.ButtonClicked);
+                sound.Volume = App.Configuration.SoundVolume;
                 sound.Play();
             }
         }
@@ -107,8 +107,8 @@ public sealed class TextButton : IButton, IDisposable
         OnClicked = null;
         OnFocused = null;
         OnChanged = null;
-        Global.UnSubscribe(EEvent.MouseMoved, OnFocusChanged);
-        Global.UnSubscribe(EEvent.MouseButtonPressed, OnButtonClicked);
+        Global.Unsubscribe(EEvent.MouseMoved, OnFocusChanged);
+        Global.Unsubscribe(EEvent.MouseButtonPressed, OnButtonClicked);
     }
     #endregion
 }

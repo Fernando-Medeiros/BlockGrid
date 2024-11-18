@@ -47,8 +47,8 @@ public sealed class CommandHUD : IView, IDisposable
     {
         if (sender is EIcon.Exit)
         {
-            Global.Invoke(EEvent.SaveGame, null);
-            Global.Invoke(EEvent.Scene, EScene.Main);
+            Global.Invoke(EEvent.SaveGameChanged, null);
+            Global.Invoke(EEvent.SceneChanged, EScene.Main);
         };
 
         if (sender is EIcon.ZoomIn) Global.Invoke(EEvent.KeyPressed, Key.Z);

@@ -1,4 +1,4 @@
-﻿namespace SFMLGame;
+﻿namespace SFMLGame.pipeline;
 
 internal sealed partial class App
 {

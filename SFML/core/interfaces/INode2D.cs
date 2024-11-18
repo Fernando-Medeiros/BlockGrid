@@ -8,7 +8,6 @@ public interface INode2D
     EOpacity Opacity { get; }
     Position2D Position2D { get; }
     IList<IObject2D> Objects { get; }
-    void Clear();
     void Dispose();
     void SetBody(IBody2D? body);
     void SetOpacity(EOpacity opacity);

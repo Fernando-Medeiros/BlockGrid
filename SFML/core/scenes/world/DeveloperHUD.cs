@@ -84,7 +84,7 @@ public sealed class DeveloperHUD : IView
                 button.OnClicked += OnButtonClicked;
             }
 
-        Global.Subscribe(EEvent.Transport, OnSelectedNodeChanged);
+        Global.Subscribe(EEvent.NodeChanged, OnSelectedNodeChanged);
     }
 
     public void Render(RenderWindow window)
@@ -101,7 +101,7 @@ public sealed class DeveloperHUD : IView
         {
             if (SelectedGuide is EGuide.Objects && SelectedObject is ESprite sprite)
             {
-                if (node.Objects.Any(x => x.Sprite == sprite) is false)
+                if (node.Objects.Any(x => x.Sprite.Equals(sprite)) is false)
                     node.Objects.Add(Factory.Build(sprite));
             }
 
@@ -120,7 +120,7 @@ public sealed class DeveloperHUD : IView
             case (_, EGuide guide): SelectedGuide = guide; break;
             case (EGuide.Objects, ESprite sprite): SelectedObject = sprite; break;
             case (EGuide.Enemies, ESprite sprite): SelectedEnemy = sprite; break;
-            case (EGuide.Biomes, EBiome biome): Global.Invoke(EEvent.Transport, biome); break;
+            case (EGuide.Biomes, EBiome biome): break;
             default: break;
         }
 
@@ -136,7 +136,7 @@ public sealed class DeveloperHUD : IView
     #region Dispose
     public void Dispose()
     {
-        Global.UnSubscribe(EEvent.Transport, OnSelectedNodeChanged);
+        Global.Unsubscribe(EEvent.NodeChanged, OnSelectedNodeChanged);
 
         foreach (IButton button in Guides)
         {

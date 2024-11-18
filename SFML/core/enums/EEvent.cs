@@ -2,18 +2,23 @@
 
 public enum EEvent : byte
 {
-    Scene,
-    Logger,
-    Region,
-    Camera,
-    Transport,
-    EndGame,
-    SaveGame,
+    #region Binding
     BasicStatus,
+
+    NodeChanged,
+    SceneChanged,
+    LoggerChanged,
+    CameraChanged,
+    SchemaChanged,
+    EndGameChanged,
+    SaveGameChanged,
+    #endregion
+    #region Window
     TextEntered,
     KeyPressed,
     KeyReleased,
     MouseMoved,
     MouseWheelScrolled,
     MouseButtonPressed,
+    #endregion
 }

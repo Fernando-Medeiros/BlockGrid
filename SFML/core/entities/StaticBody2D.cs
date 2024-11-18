@@ -16,7 +16,7 @@ public sealed class StaticBody2D : IBody2D, IDisposable
     #region Property
     public EBody? Type { get; private set; }
     public INode2D? Node { get; private set; }
-    public ESprite? Sprite { get; private set; }
+    public Enum? Sprite { get; private set; }
     public ILightComponent? Light { get; private set; }
     public IActionComponent? Action { get; private set; }
     public IStatusComponent? Status { get; private set; }
@@ -30,7 +30,7 @@ public sealed class StaticBody2D : IBody2D, IDisposable
     }
 
     public void SetNode(INode2D? node) => Node = node;
-    public void SetSprite(ESprite? sprite) => Sprite = sprite;
+    public void SetSprite(Enum? sprite) => Sprite = sprite;
     public void SetBody(IBody2D? body) => Node?.SetBody(body);
     #endregion
 

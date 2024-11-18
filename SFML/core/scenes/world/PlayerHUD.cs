@@ -52,7 +52,7 @@ public sealed class PlayerHUD : IView, IDisposable
 
         Offset = new(space, 0);
         Data = new(string.Empty, 0, 0, 0, 0, 0, 0, 0);
-        Font = core.Content.GetResource(EFont.OpenSansSemibold);
+        Font = Content.GetResource<Font>(EFont.OpenSansSemibold);
     }
 
     public void Render(RenderWindow window)
@@ -90,7 +90,7 @@ public sealed class PlayerHUD : IView, IDisposable
     #region Dispose
     public void Dispose()
     {
-        Global.UnSubscribe(EEvent.BasicStatus, OnBasicStatusChanged);
+        Global.Unsubscribe(EEvent.BasicStatus, OnBasicStatusChanged);
 
         HpBar?.Dispose();
         MpBar?.Dispose();

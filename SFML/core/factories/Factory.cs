@@ -83,9 +83,9 @@ public static class Factory
         _ => throw new Exception()
     };
 
-    public static IObject2D Build(ESprite sprite) => sprite switch
+    public static IObject2D Build(enums.ESprite sprite) => sprite switch
     {
-        ESprite.Road => new Object2D() { Sprite = sprite },
+        enums.ESprite.Road => new Object2D() { Sprite = sprite },
         _ => throw new Exception()
     };
     #endregion

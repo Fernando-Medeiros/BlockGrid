@@ -1,7 +1,6 @@
 ﻿namespace SFMLGame.core.scenes.world;
 
-public class WorldView(FloatRect viewRect)
-    : View(viewRect), IView, IDisposable
+public sealed class WorldView(FloatRect viewRect) : View(viewRect), IView, IDisposable
 {
     private FloatRect ViewRect { get; } = viewRect;
     private static IList<IList<INode2D>> Collection { get; } = [];
@@ -22,13 +21,13 @@ public class WorldView(FloatRect viewRect)
         }
     }
 
-    public virtual void Event()
+    public void Event()
     {
         Node2D.Navigation += OnNodeNavigation;
 
-        Global.Subscribe(EEvent.Region, OnRegionChanged);
-        Global.Subscribe(EEvent.SaveGame, OnRegionSaved);
-        Global.Subscribe(EEvent.Camera, OnCameraChanged);
+        Global.Subscribe(EEvent.SchemaChanged, OnLoadRegionChanged);
+        Global.Subscribe(EEvent.SaveGameChanged, OnSaveRegionChanged);
+        Global.Subscribe(EEvent.CameraChanged, OnCameraChanged);
         Global.Subscribe(EEvent.KeyPressed, OnZoomChanged);
         Global.Subscribe(EEvent.MouseButtonPressed, OnNodeSelected);
     }
@@ -76,81 +75,58 @@ public class WorldView(FloatRect viewRect)
         };
     }
 
-    // TODO :: Refatorar
-    private void OnRegionSaved(object? sender)
+    // TODO :: Refatorar para salvar apenas os dados dos nodes ocupados na região
+    private void OnSaveRegionChanged(object? sender)
     {
-        var regionSchema = new RegionSchema
-        {
-            Name = "0",
-            Biome = App.CurrentBiome,
-        };
+        var region = App.Region;
+        region.Nodes.Clear();
+        region.UpdatedOn = DateTime.Now;
 
         foreach (var nodes in Collection)
             foreach (var node in nodes)
             {
+                if (node.Body is PlayerBody2D)
+                {
+                    node.Body.Dispose();
+                    node.SetBody(null);
+                }
+
                 if (node.Body is null && node.Objects.Count == 0) continue;
 
-                var (row, column) = node.Position2D.Matrix;
-
-                var nodeSchema = new NodeSchema()
+                region.Nodes.Add(new()
                 {
-                    Row = row,
-                    Column = column,
-                };
+                    Position = node.Position2D.Matrix,
+                });
 
-                if (node.Body is IBody2D body)
-                    nodeSchema.Body = new()
-                    {
-                        Type = (EBody)body.Type,
-                        Sprite = (ESprite)body.Sprite
-                    };
-
-                foreach (var item in node.Objects)
-                    nodeSchema.Objects.Add(new() { Sprite = item.Sprite });
-
-                regionSchema.Nodes.Add(nodeSchema);
-
-                node.Clear();
+                node.Dispose();
             }
 
-        core.Content.SerializeSchema(regionSchema);
+        FileHandler.SerializeSchema(EFolder.Regions, region, region.Token);
     }
 
-    // TODO :: Refatorar
-    private void OnRegionChanged(object? sender)
+    // TODO :: Refatorar para carregar somente os nodes da região e encontrar uma forma de desacoplar o player do node2d
+    private void OnLoadRegionChanged(object? sender)
     {
         if (sender is RegionSchema regionSchema)
         {
-            Global.Invoke(EEvent.Transport, regionSchema.Biome);
-
             foreach (var schema in regionSchema.Nodes)
             {
-                var node = Collection.ElementAt(schema.Row).ElementAt(schema.Column);
+                var (_row, _column) = schema.Position;
 
-                node.Clear();
+                var node = Collection
+                   .ElementAt(_row)
+                   .ElementAt(_column);
 
-                foreach (var itemSchema in schema.Objects)
-                    node.Objects.Add(new Object2D() { Sprite = itemSchema.Sprite });
+                node.Dispose();
+            }
 
-                if (schema.Body is null) continue;
+            var (row, column) = App.Player.RegionPosition;
 
-                if (schema.Body.Type is EBody.Player)
-                {
-                    App.CurrentPlayer?.Dispose();
-                    Global.Invoke(EEvent.Transport, Factory.Build(schema.Body.Type, node));
-                    Global.Invoke(EEvent.Camera, node.Position2D);
-                    continue;
-                }
+            var _node = Collection
+                .ElementAt(row)
+                .ElementAt(column);
 
-                Factory.Build(schema.Body.Type, node);
-            };
-        }
-
-        if (App.CurrentPlayer == null)
-        {
-            var node = Collection.ElementAt(Global.MAX_ROW / 2).ElementAt(Global.MAX_COLUMN / 2);
-            Global.Invoke(EEvent.Transport, Factory.Build(EBody.Player, node));
-            Global.Invoke(EEvent.Camera, node.Position2D);
+            Factory.Build(EBody.Player, _node);
         }
     }
 
@@ -171,7 +147,7 @@ public class WorldView(FloatRect viewRect)
             INode2D node = Collection.ElementAt(row).ElementAt(column);
 
             if (node.Opacity is EOpacity.Light)
-                Global.Invoke(EEvent.Transport, node);
+                Global.Invoke(EEvent.NodeChanged, node);
         }
     }
 
@@ -192,7 +168,7 @@ public class WorldView(FloatRect viewRect)
         }
     }
 
-    protected void OnCameraChanged(object? sender)
+    private void OnCameraChanged(object? sender)
     {
         var (X, Y) = App.CurrentPosition.TopLeft;
 
@@ -213,11 +189,11 @@ public class WorldView(FloatRect viewRect)
     {
         Node2D.Navigation -= OnNodeNavigation;
 
-        Global.UnSubscribe(EEvent.Region, OnRegionChanged);
-        Global.UnSubscribe(EEvent.SaveGame, OnRegionSaved);
-        Global.UnSubscribe(EEvent.Camera, OnCameraChanged);
-        Global.UnSubscribe(EEvent.KeyPressed, OnZoomChanged);
-        Global.UnSubscribe(EEvent.MouseButtonPressed, OnNodeSelected);
+        Global.Unsubscribe(EEvent.SchemaChanged, OnLoadRegionChanged);
+        Global.Unsubscribe(EEvent.SaveGameChanged, OnSaveRegionChanged);
+        Global.Unsubscribe(EEvent.CameraChanged, OnCameraChanged);
+        Global.Unsubscribe(EEvent.KeyPressed, OnZoomChanged);
+        Global.Unsubscribe(EEvent.MouseButtonPressed, OnNodeSelected);
 
         foreach (var nodes in Collection)
             foreach (var node in nodes)

@@ -1,4 +1,5 @@
-﻿global using SFML.Graphics;
+﻿global using SFML.Audio;
+global using SFML.Graphics;
 global using SFML.System;
 global using SFML.Window;
 global using SFMLGame.core;
@@ -10,3 +11,5 @@ global using SFMLGame.core.interfaces;
 global using SFMLGame.core.nodes;
 global using SFMLGame.core.objects;
 global using SFMLGame.core.widgets;
+global using SFMLGame.pipeline;
+global using SFMLGame.pipeline.schemas;

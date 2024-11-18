@@ -42,13 +42,13 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
     #region Canva Layers
     private void DrawDynamicBiome(RenderWindow window)
     {
-        if (Biome != App.CurrentBiome)
+        if (Biome != App.Region.Biome)
         {
-            Biome = App.CurrentBiome;
-            Terrain = Factory.Shuffle(App.CurrentBiome);
+            Biome = App.Region.Biome;
+            Terrain = Factory.Shuffle(App.Region.Biome);
         }
 
-        var sprite = Content.GetResource((ETerrain)Terrain);
+        var sprite = Content.GetResource<Sprite>((ETerrain)Terrain);
         sprite.Color = Factory.Color(Opacity);
         sprite.Position = Position2D;
         window.Draw(sprite);
@@ -58,7 +58,7 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
     {
         foreach (var gameItem in Objects)
         {
-            var sprite = Content.GetResource(gameItem.Sprite);
+            var sprite = Content.GetResource<Sprite>(gameItem.Sprite);
             sprite.Color = Factory.Color(Opacity);
             sprite.Position = Position2D;
             window.Draw(sprite);
@@ -71,7 +71,7 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
 
         if (Opacity is EOpacity.Opaque or EOpacity.Regular && Body.Type != EBody.Player) return;
 
-        var sprite = Content.GetResource((ESprite)Body.Sprite);
+        var sprite = Content.GetResource<Sprite>(Body.Sprite);
         sprite.Color = Factory.Color(Opacity);
 
         if (Body.Type != EBody.Static)
@@ -95,25 +95,20 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
     {
         if (App.SelectedNode != this || App.SelectedNode?.Opacity != EOpacity.Light) return;
 
-        var sprite = Content.GetResource(EGraphic.SelectedNode);
+        var sprite = Content.GetResource<Sprite>(EGraphic.SelectedNode);
         sprite.Position = Position2D;
         window.Draw(sprite);
     }
     #endregion
 
     #region Dispose
-    public void Clear()
+    public void Dispose()
     {
+        Body?.Dispose();
         Body = null;
         Terrain = null;
         Objects.Clear();
         Opacity = EOpacity.Opaque;
-    }
-
-    public void Dispose()
-    {
-        Body?.Dispose();
-        Clear();
     }
     #endregion
 }

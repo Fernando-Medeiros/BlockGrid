@@ -58,13 +58,13 @@ public static class Global
     {
         switch (e)
         {
-            case EEvent.Scene: OnScene += action; break;
-            case EEvent.Logger: OnLogger += action; break;
-            case EEvent.Region: OnRegion += action; break;
-            case EEvent.Camera: OnCamera += action; break;
-            case EEvent.Transport: OnTransport += action; break;
-            case EEvent.EndGame: OnEndGame += action; break;
-            case EEvent.SaveGame: OnSaveGame += action; break;
+            case EEvent.SceneChanged: OnScene += action; break;
+            case EEvent.LoggerChanged: OnLogger += action; break;
+            case EEvent.SchemaChanged: OnRegion += action; break;
+            case EEvent.CameraChanged: OnCamera += action; break;
+            case EEvent.NodeChanged: OnTransport += action; break;
+            case EEvent.EndGameChanged: OnEndGame += action; break;
+            case EEvent.SaveGameChanged: OnSaveGame += action; break;
             case EEvent.BasicStatus: OnBasicStatus += action; break;
             case EEvent.TextEntered: OnTextEntered += action; break;
             case EEvent.KeyPressed: OnKeyPressed += action; break;
@@ -75,17 +75,17 @@ public static class Global
         };
     }
 
-    public static void UnSubscribe(EEvent e, Action<object?> action)
+    public static void Unsubscribe(EEvent e, Action<object?> action)
     {
         switch (e)
         {
-            case EEvent.Scene: OnScene -= action; break;
-            case EEvent.Logger: OnLogger -= action; break;
-            case EEvent.Region: OnRegion -= action; break;
-            case EEvent.Camera: OnCamera -= action; break;
-            case EEvent.Transport: OnTransport -= action; break;
-            case EEvent.EndGame: OnEndGame -= action; break;
-            case EEvent.SaveGame: OnSaveGame -= action; break;
+            case EEvent.SceneChanged: OnScene -= action; break;
+            case EEvent.LoggerChanged: OnLogger -= action; break;
+            case EEvent.SchemaChanged: OnRegion -= action; break;
+            case EEvent.CameraChanged: OnCamera -= action; break;
+            case EEvent.NodeChanged: OnTransport -= action; break;
+            case EEvent.EndGameChanged: OnEndGame -= action; break;
+            case EEvent.SaveGameChanged: OnSaveGame -= action; break;
             case EEvent.BasicStatus: OnBasicStatus -= action; break;
             case EEvent.TextEntered: OnTextEntered -= action; break;
             case EEvent.KeyPressed: OnKeyPressed -= action; break;
@@ -100,13 +100,13 @@ public static class Global
     {
         switch (e)
         {
-            case EEvent.Scene: OnScene?.Invoke(sender); break;
-            case EEvent.Logger: OnLogger?.Invoke(sender); break;
-            case EEvent.Region: OnRegion?.Invoke(sender); break;
-            case EEvent.Camera: OnCamera?.Invoke(sender); break;
-            case EEvent.Transport: OnTransport?.Invoke(sender); break;
-            case EEvent.EndGame: OnEndGame?.Invoke(sender); break;
-            case EEvent.SaveGame: OnSaveGame?.Invoke(sender); break;
+            case EEvent.SceneChanged: OnScene?.Invoke(sender); break;
+            case EEvent.LoggerChanged: OnLogger?.Invoke(sender); break;
+            case EEvent.SchemaChanged: OnRegion?.Invoke(sender); break;
+            case EEvent.CameraChanged: OnCamera?.Invoke(sender); break;
+            case EEvent.NodeChanged: OnTransport?.Invoke(sender); break;
+            case EEvent.EndGameChanged: OnEndGame?.Invoke(sender); break;
+            case EEvent.SaveGameChanged: OnSaveGame?.Invoke(sender); break;
             case EEvent.BasicStatus: OnBasicStatus?.Invoke(sender); break;
             case EEvent.TextEntered: OnTextEntered?.Invoke(sender); break;
             case EEvent.KeyPressed: OnKeyPressed?.Invoke(sender); break;

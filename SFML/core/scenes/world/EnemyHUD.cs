@@ -24,7 +24,7 @@ public sealed class EnemyHUD : IView, IDisposable
             OutlineThickness = 1f,
             OutlineColor = Factory.Color(EColor.White),
             FillColor = Factory.Color(EColor.Tomate),
-            Position = new(Global.WINDOW_WIDTH / 2 - 300 / 2, posY),
+            Position = new((Global.WINDOW_WIDTH / 2) - (300 / 2), posY),
         };
 
         posY += HpBar.Size.Y + space;
@@ -35,12 +35,12 @@ public sealed class EnemyHUD : IView, IDisposable
             OutlineThickness = 1f,
             OutlineColor = Factory.Color(EColor.White),
             FillColor = Factory.Color(EColor.CornFlowerBlue),
-            Position = new(Global.WINDOW_WIDTH / 2 - 150 / 2, posY),
+            Position = new((Global.WINDOW_WIDTH / 2) - (150 / 2), posY),
         };
 
         Offset = new(space, 0);
         Data = new(string.Empty, 0, 0, 0, 0, 0, 0, 0);
-        Font = core.Content.GetResource(EFont.OpenSansSemibold);
+        Font = core.Content.GetResource<Font>(EFont.OpenSansSemibold);
     }
 
     public void Render(RenderWindow window)
@@ -81,7 +81,7 @@ public sealed class EnemyHUD : IView, IDisposable
     #region Dispose
     public void Dispose()
     {
-        Global.UnSubscribe(EEvent.BasicStatus, OnBasicStatusChanged);
+        Global.Unsubscribe(EEvent.BasicStatus, OnBasicStatusChanged);
 
         HpBar?.Dispose();
         MpBar?.Dispose();

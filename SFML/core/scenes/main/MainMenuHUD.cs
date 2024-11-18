@@ -40,7 +40,7 @@ public sealed class MainMenuHUD : IHud, IDisposable
             CharacterSize = 40,
             DisplayedString = Global.TITLE,
             FillColor = Factory.Color(EColor.White),
-            Font = Content.GetResource(EFont.Romulus),
+            Font = Content.GetResource<Font>(EFont.Romulus),
             Position = new(Rect.WidthLeft, Rect.HeightTop),
         };
 
@@ -48,7 +48,7 @@ public sealed class MainMenuHUD : IHud, IDisposable
         {
             Position = new(Rect.X, Rect.Y),
             Size = new(Rect.Width, Rect.Height),
-            Texture = Content.GetResource(EGraphic.BackgroundHUD).Texture,
+            Texture = Content.GetResource<Sprite>(EGraphic.BackgroundHUD).Texture,
         };
     }
 
@@ -89,7 +89,7 @@ public sealed class MainMenuHUD : IHud, IDisposable
         if (sender is EMainMenu.New_Game) OnClicked?.Invoke(EMainMenu.New_Game);
         if (sender is EMainMenu.Load_Game) OnClicked?.Invoke(EMainMenu.Load_Game);
         if (sender is EMainMenu.Options) OnClicked?.Invoke(EMainMenu.Options);
-        if (sender is EMainMenu.Quit) Global.Invoke(EEvent.EndGame, null);
+        if (sender is EMainMenu.Quit) Global.Invoke(EEvent.EndGameChanged, null);
 
         foreach (var button in Buttons.OfType<TextButton>())
             button.Selected = button.Id.Equals(sender);

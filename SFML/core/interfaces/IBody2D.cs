@@ -4,7 +4,7 @@ public interface IBody2D
 {
     EBody? Type { get; }
     INode2D? Node { get; }
-    ESprite? Sprite { get; }
+    Enum? Sprite { get; }
     ILightComponent? Light { get; }
     IStatusComponent? Status { get; }
     IActionComponent? Action { get; }
@@ -15,5 +15,5 @@ public interface IBody2D
     void Execute(object? sender);
     void SetBody(IBody2D? body);
     void SetNode(INode2D? node);
-    void SetSprite(ESprite? sprite);
+    void SetSprite(Enum? sprite);
 }

@@ -8,7 +8,7 @@ public sealed class MainScene : View, IView
 
     public MainScene(FloatRect viewRect) : base(viewRect)
     {
-        Global.Subscribe(EEvent.Scene, OnSceneChanged);
+        Global.Subscribe(EEvent.SceneChanged, OnSceneChanged);
     }
 
     #region Initialize

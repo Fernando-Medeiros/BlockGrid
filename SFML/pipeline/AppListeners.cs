@@ -1,10 +1,10 @@
-﻿using SFML.Window;
+﻿using System.Numerics;
 
-namespace SFMLGame;
+namespace SFMLGame.pipeline;
 
 internal sealed partial class App
 {
-    private void LoadEvents()
+    public static void SubscribeGlobalListeners()
     {
         Window.TextEntered += (sender, e) =>
             Global.Invoke(EEvent.TextEntered, e.Unicode[0]);
@@ -24,24 +24,42 @@ internal sealed partial class App
         Window.MouseButtonPressed += (_, e) =>
             Global.Invoke(EEvent.MouseButtonPressed, new MouseDTO(Enum.Parse<EMouse>(Enum.GetName(e.Button)), e.X, e.Y));
 
-        Global.Subscribe(EEvent.Scene, (sender) =>
+
+        Global.Subscribe(EEvent.SchemaChanged, (sender) =>
+        {
+            if (sender is PlayerSchema playerSchema) Player = playerSchema;
+
+            if (sender is WorldSchema worldSchema) World = worldSchema;
+
+            if (sender is RegionSchema regionSchema) { Region = regionSchema; Content.PlayMusic(); }
+
+            if (sender is ConfigurationSchema configurationSchema) Configuration = configurationSchema;
+        });
+
+        Global.Subscribe(EEvent.SceneChanged, (sender) =>
         {
             if (sender is EScene scene) CurrentScene = scene;
         });
 
-        Global.Subscribe(EEvent.Camera, (sender) =>
+        Global.Subscribe(EEvent.CameraChanged, (sender) =>
         {
             if (sender is Position2D position) CurrentPosition = position;
         });
 
-        Global.Subscribe(EEvent.Transport, (sender) =>
+        Global.Subscribe(EEvent.NodeChanged, (sender) =>
             {
-                if (sender is IBody2D body) CurrentPlayer = body;
                 if (sender is INode2D node) SelectedNode = node;
-                if (sender is Position2D position) CurrentPosition = position;
-                if (sender is EBiome biome) { CurrentBiome = biome; Content.PlayMusic(); }
             });
 
-        Global.Subscribe(EEvent.EndGame, (sender) => Window.Close());
+        Global.Subscribe(EEvent.SaveGameChanged, (sender) =>
+        {
+            Player.UpdatedOn = DateTime.Now;
+            Player.RegionToken = Region.Token;
+            Player.RegionPosition = CurrentPosition.Matrix;
+
+            FileHandler.SerializeSchema(EFolder.Characters, Player, Player.Token);
+        });
+
+        Global.Subscribe(EEvent.EndGameChanged, (sender) => Window.Close());
     }
 }

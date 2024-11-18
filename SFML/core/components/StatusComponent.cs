@@ -30,11 +30,11 @@ public sealed class StatusComponent : IStatusComponent
 
         Global.Invoke(EEvent.BasicStatus, new StatusDTO($"{Body.Sprite} Level {Level}", Level, Hp, MaxHp, Mp, MaxMp, Exp, MaxExp));
 
-        Global.Invoke(EEvent.Logger, new LoggerDTO(ELogger.General, $"Attack :: {Body.Sprite} take {damage} damage!"));
+        Global.Invoke(EEvent.LoggerChanged, new Logger(ELogger.General, $"Attack :: {Body.Sprite} take {damage} damage!"));
 
         if (Hp <= 0)
         {
-            Global.Invoke(EEvent.Logger, new LoggerDTO(ELogger.General, $"Defeat :: {Body.Sprite} level {Level} is dead!"));
+            Global.Invoke(EEvent.LoggerChanged, new Logger(ELogger.General, $"Defeat :: {Body.Sprite} level {Level} is dead!"));
             Body.Dispose();
         }
     }

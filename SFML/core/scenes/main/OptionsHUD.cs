@@ -41,7 +41,7 @@ public sealed class OptionsHUD : IHud
                 CharacterSize = 25,
                 DisplayedString = text,
                 FillColor = Factory.Color(EColor.White),
-                Font = Content.GetResource(EFont.Romulus),
+                Font = Content.GetResource<Font>(EFont.Romulus),
                 Position = new(Rect.WidthLeft, Rect.HeightTop + offset),
             });
             count++;
@@ -59,7 +59,7 @@ public sealed class OptionsHUD : IHud
                 Id = command,
                 Text = $"{(byte)command}",
                 Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 30f),
-                Selected = App.CurrentMusicVolume == (byte)command
+                Selected = App.Configuration.MusicVolume == (byte)command
             });
             count++;
         }
@@ -76,7 +76,7 @@ public sealed class OptionsHUD : IHud
                 Id = command,
                 Text = $"{(byte)command}",
                 Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 100f),
-                Selected = App.CurrentSoundVolume == (byte)command,
+                Selected = App.Configuration.SoundVolume == (byte)command,
             });
             count++;
         }
@@ -93,7 +93,7 @@ public sealed class OptionsHUD : IHud
                 Id = command,
                 Text = $"{(byte)command}",
                 Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 170f),
-                Selected = App.CurrentFrame == (byte)command,
+                Selected = App.Configuration.Frame == (byte)command,
             });
             count++;
         }
@@ -112,7 +112,7 @@ public sealed class OptionsHUD : IHud
                 Text = text,
                 Id = command,
                 Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 240f),
-                Selected = App.CurrentLanguage == command,
+                Selected = App.Configuration.Language == command,
             });
             count++;
         }
@@ -128,7 +128,7 @@ public sealed class OptionsHUD : IHud
         {
             Position = new(Rect.X, Rect.Y),
             Size = new(Rect.Width, Rect.Height),
-            Texture = Content.GetResource(EGraphic.BackgroundHUD).Texture,
+            Texture = Content.GetResource<Sprite>(EGraphic.BackgroundHUD).Texture,
         };
     }
 
@@ -168,19 +168,23 @@ public sealed class OptionsHUD : IHud
     private void OnButtonClicked(object? sender)
     {
         if (sender is EIcon.Close)
+        {
+            FileHandler.SerializeSchema(EFolder.Options, App.Configuration, "configuration");
+
             OnClicked?.Invoke(EMainMenu.Options);
+        }
 
         if (sender is EFrame frame)
-            App.CurrentFrame = (byte)frame;
+            App.Configuration.Frame = (byte)frame;
 
         if (sender is ELanguage language)
-            App.CurrentLanguage = language;
+            App.Configuration.Language = language;
 
         if (sender is ESoundVolume soundVolume)
-            App.CurrentSoundVolume = (byte)soundVolume;
+            App.Configuration.SoundVolume = (byte)soundVolume;
 
         if (sender is EMusicVolume musicVolume)
-            App.CurrentMusicVolume = (byte)musicVolume;
+            App.Configuration.MusicVolume = (byte)musicVolume;
 
         foreach (var button in Buttons.OfType<TextButton>().Where(x => x.Id.GetType() == sender?.GetType()))
         {

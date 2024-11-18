@@ -2,15 +2,11 @@
 
 public sealed class Pipeline
 {
-    public string Folder => Global.TITLE;
-    public string Path => Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
     public void ConfigureFolders()
     {
-        string mainFolder = $"{Path}/{Folder}";
+        string mainFolder = FileHandler.MainFolder;
 
-        if (Directory.Exists(mainFolder) is false)
-            Directory.CreateDirectory(mainFolder);
+        if (Directory.Exists(mainFolder) is false) Directory.CreateDirectory(mainFolder);
 
         foreach (var innerFolder in Enum.GetNames<EFolder>())
         {
@@ -20,5 +16,12 @@ public sealed class Pipeline
 
             Directory.CreateDirectory(currentFolder);
         }
+    }
+
+    public void ConfigureOptions()
+    {
+        var schema = FileHandler.DeserializeSchema<ConfigurationSchema>(EFolder.Options, "configuration");
+
+        Global.Invoke(EEvent.SchemaChanged, schema);
     }
 }
