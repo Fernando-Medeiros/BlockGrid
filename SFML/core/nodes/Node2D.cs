@@ -3,14 +3,14 @@
 public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
 {
     #region Property
-    public EBiome? Biome { get; private set; }
-    public ETerrain? Terrain { get; private set; }
-    public IBody2D? Body { get; private set; }
+    public EBiome Biome { get; private set; }
+    public ETerrain Terrain { get; private set; }
+    public IBody2D? Body2D { get; private set; }
     public EOpacity Opacity { get; private set; } = EOpacity.Opaque;
     public Position2D Position2D { get; init; } = position2D;
 
     // TODO :: Refatorar
-    public IList<IObject2D> Objects { get; init; } = [];
+    public IList<IItem2D> Items2D { get; init; } = [];
     #endregion
 
     #region Static Common
@@ -18,7 +18,7 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
     #endregion
 
     #region Action
-    public void SetBody(IBody2D? body) => Body = body;
+    public void SetBody(IBody2D? body) => Body2D = body;
 
     public void SetOpacity(EOpacity opacity) => Opacity = opacity;
 
@@ -45,7 +45,7 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
         if (Biome != App.Region.Biome)
         {
             Biome = App.Region.Biome;
-            Terrain = Factory.Shuffle(App.Region.Biome);
+            Terrain = Factory.Shuffle(Biome);
         }
 
         var sprite = Content.GetResource<Sprite>((ETerrain)Terrain);
@@ -56,9 +56,9 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
 
     private void DrawItems(RenderWindow window)
     {
-        foreach (var gameItem in Objects)
+        foreach (var gameItem in Items2D)
         {
-            var sprite = Content.GetResource<Sprite>(gameItem.Sprite);
+            var sprite = Content.GetResource<Sprite>(gameItem.Image);
             sprite.Color = Factory.Color(Opacity);
             sprite.Position = Position2D;
             window.Draw(sprite);
@@ -67,14 +67,14 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
 
     private void DrawBody2D(RenderWindow window)
     {
-        if (Body is null) return;
+        if (Body2D is null) return;
 
-        if (Opacity is EOpacity.Opaque or EOpacity.Regular && Body.Type != EBody.Player) return;
+        if (Opacity is EOpacity.Opaque or EOpacity.Regular && Body2D.Source != EBody.Player) return;
 
-        var sprite = Content.GetResource<Sprite>(Body.Sprite);
+        var sprite = Content.GetResource<Sprite>(Body2D.Image);
         sprite.Color = Factory.Color(Opacity);
 
-        if (Body.Type != EBody.Static)
+        if (Body2D.Source != EBody.Static)
         {
             window.Draw(new CircleShape()
             {
@@ -104,10 +104,9 @@ public sealed class Node2D(Position2D position2D) : INode2D, IDisposable
     #region Dispose
     public void Dispose()
     {
-        Body?.Dispose();
-        Body = null;
-        Terrain = null;
-        Objects.Clear();
+        Body2D?.Dispose();
+        Body2D = null;
+        Items2D.Clear();
         Opacity = EOpacity.Opaque;
     }
     #endregion

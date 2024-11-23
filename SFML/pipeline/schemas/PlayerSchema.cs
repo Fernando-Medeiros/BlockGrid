@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.pipeline.schemas;
 
-public sealed class PlayerSchema
+public sealed class PlayerSchema : IPrincipalSchema
 {
     #region Identity
     public string Token { get; set; } = Guid.NewGuid().ToString();

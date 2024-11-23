@@ -137,6 +137,7 @@ public sealed class OptionsHUD : IHud
         foreach (IButton button in Buttons)
         {
             button.Event();
+            button.SetActivated(false);
             button.OnClicked += OnButtonClicked;
         }
     }
@@ -156,9 +157,12 @@ public sealed class OptionsHUD : IHud
     #region State
     public void VisibilityChanged()
     {
-        enable = !enable;
-
-        foreach (IButton button in Buttons) button.SetActivated(enable);
+        Task.Run(async () =>
+        {
+            await Task.Delay(Global.VIEW_DELAY);
+            enable = !enable;
+            foreach (IButton button in Buttons) button.SetActivated(enable);
+        });
     }
     #endregion
 
@@ -169,7 +173,7 @@ public sealed class OptionsHUD : IHud
     {
         if (sender is EIcon.Close)
         {
-            FileHandler.SerializeSchema(EFolder.Options, App.Configuration, "configuration");
+            FileHandler.SerializeSchema(EFolder.Options, App.Configuration);
 
             OnClicked?.Invoke(EMainMenu.Options);
         }

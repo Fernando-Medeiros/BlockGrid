@@ -7,16 +7,16 @@ public sealed class NPCBody2D : IBody2D, IDisposable
         Node = node;
         Node.SetBody(this);
 
-        Type = EBody.Npc;
-        Sprite = ESprite.Spider;
+        Source = EBody.Npc;
+        Image = ESprite.Spider;
         Status = new StatusComponent(this);
         Movement = new MovementComponent();
     }
 
     #region Property
-    public EBody? Type { get; private set; }
+    public EBody? Source { get; private set; }
     public INode2D? Node { get; private set; }
-    public Enum? Sprite { get; private set; }
+    public Enum? Image { get; private set; }
     public ILightComponent? Light { get; private set; }
     public IActionComponent? Action { get; private set; }
     public IStatusComponent? Status { get; private set; }
@@ -30,13 +30,13 @@ public sealed class NPCBody2D : IBody2D, IDisposable
     }
 
     public void SetNode(INode2D? node) => Node = node;
-    public void SetSprite(Enum? sprite) => Sprite = sprite;
+    public void SetSprite(Enum? sprite) => Image = sprite;
     public void SetBody(IBody2D? body) => Node?.SetBody(body);
     #endregion
 
     public void Dispose()
     {
-        Type = null;
+        Source = null;
         Light = null;
         Action = null;
         Status = null;

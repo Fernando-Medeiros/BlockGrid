@@ -2,9 +2,9 @@
 
 public interface IBody2D
 {
-    EBody? Type { get; }
+    EBody? Source { get; }
     INode2D? Node { get; }
-    Enum? Sprite { get; }
+    Enum? Image { get; }
     ILightComponent? Light { get; }
     IStatusComponent? Status { get; }
     IActionComponent? Action { get; }

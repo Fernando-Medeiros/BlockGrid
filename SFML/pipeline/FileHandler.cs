@@ -8,20 +8,20 @@ public static class FileHandler
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Global.TITLE);
 
     #region Schema
-    public static void SerializeSchema<TSchema>(EFolder innerFolder, TSchema schema, string name) where TSchema : class
+    public static void SerializeSchema(EFolder innerFolder, IPrincipalSchema schema)
     {
-        string path = $"{MainFolder}/{innerFolder}/{name}.xml";
+        string path = $"{MainFolder}/{innerFolder}/{schema.Token}.xml";
 
-        var serializer = new XmlSerializer(typeof(TSchema));
+        var serializer = new XmlSerializer(schema.GetType());
 
         using StreamWriter writer = new(path);
 
         serializer.Serialize(writer, schema);
 
-        Global.Invoke(EEvent.LoggerChanged, new Logger(ELogger.General, $"Schema saved : {name}"));
+        Global.Invoke(EEvent.LoggerChanged, new Logger(ELogger.General, $"Schema saved : {schema.Token}"));
     }
 
-    public static TSchema DeserializeSchema<TSchema>(EFolder innerFolder, string name) where TSchema : class
+    public static TSchema DeserializeSchema<TSchema>(EFolder innerFolder, string name) where TSchema : IPrincipalSchema
     {
         string path = $"{MainFolder}/{innerFolder}/{name}.xml";
 

@@ -75,58 +75,86 @@ public sealed class WorldView(FloatRect viewRect) : View(viewRect), IView, IDisp
         };
     }
 
-    // TODO :: Refatorar para salvar apenas os dados dos nodes ocupados na região
     private void OnSaveRegionChanged(object? sender)
     {
-        var region = App.Region;
-        region.Nodes.Clear();
-        region.UpdatedOn = DateTime.Now;
+        var currentRegionSchema = App.Region;
+        currentRegionSchema.Nodes.Clear();
+        currentRegionSchema.UpdatedOn = DateTime.Now;
 
         foreach (var nodes in Collection)
-            foreach (var node in nodes)
+            foreach (var currentNode in nodes)
             {
-                if (node.Body is PlayerBody2D)
+                NodeSchema nodeSchema = new()
                 {
-                    node.Body.Dispose();
-                    node.SetBody(null);
+                    Position = currentNode.Position2D.Matrix,
+                };
+
+                if (currentNode.Body2D is PlayerBody2D)
+                {
+                    var currentPlayerSchema = App.Player;
+                    currentPlayerSchema.UpdatedOn = DateTime.Now;
+                    currentPlayerSchema.RegionToken = currentRegionSchema.Token;
+                    currentPlayerSchema.RegionPosition = nodeSchema.Position;
+
+                    FileHandler.SerializeSchema(EFolder.Characters, currentPlayerSchema);
                 }
+                else if (currentNode.Body2D is not null)
+                    nodeSchema.Body2D = new Body2DSchema()
+                    {
+                        Source = (EBody)currentNode.Body2D.Source,
+                        Image = currentNode.Body2D.Image?.GetHashCode() ?? 0,
+                    };
 
-                if (node.Body is null && node.Objects.Count == 0) continue;
+                foreach (var item in currentNode.Items2D)
+                    nodeSchema.Items.Add(new Item2DSchema()
+                    {
+                        Image = item.Image?.GetHashCode() ?? 0,
+                    });
 
-                region.Nodes.Add(new()
-                {
-                    Position = node.Position2D.Matrix,
-                });
+                if (nodeSchema.Items.Count > 0 || nodeSchema.Body2D != null)
+                    currentRegionSchema.Nodes.Add(nodeSchema);
 
-                node.Dispose();
+                currentNode.Dispose();
             }
 
-        FileHandler.SerializeSchema(EFolder.Regions, region, region.Token);
+        FileHandler.SerializeSchema(EFolder.Regions, currentRegionSchema);
     }
 
-    // TODO :: Refatorar para carregar somente os nodes da região e encontrar uma forma de desacoplar o player do node2d
     private void OnLoadRegionChanged(object? sender)
     {
         if (sender is RegionSchema regionSchema)
         {
-            foreach (var schema in regionSchema.Nodes)
+            foreach (var nodes in Collection)
+                foreach (var node in nodes)
+                    node.Dispose();
+
+            foreach (NodeSchema nodeSchema in regionSchema.Nodes)
             {
-                var (_row, _column) = schema.Position;
+                var (row, column) = nodeSchema.Position;
 
-                var node = Collection
-                   .ElementAt(_row)
-                   .ElementAt(_column);
+                var currentNode = Collection
+                   .ElementAt(row)
+                   .ElementAt(column);
 
-                node.Dispose();
+                if (nodeSchema.Body2D is Body2DSchema body2DSchema)
+                    Factory.Build(body2DSchema.Source, currentNode);
+
+                foreach (Item2DSchema itemSchema in nodeSchema.Items)
+                    currentNode.Items2D.Add(new Item2D()
+                    {
+                        Image = (ESprite)itemSchema.Image
+                    });
             }
 
-            var (row, column) = App.Player.RegionPosition;
+            var (currentRow, currentColumn) = App.Player.RegionPosition;
 
-            var _node = Collection
-                .ElementAt(row)
-                .ElementAt(column);
+            var playerNode = Collection
+                .ElementAt(currentRow)
+                .ElementAt(currentColumn);
 
-            Factory.Build(EBody.Player, _node);
+            Factory.Build(EBody.Player, playerNode);
+
+            Global.Invoke(EEvent.CameraChanged, playerNode.Position2D);
         }
     }
 

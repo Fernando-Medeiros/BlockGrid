@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace SFMLGame.pipeline;
+﻿namespace SFMLGame.pipeline;
 
 internal sealed partial class App
 {
@@ -47,17 +45,12 @@ internal sealed partial class App
         });
 
         Global.Subscribe(EEvent.NodeChanged, (sender) =>
-            {
-                if (sender is INode2D node) SelectedNode = node;
-            });
+        {
+            if (sender is INode2D node) SelectedNode = node;
+        });
 
         Global.Subscribe(EEvent.SaveGameChanged, (sender) =>
         {
-            Player.UpdatedOn = DateTime.Now;
-            Player.RegionToken = Region.Token;
-            Player.RegionPosition = CurrentPosition.Matrix;
-
-            FileHandler.SerializeSchema(EFolder.Characters, Player, Player.Token);
         });
 
         Global.Subscribe(EEvent.EndGameChanged, (sender) => Window.Close());

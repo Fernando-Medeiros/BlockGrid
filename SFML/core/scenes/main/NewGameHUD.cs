@@ -154,6 +154,7 @@ public sealed class NewGameHUD : IHud
         foreach (IButton button in Buttons)
         {
             button.Event();
+            button.SetActivated(false);
             button.OnClicked += OnButtonClicked;
             button.OnChanged += OnButtonChanged;
         }
@@ -199,9 +200,12 @@ public sealed class NewGameHUD : IHud
     #region State
     public void VisibilityChanged()
     {
-        enable = !enable;
-
-        foreach (IButton button in Buttons) button.SetActivated(enable);
+        Task.Run(async () =>
+        {
+            await Task.Delay(Global.VIEW_DELAY);
+            enable = !enable;
+            foreach (IButton button in Buttons) button.SetActivated(enable);
+        });
     }
     #endregion
 
@@ -269,11 +273,11 @@ public sealed class NewGameHUD : IHud
                 RegionToken = regionSchema.Token,
             };
 
-            FileHandler.SerializeSchema(EFolder.Worlds, worldSchema, worldSchema.Token);
+            FileHandler.SerializeSchema(EFolder.Worlds, worldSchema);
 
-            FileHandler.SerializeSchema(EFolder.Characters, playerSchema, playerSchema.Token);
+            FileHandler.SerializeSchema(EFolder.Characters, playerSchema);
 
-            regionSchemas.ForEach(schema => { FileHandler.SerializeSchema(EFolder.Regions, schema, schema.Token); });
+            regionSchemas.ForEach(schema => { FileHandler.SerializeSchema(EFolder.Regions, schema); });
 
             Global.Invoke(EEvent.SceneChanged, EScene.World);
 

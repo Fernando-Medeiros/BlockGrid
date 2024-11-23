@@ -1,6 +1,6 @@
 ﻿namespace SFMLGame.pipeline.schemas;
 
-public sealed class WorldSchema
+public sealed class WorldSchema : IPrincipalSchema
 {
     #region Identity
     public string Name { get; set; } = string.Empty;
@@ -14,13 +14,13 @@ public sealed class WorldSchema
     #endregion
 }
 
-public sealed class RegionMetaSchema
+public sealed class RegionMetaSchema : IPrincipalSchema
 {
     public string Token { get; set; } = string.Empty;
     public EBiome Biome { get; set; } = EBiome.Forest;
 }
 
-public sealed class RegionSchema
+public sealed class RegionSchema : IPrincipalSchema
 {
     #region Identity
     public string Name { get; set; } = string.Empty;
@@ -36,5 +36,18 @@ public sealed class RegionSchema
 
 public sealed class NodeSchema
 {
+    public Body2DSchema? Body2D { get; set; }
+    public List<Item2DSchema> Items { get; set; } = [];
     public (byte Row, byte Column) Position { get; set; } = (0, 0);
+}
+
+public sealed class Body2DSchema
+{
+    public EBody Source { get; set; }
+    public int Image { get; set; }
+}
+
+public sealed class Item2DSchema
+{
+    public int Image { get; set; }
 }

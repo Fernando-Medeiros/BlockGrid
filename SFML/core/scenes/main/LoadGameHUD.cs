@@ -78,6 +78,7 @@ public sealed class LoadGameHUD : IHud
         foreach (IButton button in Buttons)
         {
             button.Event();
+            button.SetActivated(false);
             button.OnClicked += OnButtonClicked;
         }
     }
@@ -95,9 +96,12 @@ public sealed class LoadGameHUD : IHud
     #region State
     public void VisibilityChanged()
     {
-        enable = !enable;
-
-        foreach (IButton button in Buttons) button.SetActivated(enable);
+        Task.Run(async () =>
+        {
+            await Task.Delay(Global.VIEW_DELAY);
+            enable = !enable;
+            foreach (IButton button in Buttons) button.SetActivated(enable);
+        });
     }
     #endregion
 
@@ -130,7 +134,7 @@ public sealed class LoadGameHUD : IHud
                 button.OnClicked -= OnButtonClicked;
                 button.Dispose();
             }
-            
+
             buttons.ForEach(x => Buttons.Remove(x));
 
             Characters.Remove(playerSchema);

@@ -4,7 +4,6 @@ public enum ESprite : int
 {
     #region Player / Enemy
     Aracne,
-    Dwarf,
     Spider,
     #endregion
 

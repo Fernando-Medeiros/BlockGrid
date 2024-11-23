@@ -7,8 +7,8 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
         Node = node;
         Node.SetBody(this);
 
-        Type = EBody.Player;
-        Sprite = App.Player.Race;
+        Source = EBody.Player;
+        Image = App.Player.Race;
         Light = new LightComponent();
         Action = new ActionComponent();
         Status = new StatusComponent(this);
@@ -19,9 +19,9 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
     }
 
     #region Property
-    public EBody? Type { get; private set; }
+    public EBody? Source { get; private set; }
     public INode2D? Node { get; private set; }
-    public Enum? Sprite { get; private set; }
+    public Enum? Image { get; private set; }
     public ILightComponent? Light { get; private set; }
     public IActionComponent? Action { get; private set; }
     public IStatusComponent? Status { get; private set; }
@@ -48,7 +48,7 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
         Node = node;
         Global.Invoke(EEvent.CameraChanged, Node?.Position2D);
     }
-    public void SetSprite(Enum? sprite) => Sprite = sprite;
+    public void SetSprite(Enum? sprite) => Image = sprite;
     public void SetBody(IBody2D? body) => Node?.SetBody(body);
     #endregion
 
@@ -56,7 +56,7 @@ public sealed class PlayerBody2D : IBody2D, IDisposable
     {
         Light?.VisibilityTo(this, EOpacity.Opaque);
 
-        Type = null;
+        Source = null;
         Light = null;
         Action = null;
         Status = null;

@@ -90,11 +90,11 @@ public sealed class DeveloperHUD : IView
         {
             if (SelectedGuide is EGuide.Objects && SelectedObject is ESprite sprite)
             {
-                if (node.Objects.Any(x => x.Sprite.Equals(sprite)) is false)
-                    node.Objects.Add(Factory.Build(sprite));
+                if (node.Items2D.Any(x => x.Image.Equals(sprite)) is false)
+                    node.Items2D.Add(Factory.Build(sprite));
             }
 
-            if (SelectedGuide is EGuide.Enemies && node.Body is null)
+            if (SelectedGuide is EGuide.Enemies && node.Body2D is null)
                 node.SetBody(Factory.Build(EBody.Enemy, node));
         }
     }

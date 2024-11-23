@@ -30,6 +30,8 @@ public static class Global
 {
     public const string TITLE = "Realms of Storms";
 
+    public const int VIEW_DELAY = 225;
+
     public const byte RECT = 32;
     public const byte MAX_ROW = 255;
     public const byte MAX_COLUMN = 255;
