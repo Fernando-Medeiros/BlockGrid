@@ -44,6 +44,6 @@ public sealed class PlayerSchema
 
     public override string ToString()
     {
-        return string.Format("{0} - {1} | {2} | {3}", Name, Race, Alignment, Profession);
+        return string.Format("~~ {0} ~~\n[ {1} | {2} | {3} ]\n{4}", Name, Race, Alignment, Profession, UpdatedOn);
     }
 }

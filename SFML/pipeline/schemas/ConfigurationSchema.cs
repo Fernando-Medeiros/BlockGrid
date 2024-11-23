@@ -10,7 +10,7 @@ public sealed class ConfigurationSchema
 
     public int WindowHeight { get; set; } = Global.WINDOW_HEIGHT;
 
-    public byte MusicVolume { get; set; } = (byte)ESoundVolume.S4;
+    public byte MusicVolume { get; set; } = (byte)EMusicVolume.S4;
 
     public byte SoundVolume { get; set; } = (byte)ESoundVolume.S4;
 }

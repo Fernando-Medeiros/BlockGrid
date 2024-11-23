@@ -59,27 +59,25 @@ public sealed class MainScene : View, IView
     {
         var collection = sender switch
         {
+            EMainMenu.Options => Collection.Where(x => x is OptionsHUD or MainMenuHUD),
             EMainMenu.New_Game => Collection.Where(x => x is NewGameHUD or MainMenuHUD),
             EMainMenu.Load_Game => Collection.Where(x => x is LoadGameHUD or MainMenuHUD),
-            EMainMenu.Options => Collection.Where(x => x is OptionsHUD or MainMenuHUD),
             _ => []
         };
 
-        foreach (IHud hud in collection)
-        {
+        foreach (var hud in collection.OfType<IHud>())
             hud.VisibilityChanged();
-        }
     }
     #endregion
 
     #region Dispose
     public new void Dispose()
     {
-        foreach (var view in Collection)
-            view.Dispose();
-
         foreach (var hud in Collection.OfType<IHud>())
             hud.OnClicked -= OnHudChanged;
+
+        foreach (var view in Collection)
+            view.Dispose();
 
         Collection.Clear();
 

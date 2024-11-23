@@ -12,7 +12,7 @@ public sealed class ImageButton : IButton, IDisposable
 
     #region Required Property
     public required object Id { get; init; }
-    public required System.Enum Image { get; set; }
+    public required Enum Image { get; set; }
     public required Vector2f Position { get; set; }
     #endregion
 
@@ -33,17 +33,16 @@ public sealed class ImageButton : IButton, IDisposable
 
     public void Render(RenderWindow window)
     {
-        var sprite = Content.GetResource<Sprite>(Image);
-
-        sprite.Position = Position;
-        sprite.Color = Factory.Color(EOpacity.Light);
-        window.Draw(Graphic = sprite);
+        Graphic ??= new(Content.GetResource<Sprite>(Image));
+        Graphic.Color = Factory.Color(EOpacity.Light);
+        Graphic.Position = Position;
+        window.Draw(Graphic);
 
         if (Focused || Selected)
         {
-            sprite = Content.GetResource<Sprite>(EGraphic.SelectedNode);
-            sprite.Position = Position;
+            var sprite = Content.GetResource<Sprite>(EGraphic.SelectedNode);
             sprite.Color = Factory.Color(EOpacity.Light);
+            sprite.Position = Position;
             window.Draw(sprite);
         }
     }

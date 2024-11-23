@@ -2,7 +2,26 @@
 
 public sealed class TextButton : IButton, IDisposable
 {
-    private Text? Graphic { get; set; }
+    private Text Graphic { get; set; }
+
+    public TextButton()
+    {
+    }
+
+    public TextButton(object id, string text, Vector2f position)
+    {
+        Id = id;
+        Text = text;
+        Position = position;
+
+        Graphic = new Text()
+        {
+            Position = Position,
+            DisplayedString = Text,
+            OutlineThickness = Outline,
+            Font = Content.GetResource<Font>(Font),
+        };
+    }
 
     #region Control Property
     public bool Activated { get; private set; } = true;
@@ -11,9 +30,9 @@ public sealed class TextButton : IButton, IDisposable
     #endregion
 
     #region Required Property
-    public required object Id { get; init; }
-    public required string Text { get; set; }
-    public required Vector2f Position { get; set; }
+    public object Id { get; set; }
+    public string Text { get; set; }
+    public Vector2f Position { get; set; }
     #endregion
 
     #region Custom Property
@@ -29,7 +48,17 @@ public sealed class TextButton : IButton, IDisposable
 
     #region Action
     public bool Equal(object? value) => Id.Equals(value);
+
     public void SetActivated(bool value) => Activated = value;
+
+    public float HeightBottom()
+    {
+        Graphic.CharacterSize = Size;
+
+        FloatRect rect = Graphic.GetGlobalBounds();
+
+        return rect.Position.Y + rect.Height;
+    }
     #endregion
 
     #region Build
@@ -41,18 +70,19 @@ public sealed class TextButton : IButton, IDisposable
 
     public void Render(RenderWindow window)
     {
-        window.Draw(Graphic = new Text()
-        {
-            Position = Position,
-            CharacterSize = Size,
-            DisplayedString = Text,
-            OutlineThickness = Outline,
-            Font = Content.GetResource<Font>(Font),
-            OutlineColor = Factory.Color(OutlineColor),
-            FillColor = Focused ? Factory.Color(FocusedColor)
-                : Selected ? Factory.Color(SelectedColor)
-                : Factory.Color(Color),
-        });
+        Graphic ??= new Text();
+
+        Graphic.Position = Position;
+        Graphic.CharacterSize = Size;
+        Graphic.DisplayedString = Text;
+        Graphic.OutlineThickness = Outline;
+        Graphic.Font = Content.GetResource<Font>(Font);
+        Graphic.OutlineColor = Factory.Color(OutlineColor);
+        Graphic.FillColor = Focused ? Factory.Color(FocusedColor)
+            : Selected ? Factory.Color(SelectedColor)
+            : Factory.Color(Color);
+
+        window.Draw(Graphic);
     }
     #endregion
 

@@ -210,6 +210,8 @@ public sealed class NewGameHUD : IHud
 
     private void OnButtonChanged(object? sender)
     {
+        if (enable is false) return;
+
         var entry = (TextEntry)Buttons.First(btn => btn.Equal(sender));
 
         var button = (Button)Buttons.First(btn => btn.Equal(EMainMenu.New_Game));
@@ -225,6 +227,8 @@ public sealed class NewGameHUD : IHud
 
     private void OnButtonClicked(object? sender)
     {
+        if (enable is false) return;
+
         if (sender is EIcon.Close)
         {
             OnClicked?.Invoke(EMainMenu.New_Game);
@@ -235,47 +239,47 @@ public sealed class NewGameHUD : IHud
         {
             byte maxRect = (byte)WorldSize;
 
-            List<RegionSchema> collection = [];
+            List<RegionSchema> regionSchemas = [];
 
             for (byte row = 0; row < maxRect; row++)
                 for (byte column = 0; column < maxRect; column++)
                 {
-                    collection.Add(new()
+                    regionSchemas.Add(new()
                     {
                         Biome = App.Shuffle(Enum.GetValues<EBiome>()),
                     });
                 }
 
-            var world = new WorldSchema()
+            var worldSchema = new WorldSchema()
             {
                 Size = WorldSize,
                 Name = WorldName,
-                Region = collection.Select(x => x.Token).ToList(),
+                Region = regionSchemas.Select(x => new RegionMetaSchema() { Token = x.Token, Biome = x.Biome }).ToList(),
             };
 
-            var region = collection.First();
+            var regionSchema = regionSchemas.First();
 
-            var player = new PlayerSchema()
+            var playerSchema = new PlayerSchema()
             {
                 Name = CharacterName,
                 Race = CharacterRace,
                 Alignment = CharacterAlignment,
                 Profession = CharacterProfession,
-                WorldToken = world.Token,
-                RegionToken = region.Token,
+                WorldToken = worldSchema.Token,
+                RegionToken = regionSchema.Token,
             };
 
-            FileHandler.SerializeSchema(EFolder.Worlds, world, world.Token);
+            FileHandler.SerializeSchema(EFolder.Worlds, worldSchema, worldSchema.Token);
 
-            FileHandler.SerializeSchema(EFolder.Characters, player, player.Token);
+            FileHandler.SerializeSchema(EFolder.Characters, playerSchema, playerSchema.Token);
 
-            collection.ForEach(schema => { FileHandler.SerializeSchema(EFolder.Regions, schema, schema.Token); });
+            regionSchemas.ForEach(schema => { FileHandler.SerializeSchema(EFolder.Regions, schema, schema.Token); });
 
             Global.Invoke(EEvent.SceneChanged, EScene.World);
 
-            Global.Invoke(EEvent.SchemaChanged, world);
-            Global.Invoke(EEvent.SchemaChanged, player);
-            Global.Invoke(EEvent.SchemaChanged, region);
+            Global.Invoke(EEvent.SchemaChanged, worldSchema);
+            Global.Invoke(EEvent.SchemaChanged, playerSchema);
+            Global.Invoke(EEvent.SchemaChanged, regionSchema);
             return;
         }
 

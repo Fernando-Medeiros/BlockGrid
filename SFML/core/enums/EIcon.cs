@@ -6,5 +6,6 @@ public enum EIcon : byte
     ZoomIn,
     ZoomOut,
     Close,
+    Delete,
     World,
 }

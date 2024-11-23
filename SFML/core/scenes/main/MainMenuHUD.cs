@@ -7,7 +7,6 @@ public sealed class MainMenuHUD : IHud, IDisposable
     #endregion
 
     #region Property
-    private Text Title { get; set; } = new();
     private IList<IButton> Buttons { get; } = [];
     private Rect Rect { get; set; } = Rect.Empty;
     private RectangleShape Background { get; set; } = new();
@@ -20,29 +19,34 @@ public sealed class MainMenuHUD : IHud, IDisposable
             .WithSize(width: 500f, height: 700f, padding: 68f)
             .WithAlignment();
 
+        float posY = Rect.HeightTop;
+
+        TextButton titleButton = new(
+            id: Global.TITLE,
+            text: Global.TITLE,
+            position: new(Rect.WidthLeft, posY))
+        {
+            Size = 40,
+        };
+
+        Buttons.Add(titleButton);
+
+        posY = titleButton.HeightBottom();
+
         foreach (var command in Enum.GetValues<EMainMenu>())
         {
-            var gap = ((byte)command * 50f) + 60f;
-
-            var text = command.ToString().Replace("_", " ");
-
-            Buttons.Add(new TextButton()
+            TextButton textButton = new(
+                id: command,
+                text: $"{command}".Replace("_", " "),
+                position: new(Rect.WidthLeft, posY))
             {
                 Size = 30,
-                Text = text,
-                Id = command,
-                Position = new(Rect.WidthLeft, Rect.HeightTop + gap),
-            });
-        }
+            };
 
-        Title = new Text()
-        {
-            CharacterSize = 40,
-            DisplayedString = Global.TITLE,
-            FillColor = Factory.Color(EColor.White),
-            Font = Content.GetResource<Font>(EFont.Romulus),
-            Position = new(Rect.WidthLeft, Rect.HeightTop),
-        };
+            posY = textButton.HeightBottom();
+
+            Buttons.Add(textButton);
+        }
 
         Background = new RectangleShape()
         {
@@ -66,7 +70,6 @@ public sealed class MainMenuHUD : IHud, IDisposable
         if (enable is false) return;
 
         window.Draw(Background);
-        window.Draw(Title);
 
         foreach (IButton button in Buttons) button.Render(window);
     }
@@ -86,9 +89,11 @@ public sealed class MainMenuHUD : IHud, IDisposable
 
     private void OnButtonClicked(object? sender)
     {
+        if (enable is false) return;
+
+        if (sender is EMainMenu.Options) OnClicked?.Invoke(EMainMenu.Options);
         if (sender is EMainMenu.New_Game) OnClicked?.Invoke(EMainMenu.New_Game);
         if (sender is EMainMenu.Load_Game) OnClicked?.Invoke(EMainMenu.Load_Game);
-        if (sender is EMainMenu.Options) OnClicked?.Invoke(EMainMenu.Options);
         if (sender is EMainMenu.Quit) Global.Invoke(EEvent.EndGameChanged, null);
 
         foreach (var button in Buttons.OfType<TextButton>())
@@ -108,8 +113,6 @@ public sealed class MainMenuHUD : IHud, IDisposable
         }
 
         Buttons.Clear();
-
-        Title.Dispose();
         Background.Dispose();
     }
     #endregion

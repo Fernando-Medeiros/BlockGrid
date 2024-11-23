@@ -9,9 +9,15 @@ public sealed class WorldSchema
     #endregion
 
     #region Stats
-    public List<string> Region { get; set; } = [];
+    public List<RegionMetaSchema> Region { get; set; } = [];
     public DateTime UpdatedOn { get; set; } = DateTime.Now;
     #endregion
+}
+
+public sealed class RegionMetaSchema
+{
+    public string Token { get; set; } = string.Empty;
+    public EBiome Biome { get; set; } = EBiome.Forest;
 }
 
 public sealed class RegionSchema

@@ -9,12 +9,14 @@ internal sealed partial class App
 
     static App()
     {
+        var style = Styles.Fullscreen;
         var size = new FloatRect(0, 0, Configuration.WindowWidth, Configuration.WindowHeight);
 
-        Window = new(
-            new VideoMode((uint)size.Width, (uint)size.Height),
-            Global.TITLE,
-            Styles.Fullscreen);
+#if DEBUG
+        style = Styles.Resize;
+#endif
+
+        Window = new(new VideoMode((uint)size.Width, (uint)size.Height), Global.TITLE, style);
 
         Scenes = [];
         Scenes.Add(EScene.Main, new MainScene(size));

@@ -7,9 +7,8 @@ public sealed class LoadGameHUD : IHud
     #endregion
 
     #region Property
-    private IList<PlayerSchema> Characters { get; } = [];
-
     private IList<IButton> Buttons { get; } = [];
+    private IList<PlayerSchema> Characters { get; } = [];
     private Rect Rect { get; set; } = Rect.Empty;
     private RectangleShape Background { get; set; } = new();
     #endregion
@@ -25,24 +24,35 @@ public sealed class LoadGameHUD : IHud
             .Select(Path.GetFileNameWithoutExtension)
             .ToList();
 
-        foreach (string name in names)
+        foreach (var fileName in names)
         {
-            Characters.Add(FileHandler.DeserializeSchema<PlayerSchema>(EFolder.Characters, name));
+            Characters.Add(FileHandler.DeserializeSchema<PlayerSchema>(EFolder.Characters, fileName));
         }
 
-        float offset = 0f;
+        float posY = Rect.HeightTop;
 
-        #region Worlds
-        foreach (var schema in Characters)
+        #region Characters
+        foreach (var schema in Characters.OrderByDescending(x => x.UpdatedOn))
         {
-            Buttons.Add(new TextButton()
+            TextButton textButton = new(
+                id: schema.Token,
+                text: schema.ToString(),
+                position: new(Rect.WidthLeft, posY))
             {
                 Size = 20,
-                Id = schema.Token,
-                Text = schema.ToString(),
-                Position = new(Rect.WidthLeft, Rect.HeightTop + offset)
-            });
-            offset += 30;
+            };
+
+            ImageButton imageButton = new()
+            {
+                Id = (EIcon.Delete, schema.Token),
+                Image = EIcon.Delete,
+                Position = new(Rect.WidthRight - Rect.Padding, posY)
+            };
+
+            posY = textButton.HeightBottom();
+
+            Buttons.Add(textButton);
+            Buttons.Add(imageButton);
         }
         #endregion
 
@@ -96,23 +106,58 @@ public sealed class LoadGameHUD : IHud
 
     private void OnButtonClicked(object? sender)
     {
+        if (enable is false) return;
+
         if (sender is EIcon.Close)
         {
             OnClicked?.Invoke(EMainMenu.Load_Game);
             return;
         }
 
+        // Deleta os arquivos vinculados ao personagem e remove os dados em memoria;
+        if (sender is (EIcon, string))
+        {
+            (EIcon, string token) tuple = ((EIcon, string))sender;
+
+            var playerSchema = Characters.First(x => x.Token == tuple.token);
+
+            var worldSchema = FileHandler.DeserializeSchema<WorldSchema>(EFolder.Worlds, playerSchema.WorldToken);
+
+            var buttons = Buttons.Where(x => x.Equal(sender) || x.Equal(tuple.token)).ToList();
+
+            foreach (var button in buttons)
+            {
+                button.OnClicked -= OnButtonClicked;
+                button.Dispose();
+            }
+            
+            buttons.ForEach(x => Buttons.Remove(x));
+
+            Characters.Remove(playerSchema);
+
+            foreach (var regionMetaSchema in worldSchema.Region)
+                File.Delete($"{FileHandler.MainFolder}/{EFolder.Regions}/{regionMetaSchema.Token}.xml");
+
+            File.Delete($"{FileHandler.MainFolder}/{EFolder.Worlds}/{worldSchema.Token}.xml");
+            File.Delete($"{FileHandler.MainFolder}/{EFolder.Characters}/{playerSchema.Token}.xml");
+            return;
+        }
+
+        // Carrega os dados do personagem/mundo/região e inicia a cena do mundo;
         if (sender is string token)
         {
-            var player = Characters.First(x => x.Token == token);
-            var world = FileHandler.DeserializeSchema<WorldSchema>(EFolder.Worlds, player.WorldToken);
-            var region = FileHandler.DeserializeSchema<RegionSchema>(EFolder.Regions, player.RegionToken);
+            var playerSchema = Characters.First(x => x.Token == token);
 
+            var worldSchema = FileHandler.DeserializeSchema<WorldSchema>(EFolder.Worlds, playerSchema.WorldToken);
+
+            var regionSchema = FileHandler.DeserializeSchema<RegionSchema>(EFolder.Regions, playerSchema.RegionToken);
+
+            // Inicia a construção da cena e as assinaturas dos enventos para enviar os schemas em seguida;
             Global.Invoke(EEvent.SceneChanged, EScene.World);
 
-            Global.Invoke(EEvent.SchemaChanged, player);
-            Global.Invoke(EEvent.SchemaChanged, world);
-            Global.Invoke(EEvent.SchemaChanged, region);
+            Global.Invoke(EEvent.SchemaChanged, playerSchema);
+            Global.Invoke(EEvent.SchemaChanged, worldSchema);
+            Global.Invoke(EEvent.SchemaChanged, regionSchema);
         }
     }
     #endregion

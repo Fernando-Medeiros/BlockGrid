@@ -2,7 +2,7 @@
 
 public sealed class DeveloperHUD : IView
 {
-    private enum EGuide : byte { Biomes, Enemies, Objects }
+    private enum EGuide : byte { Enemies, Objects }
 
     private EGuide SelectedGuide { get; set; }
     private ESprite? SelectedEnemy { get; set; }
@@ -33,18 +33,7 @@ public sealed class DeveloperHUD : IView
         }
 
         var posY = Rect.Y + 30;
-        foreach (var biome in Enum.GetValues<EBiome>())
-        {
-            Buttons[EGuide.Biomes].Add(new ImageButton()
-            {
-                Id = biome,
-                Image = Factory.Shuffle(biome),
-                Position = new(Rect.X, posY),
-            });
-            posY += Global.RECT + 5;
-        }
 
-        posY = Rect.Y + 30;
         foreach (var enemie in new List<ESprite> { ESprite.Aracne, ESprite.Spider })
         {
             Buttons[EGuide.Enemies].Add(new ImageButton()
@@ -120,7 +109,6 @@ public sealed class DeveloperHUD : IView
             case (_, EGuide guide): SelectedGuide = guide; break;
             case (EGuide.Objects, ESprite sprite): SelectedObject = sprite; break;
             case (EGuide.Enemies, ESprite sprite): SelectedEnemy = sprite; break;
-            case (EGuide.Biomes, EBiome biome): break;
             default: break;
         }
 
