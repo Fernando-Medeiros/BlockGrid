@@ -7,9 +7,10 @@ public interface IButton
     event Action<object?>? OnChanged;
 
     bool Equal(object? value);
-    void SetActivated(bool value);
+    void Activated(bool value);
+    float GetPosition(EDirection direction);
 
     void Event();
-    void Dispose();
     void Render(RenderWindow window);
+    void Dispose();
 }

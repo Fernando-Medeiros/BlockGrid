@@ -26,7 +26,7 @@ public sealed class MainMenuHUD : IHud, IDisposable
             text: Global.TITLE,
             position: new(Rect.WidthLeft, posY))
         {
-            Size = 40,
+            FontSize = 40,
         };
 
         Buttons.Add(titleButton);
@@ -40,7 +40,7 @@ public sealed class MainMenuHUD : IHud, IDisposable
                 text: $"{command}".Replace("_", " "),
                 position: new(Rect.WidthLeft, posY))
             {
-                Size = 30,
+                FontSize = 30,
             };
 
             posY = textButton.GetPosition(EDirection.Bottom);
@@ -80,7 +80,7 @@ public sealed class MainMenuHUD : IHud, IDisposable
     {
         enable = !enable;
 
-        foreach (IButton button in Buttons) button.SetActivated(enable);
+        foreach (IButton button in Buttons) button.Activated(enable);
     }
     #endregion
 

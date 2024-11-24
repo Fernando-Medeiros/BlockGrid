@@ -53,12 +53,12 @@ public sealed class OptionsHUD : IHud
         {
             var offset = count * 40f;
 
-            Buttons.Add(new TextButton()
+            Buttons.Add(new TextButton(
+                id: command,
+                text: $"{(byte)command}",
+                position: new(Rect.WidthLeft + offset, Rect.HeightTop + 30f))
             {
-                Size = 20,
-                Id = command,
-                Text = $"{(byte)command}",
-                Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 30f),
+                FontSize = 20,
                 Selected = App.Configuration.MusicVolume == (byte)command
             });
             count++;
@@ -70,12 +70,12 @@ public sealed class OptionsHUD : IHud
         {
             var offset = count * 40f;
 
-            Buttons.Add(new TextButton()
+            Buttons.Add(new TextButton(
+                id: command,
+                text: $"{(byte)command}",
+                position: new(Rect.WidthLeft + offset, Rect.HeightTop + 100f))
             {
-                Size = 20,
-                Id = command,
-                Text = $"{(byte)command}",
-                Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 100f),
+                FontSize = 20,
                 Selected = App.Configuration.SoundVolume == (byte)command,
             });
             count++;
@@ -121,12 +121,12 @@ public sealed class OptionsHUD : IHud
         {
             var offset = count * 40f;
 
-            Buttons.Add(new TextButton()
+            Buttons.Add(new TextButton(
+                id: command,
+                text: $"{(byte)command}",
+                position: new(Rect.WidthLeft + offset, Rect.HeightTop + 310f))
             {
-                Size = 20,
-                Id = command,
-                Text = $"{(byte)command}",
-                Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 310f),
+                FontSize = 20,
                 Selected = App.Configuration.Frame == (byte)command,
             });
             count++;
@@ -138,23 +138,21 @@ public sealed class OptionsHUD : IHud
         {
             var offset = count * 40f;
 
-            Buttons.Add(new TextButton()
+            Buttons.Add(new TextButton(
+                id: command,
+                text: command.ToString().Replace("_", "-"),
+                position: new(Rect.WidthLeft + offset, Rect.HeightTop + 370f))
             {
-                Size = 20,
-                Id = command,
-                Text = command.ToString().Replace("_", "-"),
-                Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 370f),
+                FontSize = 20,
                 Selected = App.Configuration.Language == command,
             });
             count++;
         }
 
-        Buttons.Add(new ImageButton()
-        {
-            Id = EIcon.Close,
-            Image = EIcon.Close,
-            Position = new(Rect.WidthRight, Rect.HeightTop),
-        });
+        Buttons.Add(new ImageButton(
+            id: EIcon.Close,
+            image: EIcon.Close,
+            position: new(Rect.WidthRight, Rect.HeightTop)));
 
         Background = new RectangleShape()
         {
@@ -169,7 +167,7 @@ public sealed class OptionsHUD : IHud
         foreach (IButton button in Buttons)
         {
             button.Event();
-            button.SetActivated(false);
+            button.Activated(false);
             button.OnClicked += OnButtonClicked;
         }
     }
@@ -193,7 +191,7 @@ public sealed class OptionsHUD : IHud
         {
             await Task.Delay(Global.VIEW_DELAY);
             enable = !enable;
-            foreach (IButton button in Buttons) button.SetActivated(enable);
+            foreach (IButton button in Buttons) button.Activated(enable);
         });
     }
     #endregion

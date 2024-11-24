@@ -1,89 +1,78 @@
 ﻿namespace SFMLGame.core.widgets;
 
-public sealed class TextEntry : IButton, IDisposable
+public sealed class TextEntry : BaseButton<RectangleShape>
 {
-    private Text? Graphic { get; set; }
-    private RectangleShape? Border { get; set; }
+    public TextEntry(
+        object id,
+        string placeholder,
+        Vector2f position,
+        Vector2f borderSize)
+    {
+        Id = id;
+        Position = position;
+        BorderSize = borderSize;
+        Placeholder = placeholder;
+
+        EntryGraphic = new Text();
+        Graphic = new RectangleShape();
+    }
+
+    #region SFML Property
+    private Text EntryGraphic { get; set; }
+    #endregion
 
     #region Control Property
     public bool LengthReached { get; private set; }
-    public bool Activated { get; private set; } = true;
-    public bool Focused { get; set; }
-    public bool Selected { get; set; }
     #endregion
 
     #region Required Property
-    public required object Id { get; init; }
     public string Text { get; set; } = string.Empty;
-    public required string Placeholder { get; set; }
-    public required Vector2f Position { get; set; }
-    public required Vector2f BorderSize { get; set; }
+    public string Placeholder { get; set; }
+    public Vector2f BorderSize { get; set; }
     #endregion
 
     #region Custom Property
     public int Padding { get; } = 5;
-    public uint Size { get; set; } = 12;
-    public float Outline { get; set; } = 1f;
-
-    public EFont Font { get; set; } = EFont.Romulus;
-    public EColor Color { get; set; } = EColor.White;
-    public EColor OutlineColor { get; set; } = EColor.Black;
-    public EColor FocusedColor { get; set; } = EColor.GoldRod;
-    public EColor SelectedColor { get; set; } = EColor.CornFlowerBlue;
     public EColor LengthReachedColor { get; set; } = EColor.Tomate;
     #endregion
 
-    #region Action
-    public bool Equal(object? value) => Id.Equals(value);
-    public void SetActivated(bool value) => Activated = value;
-    #endregion
-
-    #region Build
-    public void Event()
+    public override void Event()
     {
+        base.Event();
         Global.Subscribe(EEvent.TextEntered, OnTextEntered);
-        Global.Subscribe(EEvent.MouseMoved, OnFocusChanged);
-        Global.Subscribe(EEvent.MouseButtonPressed, OnButtonClicked);
     }
 
-    public void Render(RenderWindow window)
+    public override void Render(RenderWindow window)
     {
-        window.Draw(Border = new()
-        {
-            Size = BorderSize,
-            Position = Position,
-            OutlineThickness = Outline,
-            FillColor = Factory.Color(EColor.Transparent),
-            OutlineColor = Focused ? Factory.Color(FocusedColor)
-                : LengthReached ? Factory.Color(LengthReachedColor)
-                : Factory.Color(Color),
-        });
+        base.Render(window);
 
-        window.Draw(Graphic = new()
-        {
-            CharacterSize = Size,
-            OutlineThickness = Outline,
-            Font = Content.GetResource<Font>(Font),
-            Position = Position + new Vector2f(Padding, -Padding),
-            OutlineColor = Factory.Color(OutlineColor),
-            DisplayedString = Text.Length == 0 ? Placeholder : Text,
-            FillColor = Focused ? Factory.Color(FocusedColor)
-                : Selected ? Factory.Color(SelectedColor)
-                : Factory.Color(Color),
-        });
+        Graphic.Size = BorderSize;
+        Graphic.Position = Position;
+        Graphic.OutlineThickness = Outline;
+        Graphic.FillColor = Factory.Color(EColor.Transparent);
+        Graphic.OutlineColor = Focused ? Factory.Color(FocusedColor)
+            : LengthReached ? Factory.Color(LengthReachedColor)
+            : Factory.Color(Color);
+
+        EntryGraphic.CharacterSize = FontSize;
+        EntryGraphic.OutlineThickness = Outline;
+        EntryGraphic.Font = Content.GetResource<Font>(Font);
+        EntryGraphic.Position = Position + new Vector2f(Padding, -Padding);
+        EntryGraphic.OutlineColor = Factory.Color(OutlineColor);
+        EntryGraphic.DisplayedString = Text.Length == 0 ? Placeholder : Text;
+        EntryGraphic.FillColor = Focused ? Factory.Color(FocusedColor)
+            : Selected ? Factory.Color(SelectedColor)
+            : Factory.Color(Color);
+
+        window.Draw(EntryGraphic);
+        window.Draw(Graphic);
     }
-    #endregion
 
-    #region Event
-    public event Action<object?>? OnChanged;
-    public event Action<object?>? OnClicked;
-    public event Action<object?>? OnFocused;
-
-    private void OnTextEntered(object? sender)
+    protected override void OnTextEntered(object? sender)
     {
-        if (Activated is false || Selected is false) return;
+        if (Disposed || Enabled is false || Selected is false) return;
 
-        LengthReached = Graphic?.GetLocalBounds().Width >= Border?.GetGlobalBounds().Width - (Padding * 4);
+        LengthReached = EntryGraphic?.GetLocalBounds().Width >= Graphic?.GetGlobalBounds().Width - (Padding * 4);
 
         string temp = $"{sender}";
 
@@ -105,63 +94,13 @@ public sealed class TextEntry : IButton, IDisposable
         else if (temp.Length > 0)
             Text += temp;
 
-        OnChanged?.Invoke(Id);
+        base.OnTextEntered(sender);
     }
 
-    private void OnButtonClicked(object? sender)
+    public override void Dispose()
     {
-        if (Activated is false) return;
-
-        if (sender is MouseDTO mouse)
-        {
-            if (mouse.Button != EMouse.Left) return;
-
-            if (Border?.GetGlobalBounds().Contains(mouse) ?? default)
-            {
-                Selected = true;
-                OnClicked?.Invoke(Id);
-
-                var sound = Content.GetResource<Sound>(ESound.ButtonClicked);
-                sound.Volume = App.Configuration.SoundVolume;
-                sound.Play();
-                return;
-            }
-
-            Selected = false;
-        }
-    }
-
-    private void OnFocusChanged(object? sender)
-    {
-        if (Activated is false) return;
-
-        if (sender is MouseDTO mouse)
-        {
-            if (Border?.GetGlobalBounds().Contains(mouse) ?? false)
-            {
-                Focused = true;
-                OnFocused?.Invoke(Id);
-                return;
-            }
-
-            Focused = false;
-        }
-    }
-    #endregion
-
-    #region Dispose
-    public void Dispose()
-    {
-        Border?.Dispose();
-        Border = null;
-        Graphic?.Dispose();
-        Graphic = null;
-        OnClicked = null;
-        OnFocused = null;
-        OnChanged = null;
+        base.Dispose();
+        EntryGraphic?.Dispose();
         Global.Unsubscribe(EEvent.TextEntered, OnTextEntered);
-        Global.Unsubscribe(EEvent.MouseMoved, OnFocusChanged);
-        Global.Unsubscribe(EEvent.MouseButtonPressed, OnButtonClicked);
     }
-    #endregion
 }

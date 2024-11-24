@@ -11,5 +11,6 @@ global using SFMLGame.core.interfaces;
 global using SFMLGame.core.nodes;
 global using SFMLGame.core.objects;
 global using SFMLGame.core.widgets;
+global using SFMLGame.core.widgets.shared;
 global using SFMLGame.pipeline;
 global using SFMLGame.pipeline.schemas;

@@ -39,15 +39,13 @@ public sealed class LoadGameHUD : IHud
                 text: schema.ToString(),
                 position: new(Rect.WidthLeft, posY))
             {
-                Size = 20,
+                FontSize = 20,
             };
 
-            ImageButton imageButton = new()
-            {
-                Id = (EIcon.Delete, schema.Token),
-                Image = EIcon.Delete,
-                Position = new(Rect.WidthRight - Rect.Padding, posY)
-            };
+            ImageButton imageButton = new(
+                id: (EIcon.Delete, schema.Token),
+                image: EIcon.Delete,
+                position: new(Rect.WidthRight - Rect.Padding, posY));
 
             posY = textButton.GetPosition(EDirection.Bottom);
 
@@ -57,12 +55,10 @@ public sealed class LoadGameHUD : IHud
         #endregion
 
         #region View Options
-        Buttons.Add(new ImageButton()
-        {
-            Id = EIcon.Close,
-            Image = EIcon.Close,
-            Position = new(Rect.WidthRight, Rect.HeightTop),
-        });
+        Buttons.Add(new ImageButton(
+            id: EIcon.Close,
+            image: EIcon.Close,
+            position: new(Rect.WidthRight, Rect.HeightTop)));
 
         Background = new RectangleShape()
         {
@@ -78,7 +74,7 @@ public sealed class LoadGameHUD : IHud
         foreach (IButton button in Buttons)
         {
             button.Event();
-            button.SetActivated(false);
+            button.Activated(false);
             button.OnClicked += OnButtonClicked;
         }
     }
@@ -100,7 +96,7 @@ public sealed class LoadGameHUD : IHud
         {
             await Task.Delay(Global.VIEW_DELAY);
             enable = !enable;
-            foreach (IButton button in Buttons) button.SetActivated(enable);
+            foreach (IButton button in Buttons) button.Activated(enable);
         });
     }
     #endregion

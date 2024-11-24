@@ -23,13 +23,13 @@ public sealed class DeveloperHUD : IView
         {
             Buttons.Add(guide, []);
 
-            Guides.Add(new TextButton()
+            Guides.Add(new TextButton(
+                id: guide,
+                text: Enum.GetName(guide),
+                position: new(posX, Rect.Y))
             {
-                Id = guide,
-                Size = 20,
+                FontSize = 20,
                 Font = EFont.Romulus,
-                Text = Enum.GetName(guide)!,
-                Position = new(posX, Rect.Y),
             });
             posX += space;
         }
@@ -38,24 +38,24 @@ public sealed class DeveloperHUD : IView
 
         foreach (var enemie in new List<ESprite> { ESprite.Aracne, ESprite.Spider })
         {
-            Buttons[EGuide.Enemies].Add(new ImageButton()
-            {
-                Id = enemie,
-                Image = enemie,
-                Position = new(Rect.X, posY),
-            });
+            Buttons[EGuide.Enemies].Add(
+                new ImageButton(
+                    id: enemie,
+                    image: enemie,
+                    position: new(Rect.X, posY)));
+
             posY += Global.RECT + 5;
         }
 
         posY = Rect.Y + 30;
         foreach (var gameObject in new List<ESprite> { ESprite.Road })
         {
-            Buttons[EGuide.Objects].Add(new ImageButton()
-            {
-                Id = gameObject,
-                Image = gameObject,
-                Position = new(Rect.X, posY),
-            });
+            Buttons[EGuide.Objects].Add(
+                new ImageButton(
+                    id: gameObject,
+                    image: gameObject,
+                    position: new(Rect.X, posY)));
+
             posY += Global.RECT + 5;
         }
     }
@@ -118,7 +118,7 @@ public sealed class DeveloperHUD : IView
         {
             foreach (var guide in Enum.GetValues<EGuide>())
                 foreach (var button in Buttons[guide])
-                    button.SetActivated(guide == SelectedGuide);
+                    button.Activated(guide == SelectedGuide);
         }
     }
     #endregion

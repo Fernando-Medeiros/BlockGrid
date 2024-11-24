@@ -20,12 +20,10 @@ public sealed class CommandHUD : IView, IDisposable
         {
             posY -= Global.RECT + space;
 
-            Buttons.Add(new ImageButton()
-            {
-                Id = icon,
-                Image = icon,
-                Position = new(Rect.X, posY),
-            });
+            Buttons.Add(new ImageButton(
+                id: icon,
+                image: icon,
+                position: new(Rect.X, posY)));
         }
     }
 

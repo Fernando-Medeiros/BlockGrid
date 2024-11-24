@@ -25,7 +25,7 @@ public sealed class LoggerHUD : IView, IDisposable
                 text: guide.ToString(),
                 position: new(posX, Rect.HeightTop))
             {
-                Size = 20,
+                FontSize = 20,
             };
 
             posX = textButton.GetPosition(EDirection.Right) + Rect.Padding;

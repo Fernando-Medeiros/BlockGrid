@@ -33,52 +33,58 @@ public sealed class NewGameHUD : IHud
         #region Character Options
         foreach (var command in Enum.GetValues<ERace>())
         {
-            Buttons.Add(new ImageButton()
+            ImageButton imageButton = new(
+                id: command,
+                image: command,
+                position: new(Rect.WidthLeft + offset, Rect.HeightCenter - posY))
             {
-                Id = command,
-                Image = command,
-                Position = new(Rect.WidthLeft + offset, Rect.HeightCenter - posY),
                 Selected = CharacterRace == command,
-            });
+            };
+
             offset += 32f;
+            Buttons.Add(imageButton);
         }
 
         offset = 0f;
         posY -= 50f;
         foreach (var command in Enum.GetValues<EAlignment>())
         {
-            Buttons.Add(new ImageButton()
+            ImageButton imageButton = new(
+                id: command,
+                image: command,
+                position: new(Rect.WidthCenter - (Rect.Padding * 2) + offset, Rect.HeightCenter - posY))
             {
-                Id = command,
-                Image = command,
-                Position = new(Rect.WidthCenter - (Rect.Padding * 2) + offset, Rect.HeightCenter - posY),
                 Selected = CharacterAlignment == command,
-            });
+            };
+
             offset += 32f;
+            Buttons.Add(imageButton);
         }
 
         offset = 0f;
         posY -= 50f;
         foreach (var command in Enum.GetValues<EProfession>())
         {
-            Buttons.Add(new ImageButton()
+            ImageButton imageButton = new(
+                id: command,
+                image: command,
+                position: new(Rect.WidthLeft + offset, Rect.HeightCenter - posY))
             {
-                Id = command,
-                Image = command,
-                Position = new(Rect.WidthLeft + offset, Rect.HeightCenter - posY),
                 Selected = CharacterProfession == command,
-            });
+            };
+
             offset += 32f;
+            Buttons.Add(imageButton);
         }
 
         posY -= 50f;
-        Buttons.Add(new TextEntry()
+        Buttons.Add(new TextEntry(
+            id: nameof(ERace),
+            placeholder: "Entry character name:",
+            position: new(Rect.WidthLeft, Rect.HeightCenter - posY),
+            borderSize: new(Rect.Width - (Rect.Padding * 2), 25))
         {
-            Size = 25,
-            Id = nameof(ERace),
-            Placeholder = "Entry character name:",
-            BorderSize = new(Rect.Width - (Rect.Padding * 2), 25),
-            Position = new(Rect.WidthLeft, Rect.HeightCenter - posY),
+            FontSize = 25,
         });
         #endregion
 
@@ -97,12 +103,12 @@ public sealed class NewGameHUD : IHud
                 Position = new(Rect.WidthLeft + offset, Rect.HeightBottom - posY - (radius * 2)),
             });
 
-            Buttons.Add(new TextButton()
+            Buttons.Add(new TextButton(
+                id: command,
+                text: $"{(int)command:D2}x{(int)command:D2}²",
+                position: new(Rect.WidthLeft + offset, Rect.HeightBottom - posY))
             {
-                Size = 25,
-                Id = command,
-                Text = $"{(int)command:D2}x{(int)command:D2}²",
-                Position = new(Rect.WidthLeft + offset, Rect.HeightBottom - posY),
+                FontSize = 25,
                 Selected = WorldSize == command,
             });
             offset += 75f;
@@ -110,34 +116,31 @@ public sealed class NewGameHUD : IHud
 
         posY -= 50f;
 
-        Buttons.Add(new TextEntry()
+        Buttons.Add(new TextEntry(
+            id: nameof(EWorldSize),
+            placeholder: "Entry world name:",
+            position: new(Rect.WidthLeft, Rect.HeightBottom - posY),
+            borderSize: new(Rect.Width - (Rect.Padding * 2), 25f))
         {
-            Size = 25,
-            Id = nameof(EWorldSize),
-            Placeholder = "Entry world name:",
-            BorderSize = new(Rect.Width - (Rect.Padding * 2), 25f),
-            Position = new(Rect.WidthLeft, Rect.HeightBottom - posY),
+            FontSize = 25,
         });
         #endregion
 
         #region View Options
-        Buttons.Add(new ImageButton()
-        {
-            Id = EIcon.Close,
-            Image = EIcon.Close,
-            Position = new(Rect.WidthRight - 8f, Rect.HeightTop),
-        });
+        Buttons.Add(new ImageButton(
+            id: EIcon.Close,
+            image: EIcon.Close,
+            position: new(Rect.WidthRight - 8f, Rect.HeightTop)));
 
-        Buttons.Add(new Button()
+        Buttons.Add(new Button(
+            id: EMainMenu.New_Game,
+            text: "TO ADVENTURE",
+            position: new(Rect.WidthLeft, Rect.HeightBottom - 30),
+            borderSize: new(Rect.Width - (Rect.Padding * 2), 25))
         {
-            Size = 23,
-            Disabled = true,
+            FontSize = 23,
             Color = EColor.White,
-            Text = "TO ADVENTURE",
-            Id = EMainMenu.New_Game,
             BackgroundColor = EColor.DarkSeaGreen,
-            BorderSize = new(Rect.Width - (Rect.Padding * 2), 25),
-            Position = new(Rect.WidthLeft, Rect.HeightBottom - 30),
         });
 
         Background = new RectangleShape()
@@ -154,7 +157,7 @@ public sealed class NewGameHUD : IHud
         foreach (IButton button in Buttons)
         {
             button.Event();
-            button.SetActivated(false);
+            button.Activated(false);
             button.OnClicked += OnButtonClicked;
             button.OnChanged += OnButtonChanged;
         }
@@ -203,8 +206,16 @@ public sealed class NewGameHUD : IHud
         Task.Run(async () =>
         {
             await Task.Delay(Global.VIEW_DELAY);
+            
             enable = !enable;
-            foreach (IButton button in Buttons) button.SetActivated(enable);
+            
+            foreach (IButton button in Buttons)
+            {
+                if(button.Equal(EMainMenu.New_Game))
+                    button.Activated(CharacterName.Length > 4 && WorldName.Length > 4);
+                else
+                    button.Activated(enable);
+            }
         });
     }
     #endregion
@@ -226,7 +237,7 @@ public sealed class NewGameHUD : IHud
         if (sender is nameof(ERace))
             CharacterName = entry.Text;
 
-        button.Disabled = CharacterName.Length < 4 || WorldName.Length < 4;
+        button.Activated(CharacterName.Length > 4 && WorldName.Length > 4);
     }
 
     private void OnButtonClicked(object? sender)
