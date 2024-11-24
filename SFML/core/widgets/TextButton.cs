@@ -51,11 +51,16 @@ public sealed class TextButton : IButton, IDisposable
 
     public void SetActivated(bool value) => Activated = value;
 
-    public float HeightBottom()
+    public float GetPosition(EDirection direction)
     {
         Graphic.CharacterSize = Size;
 
         FloatRect rect = Graphic.GetGlobalBounds();
+
+        if (direction is EDirection.Top) return rect.Position.Y;
+        if (direction is EDirection.Left) return rect.Position.X;
+        if (direction is EDirection.Right) return rect.Position.X + rect.Width;
+        if (direction is EDirection.Bottom) return rect.Position.Y + rect.Height;
 
         return rect.Position.Y + rect.Height;
     }

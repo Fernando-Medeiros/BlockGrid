@@ -40,7 +40,9 @@ public sealed class WorldScene : View, IView
         Collection.Add(new LoggerHUD());
         Collection.Add(new CommandHUD());
         Collection.Add(new WorldMapHUD());
+#if DEBUG
         Collection.Add(new DeveloperHUD());
+#endif
 
         foreach (var view in Collection) view.Build();
     }

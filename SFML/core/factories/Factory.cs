@@ -25,6 +25,17 @@ public static class Factory
     };
     #endregion
 
+    #region Resolve
+    public static (int Width, int Height) Resolution(EWindowResolution resolution) => resolution switch
+    {
+        EWindowResolution.R_800x600 => (800, 600),
+        EWindowResolution.R_1024x768 => (1024, 768),
+        EWindowResolution.R_1280x720 => (1280, 720),
+        EWindowResolution.R_1980x1280 => (1980, 1280),
+        _ => throw new Exception()
+    };
+    #endregion
+
     #region Shuffle
     public static ESound Shuffle(ETerrain terrain) => terrain switch
     {

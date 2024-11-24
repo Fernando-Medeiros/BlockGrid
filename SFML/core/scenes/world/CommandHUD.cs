@@ -8,7 +8,9 @@ public sealed class CommandHUD : IView, IDisposable
     #region Build
     public void Build()
     {
-        Rect = new(x: Global.WINDOW_WIDTH - Global.RECT - 5, y: Global.WINDOW_HEIGHT - 5, width: 0f, height: 0f);
+        var (width, height) = App.Configuration.WindowResolution;
+
+        Rect = new(x: width - Global.RECT - 5, y: height - 5, width: 0f, height: 0f);
 
         var (posY, space) = (Rect.Y, 5f);
 

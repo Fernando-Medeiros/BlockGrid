@@ -4,8 +4,8 @@ public sealed class BackgroundView : IView, IDisposable
 {
     private (byte Row, byte Column) Center { get; set; } = (0, 0);
     private IList<IList<(ETerrain, Position2D)>> Collection { get; } = [];
-    private int MaxRow { get; } = (Global.WINDOW_HEIGHT / Global.RECT) + 1;
-    private int MaxColumn { get; } = (Global.WINDOW_WIDTH / Global.RECT) + 1;
+    private int MaxRow { get; } = (App.Configuration.WindowResolution.Height / Global.RECT) + 1;
+    private int MaxColumn { get; } = (App.Configuration.WindowResolution.Width / Global.RECT) + 1;
 
     #region Build
     public void Build()

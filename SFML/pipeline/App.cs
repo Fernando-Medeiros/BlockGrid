@@ -9,14 +9,15 @@ internal sealed partial class App
 
     static App()
     {
-        var style = Styles.Fullscreen;
-        var size = new FloatRect(0, 0, Configuration.WindowWidth, Configuration.WindowHeight);
+        var pipe = new Pipeline();
+        pipe.ConfigureFolders();
+        pipe.ConfigureOptions();
 
-#if DEBUG
-        style = Styles.Resize;
-#endif
+        var (width, height) = Configuration.WindowResolution;
 
-        Window = new(new VideoMode((uint)size.Width, (uint)size.Height), Global.TITLE, style);
+        var size = new FloatRect(0, 0, width, height);
+
+        Window = new(new VideoMode((uint)width, (uint)height), Global.TITLE, (Styles)Configuration.WindowMode);
 
         Scenes = [];
         Scenes.Add(EScene.Main, new MainScene(size));
@@ -30,6 +31,8 @@ internal sealed partial class App
 
     public void ConfigureListeners()
     {
+        SubscribeGlobalListeners();
+
         Scenes[CurrentScene].Event();
     }
 

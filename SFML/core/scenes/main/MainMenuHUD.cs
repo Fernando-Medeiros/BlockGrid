@@ -31,7 +31,7 @@ public sealed class MainMenuHUD : IHud, IDisposable
 
         Buttons.Add(titleButton);
 
-        posY = titleButton.HeightBottom();
+        posY = titleButton.GetPosition(EDirection.Bottom);
 
         foreach (var command in Enum.GetValues<EMainMenu>())
         {
@@ -43,7 +43,7 @@ public sealed class MainMenuHUD : IHud, IDisposable
                 Size = 30,
             };
 
-            posY = textButton.HeightBottom();
+            posY = textButton.GetPosition(EDirection.Bottom);
 
             Buttons.Add(textButton);
         }

@@ -58,8 +58,7 @@ public sealed class Rect()
     /// <returns><see cref="Rect"/> -> this</returns>
     public Rect WithAlignment(EDirection? alignment = null)
     {
-        var width = App.Configuration.WindowWidth;
-        var height = App.Configuration.WindowHeight;
+        var (width, height) = App.Configuration.WindowResolution;
 
         (X, Y) = alignment switch
         {

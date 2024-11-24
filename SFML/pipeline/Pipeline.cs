@@ -21,7 +21,7 @@ public sealed class Pipeline
     public void ConfigureOptions()
     {
         var schema = FileHandler.DeserializeSchema<ConfigurationSchema>(EFolder.Options, "configuration");
-
-        Global.Invoke(EEvent.SchemaChanged, schema);
+     
+        App.Configuration = schema;
     }
 }

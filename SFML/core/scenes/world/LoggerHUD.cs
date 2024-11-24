@@ -2,31 +2,35 @@
 
 public sealed class LoggerHUD : IView, IDisposable
 {
-    private IList<IButton> Buttons { get; } = [];
     private ELogger SelectedGuide { get; set; } = ELogger.General;
-    private Dictionary<ELogger, List<string>> Loggers { get; } = [];
     private Rect Rect { get; set; } = Rect.Empty;
+    private IList<IButton> Buttons { get; } = [];
+    private Dictionary<ELogger, List<string>> Loggers { get; } = [];
 
     #region Build
     public void Build()
     {
-        Rect = new(x: 5f, y: Global.WINDOW_HEIGHT - 160f, width: 200f, height: 160f);
+        Rect = new Rect()
+            .WithSize(width: 200f, height: 160f, padding: 15f)
+            .WithAlignment(EDirection.BottomLeft);
 
-        var (posX, space) = (Rect.X, 70f);
+        float posX = Rect.WidthLeft;
 
         foreach (var guide in Enum.GetValues<ELogger>())
         {
             Loggers.Add(guide, []);
 
-            Buttons.Add(new TextButton()
+            TextButton textButton = new(
+                id: guide,
+                text: guide.ToString(),
+                position: new(posX, Rect.HeightTop))
             {
-                Id = guide,
                 Size = 20,
-                Font = EFont.Romulus,
-                Position = new(posX, Rect.Y),
-                Text = Enum.GetName(guide)!,
-            });
-            posX += space;
+            };
+
+            posX = textButton.GetPosition(EDirection.Right) + Rect.Padding;
+
+            Buttons.Add(textButton);
         }
     }
 
@@ -51,7 +55,7 @@ public sealed class LoggerHUD : IView, IDisposable
             window.Draw(new Text(logger, Content.GetResource<Font>(EFont.OpenSansRegular), 12)
             {
                 FillColor = Factory.Color(EColor.White),
-                Position = new Vector2f(Rect.X, Rect.Y + gap),
+                Position = new Vector2f(Rect.WidthLeft, Rect.HeightTop + gap),
             });
             gap += 11;
         }
@@ -65,15 +69,8 @@ public sealed class LoggerHUD : IView, IDisposable
         {
             SelectedGuide = guide;
 
-            foreach (TextButton button in Buttons)
-            {
-                if (button.Id == sender)
-                {
-                    button.Color = EColor.CornFlowerBlue;
-                    continue;
-                }
-                button.Color = EColor.White;
-            }
+            foreach (var button in Buttons.OfType<TextButton>())
+                button.Selected = button.Id.Equals(sender);
         }
     }
 

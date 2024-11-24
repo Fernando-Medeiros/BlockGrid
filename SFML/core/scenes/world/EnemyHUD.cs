@@ -16,6 +16,8 @@ public sealed class EnemyHUD : IView, IDisposable
 
     public void Build()
     {
+        var (width, _) = App.Configuration.WindowResolution;
+
         var (posY, space) = (5f, 5f);
 
         HpBar = new()
@@ -24,7 +26,7 @@ public sealed class EnemyHUD : IView, IDisposable
             OutlineThickness = 1f,
             OutlineColor = Factory.Color(EColor.White),
             FillColor = Factory.Color(EColor.Tomate),
-            Position = new((Global.WINDOW_WIDTH / 2) - (300 / 2), posY),
+            Position = new((width / 2) - (300 / 2), posY),
         };
 
         posY += HpBar.Size.Y + space;
@@ -35,7 +37,7 @@ public sealed class EnemyHUD : IView, IDisposable
             OutlineThickness = 1f,
             OutlineColor = Factory.Color(EColor.White),
             FillColor = Factory.Color(EColor.CornFlowerBlue),
-            Position = new((Global.WINDOW_WIDTH / 2) - (150 / 2), posY),
+            Position = new((width / 2) - (150 / 2), posY),
         };
 
         Offset = new(space, 0);

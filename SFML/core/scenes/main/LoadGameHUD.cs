@@ -49,7 +49,7 @@ public sealed class LoadGameHUD : IHud
                 Position = new(Rect.WidthRight - Rect.Padding, posY)
             };
 
-            posY = textButton.HeightBottom();
+            posY = textButton.GetPosition(EDirection.Bottom);
 
             Buttons.Add(textButton);
             Buttons.Add(imageButton);

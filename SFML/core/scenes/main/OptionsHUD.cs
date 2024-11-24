@@ -6,6 +6,8 @@ public sealed class OptionsHUD : IHud
     {
         Music_Volume,
         Sound_Volume,
+        Window_Mode,
+        Resolution,
         FPS,
         Language
     }
@@ -34,12 +36,10 @@ public sealed class OptionsHUD : IHud
         {
             var offset = count * 70f;
 
-            var text = command.ToString().Replace("_", " ");
-
             Guides.Add(new Text()
             {
                 CharacterSize = 25,
-                DisplayedString = text,
+                DisplayedString = command.ToString().Replace("_", " "),
                 FillColor = Factory.Color(EColor.White),
                 Font = Content.GetResource<Font>(EFont.Romulus),
                 Position = new(Rect.WidthLeft, Rect.HeightTop + offset),
@@ -55,7 +55,7 @@ public sealed class OptionsHUD : IHud
 
             Buttons.Add(new TextButton()
             {
-                Size = 25,
+                Size = 20,
                 Id = command,
                 Text = $"{(byte)command}",
                 Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 30f),
@@ -72,7 +72,7 @@ public sealed class OptionsHUD : IHud
 
             Buttons.Add(new TextButton()
             {
-                Size = 25,
+                Size = 20,
                 Id = command,
                 Text = $"{(byte)command}",
                 Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 100f),
@@ -80,6 +80,40 @@ public sealed class OptionsHUD : IHud
             });
             count++;
         }
+
+        //count = 0;
+
+        //foreach (var command in Enum.GetValues<EWindowMode>())
+        //{
+        //    var offset = count * 80f;
+
+        //    Buttons.Add(new TextButton()
+        //    {
+        //        Size = 20,
+        //        Id = command,
+        //        Text = $"{command}",
+        //        Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 170f),
+        //        Selected = App.Configuration.WindowMode == (byte)command,
+        //    });
+        //    count++;
+        //}
+
+        //count = 0;
+
+        //foreach (var command in Enum.GetValues<EWindowResolution>())
+        //{
+        //    var offset = count * 90f;
+
+        //    Buttons.Add(new TextButton()
+        //    {
+        //        Size = 20,
+        //        Id = command,
+        //        Text = command.ToString().Replace("R_", ""),
+        //        Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 240f),
+        //        Selected = App.Configuration.WindowResolution == Factory.Resolution(command)
+        //    });
+        //    count++;
+        //}
 
         count = 0;
 
@@ -89,10 +123,10 @@ public sealed class OptionsHUD : IHud
 
             Buttons.Add(new TextButton()
             {
-                Size = 25,
+                Size = 20,
                 Id = command,
                 Text = $"{(byte)command}",
-                Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 170f),
+                Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 310f),
                 Selected = App.Configuration.Frame == (byte)command,
             });
             count++;
@@ -104,14 +138,12 @@ public sealed class OptionsHUD : IHud
         {
             var offset = count * 40f;
 
-            var text = command.ToString().Replace("_", "-");
-
             Buttons.Add(new TextButton()
             {
-                Size = 25,
-                Text = text,
+                Size = 20,
                 Id = command,
-                Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 240f),
+                Text = command.ToString().Replace("_", "-"),
+                Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 370f),
                 Selected = App.Configuration.Language == command,
             });
             count++;
@@ -189,6 +221,12 @@ public sealed class OptionsHUD : IHud
 
         if (sender is EMusicVolume musicVolume)
             App.Configuration.MusicVolume = (byte)musicVolume;
+
+        if (sender is EWindowMode windowMode)
+            App.Configuration.WindowMode = (byte)windowMode;
+
+        if (sender is EWindowResolution windowResolution)
+            App.Configuration.WindowResolution = Factory.Resolution(windowResolution);
 
         foreach (var button in Buttons.OfType<TextButton>().Where(x => x.Id.GetType() == sender?.GetType()))
         {
