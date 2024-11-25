@@ -8,22 +8,25 @@ public sealed class CommandHUD : IView, IDisposable
     #region Build
     public void Build()
     {
-        var (width, height) = App.Configuration.WindowResolution;
+        EIcon[] icons = [EIcon.ZoomIn, EIcon.ZoomOut, EIcon.Exit];
 
-        Rect = new(x: width - Global.RECT - 5, y: height - 5, width: 0f, height: 0f);
+        Rect = new Rect()
+          .WithSize(width: 50f, height: 120f)
+          .WithPadding(vertical: 10f, horizontal: 10f)
+          .WithAlignment(EDirection.BottomRight);
 
-        var (posY, space) = (Rect.Y, 5f);
-
-        EIcon[] icons = [EIcon.Exit, EIcon.ZoomOut, EIcon.ZoomIn];
+        float posY = Rect.HeightTop;
 
         foreach (EIcon icon in icons)
         {
-            posY -= Global.RECT + space;
-
-            Buttons.Add(new ImageButton(
+            ImageButton imageButton = new(
                 id: icon,
                 image: icon,
-                position: new(Rect.X, posY)));
+                position: new(Rect.WidthLeft, posY));
+
+            posY = imageButton.GetPosition(EDirection.Bottom);
+
+            Buttons.Add(imageButton);
         }
     }
 

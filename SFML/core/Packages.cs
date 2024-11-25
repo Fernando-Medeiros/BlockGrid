@@ -12,23 +12,6 @@ public sealed record Position2D(byte Row, byte Column, float X, float Y)
 
 public sealed class Rect()
 {
-    #region Main Property
-    public float X { get; private set; }
-    public float Y { get; private set; }
-    public float Width { get; private set; }
-    public float Height { get; private set; }
-    public float Padding { get; private set; }
-    #endregion
-
-    #region Secondary Property
-    public float WidthLeft => X + Padding;
-    public float WidthRight => X + Width - Padding;
-    public float WidthCenter => X + (Width / 2f) + (Padding / 2f);
-    public float HeightTop => Y + Padding;
-    public float HeightBottom => Y + Height - Padding;
-    public float HeightCenter => Y + (Height / 2f) + (Padding / 2f);
-    #endregion
-
     public Rect(float x, float y, float width, float height) : this()
     {
         X = x;
@@ -37,6 +20,24 @@ public sealed class Rect()
         Height = height;
     }
 
+    #region Main Property
+    public float X { get; private set; }
+    public float Y { get; private set; }
+    public float Width { get; private set; }
+    public float Height { get; private set; }
+    public float VerticalPadding { get; private set; }
+    public float HorizontalPadding { get; private set; }
+    #endregion
+
+    #region Secondary Property
+    public float WidthLeft => X + HorizontalPadding;
+    public float WidthRight => X + Width - HorizontalPadding;
+    public float WidthCenter => X + (Width / 2f) + (HorizontalPadding / 2f);
+    public float HeightTop => Y + VerticalPadding;
+    public float HeightBottom => Y + Height - VerticalPadding;
+    public float HeightCenter => Y + (Height / 2f) + (VerticalPadding / 2f);
+    #endregion
+
     #region Extension
     public static Rect Empty => new();
 
@@ -44,11 +45,17 @@ public sealed class Rect()
     #endregion
 
     #region Builder
-    public Rect WithSize(float width, float height, float padding)
+    public Rect WithSize(float width, float height)
     {
         Width = width;
         Height = height;
-        Padding = padding;
+        return this;
+    }
+
+    public Rect WithPadding(float vertical, float horizontal)
+    {
+        VerticalPadding = vertical;
+        HorizontalPadding = horizontal;
         return this;
     }
 

@@ -27,126 +27,127 @@ public sealed class OptionsHUD : IHud
     public void Build()
     {
         Rect = new Rect()
-          .WithSize(width: 500f, height: 700f, padding: 68f)
+          .WithSize(width: 500f, height: 500f)
+          .WithPadding(vertical: 10f, horizontal: 32f)
           .WithAlignment();
 
-        int count = 0;
+        float posY = Rect.HeightTop;
+        float posX = Rect.WidthLeft;
+
+        Dictionary<ECommand, float> verticalPositions = [];
 
         foreach (var command in Enum.GetValues<ECommand>())
         {
-            var offset = count * 70f;
-
-            Guides.Add(new Text()
+            Text subtitle = new()
             {
                 CharacterSize = 25,
-                DisplayedString = command.ToString().Replace("_", " "),
                 FillColor = Factory.Color(EColor.White),
                 Font = Content.GetResource<Font>(EFont.Romulus),
-                Position = new(Rect.WidthLeft, Rect.HeightTop + offset),
-            });
-            count++;
+                DisplayedString = command.ToString().Replace("_", " "),
+                Position = new(posX, posY),
+            };
+
+            FloatRect rect = subtitle.GetGlobalBounds();
+            posY = rect.Position.Y + rect.Height + Rect.HorizontalPadding;
+            verticalPositions[command] = rect.Position.Y + rect.Height;
+
+            Guides.Add(subtitle);
         }
 
-        count = 0;
-
+        posX = Rect.WidthLeft;
         foreach (var command in Enum.GetValues<EMusicVolume>())
         {
-            var offset = count * 40f;
-
-            Buttons.Add(new TextButton(
+            TextButton textButton = new(
                 id: command,
                 text: $"{(byte)command}",
-                position: new(Rect.WidthLeft + offset, Rect.HeightTop + 30f))
+                position: new(posX, verticalPositions[ECommand.Music_Volume]))
             {
                 FontSize = 20,
                 Selected = App.Configuration.MusicVolume == (byte)command
-            });
-            count++;
+            };
+
+            Buttons.Add(textButton);
+            posX = textButton.GetPosition(EDirection.Right);
         }
 
-        count = 0;
-
+        posX = Rect.WidthLeft;
         foreach (var command in Enum.GetValues<ESoundVolume>())
         {
-            var offset = count * 40f;
-
-            Buttons.Add(new TextButton(
-                id: command,
-                text: $"{(byte)command}",
-                position: new(Rect.WidthLeft + offset, Rect.HeightTop + 100f))
+            TextButton textButton = new(
+              id: command,
+              text: $"{(byte)command}",
+              position: new(posX, verticalPositions[ECommand.Sound_Volume]))
             {
                 FontSize = 20,
                 Selected = App.Configuration.SoundVolume == (byte)command,
-            });
-            count++;
+            };
+
+            Buttons.Add(textButton);
+            posX = textButton.GetPosition(EDirection.Right);
         }
 
-        //count = 0;
+        posX = Rect.WidthLeft;
+        foreach (var command in Enum.GetValues<EWindowMode>())
+        {
+            TextButton textButton = new(
+                 id: command,
+                 text: Enum.GetName(command),
+                 position: new(posX, verticalPositions[ECommand.Window_Mode]))
+            {
+                FontSize = 20,
+                Selected = App.Configuration.WindowMode == (byte)command,
+            };
 
-        //foreach (var command in Enum.GetValues<EWindowMode>())
-        //{
-        //    var offset = count * 80f;
+            Buttons.Add(textButton);
+            posX = textButton.GetPosition(EDirection.Right);
+        }
 
-        //    Buttons.Add(new TextButton()
-        //    {
-        //        Size = 20,
-        //        Id = command,
-        //        Text = $"{command}",
-        //        Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 170f),
-        //        Selected = App.Configuration.WindowMode == (byte)command,
-        //    });
-        //    count++;
-        //}
+        posX = Rect.WidthLeft;
+        foreach (var command in Enum.GetValues<EWindowResolution>())
+        {
+            TextButton textButton = new(
+                id: command,
+                text: command.ToString().Replace("R_", ""),
+                position: new(posX, verticalPositions[ECommand.Resolution]))
+            {
+                FontSize = 20,
+                Selected = App.Configuration.WindowResolution == Factory.Resolution(command)
+            };
 
-        //count = 0;
+            Buttons.Add(textButton);
+            posX = textButton.GetPosition(EDirection.Right);
+        }
 
-        //foreach (var command in Enum.GetValues<EWindowResolution>())
-        //{
-        //    var offset = count * 90f;
-
-        //    Buttons.Add(new TextButton()
-        //    {
-        //        Size = 20,
-        //        Id = command,
-        //        Text = command.ToString().Replace("R_", ""),
-        //        Position = new(Rect.WidthLeft + offset, Rect.HeightTop + 240f),
-        //        Selected = App.Configuration.WindowResolution == Factory.Resolution(command)
-        //    });
-        //    count++;
-        //}
-
-        count = 0;
-
+        posX = Rect.WidthLeft;
         foreach (var command in Enum.GetValues<EFrame>())
         {
-            var offset = count * 40f;
-
-            Buttons.Add(new TextButton(
-                id: command,
-                text: $"{(byte)command}",
-                position: new(Rect.WidthLeft + offset, Rect.HeightTop + 310f))
+            TextButton textButton = new(
+                 id: command,
+                 text: $"{(byte)command}",
+                 position: new(posX, verticalPositions[ECommand.FPS]))
             {
                 FontSize = 20,
                 Selected = App.Configuration.Frame == (byte)command,
-            });
-            count++;
+            };
+
+            Buttons.Add(textButton);
+            posX = textButton.GetPosition(EDirection.Right);
         }
 
-        count = 0;
-
+        posX = Rect.WidthLeft;
         foreach (var command in Enum.GetValues<ELanguage>())
         {
-            var offset = count * 40f;
-
-            Buttons.Add(new TextButton(
-                id: command,
-                text: command.ToString().Replace("_", "-"),
-                position: new(Rect.WidthLeft + offset, Rect.HeightTop + 370f))
+            TextButton textButton = new(
+                 id: command,
+                 text: command.ToString().Replace("_", "-"),
+                 position: new(posX, verticalPositions[ECommand.Language]))
             {
                 FontSize = 20,
                 Selected = App.Configuration.Language == command,
-            });
-            count++;
+            };
+
+            Buttons.Add(textButton);
+            posX = textButton.GetPosition(EDirection.Right);
         }
 
         Buttons.Add(new ImageButton(

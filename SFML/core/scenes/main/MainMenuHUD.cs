@@ -16,7 +16,8 @@ public sealed class MainMenuHUD : IHud, IDisposable
     public void Build()
     {
         Rect = new Rect()
-            .WithSize(width: 500f, height: 700f, padding: 68f)
+            .WithSize(width: 500f, height: 500f)
+            .WithPadding(vertical: 10f, horizontal: 32f)
             .WithAlignment();
 
         float posY = Rect.HeightTop;
@@ -26,12 +27,11 @@ public sealed class MainMenuHUD : IHud, IDisposable
             text: Global.TITLE,
             position: new(Rect.WidthLeft, posY))
         {
-            FontSize = 40,
+            FontSize = 45,
         };
 
         Buttons.Add(titleButton);
-
-        posY = titleButton.GetPosition(EDirection.Bottom);
+        posY = titleButton.GetPosition(EDirection.Bottom) + (Rect.VerticalPadding * 2);
 
         foreach (var command in Enum.GetValues<EMainMenu>())
         {
@@ -43,8 +43,7 @@ public sealed class MainMenuHUD : IHud, IDisposable
                 FontSize = 30,
             };
 
-            posY = textButton.GetPosition(EDirection.Bottom);
-
+            posY = textButton.GetPosition(EDirection.Bottom) + Rect.VerticalPadding;
             Buttons.Add(textButton);
         }
 

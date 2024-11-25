@@ -11,7 +11,8 @@ public sealed class LoggerHUD : IView, IDisposable
     public void Build()
     {
         Rect = new Rect()
-            .WithSize(width: 200f, height: 160f, padding: 15f)
+            .WithSize(width: 200f, height: 160f)
+            .WithPadding(vertical: 15f, horizontal: 15f)
             .WithAlignment(EDirection.BottomLeft);
 
         float posX = Rect.WidthLeft;
@@ -28,7 +29,7 @@ public sealed class LoggerHUD : IView, IDisposable
                 FontSize = 20,
             };
 
-            posX = textButton.GetPosition(EDirection.Right) + Rect.Padding;
+            posX = textButton.GetPosition(EDirection.Right) + Rect.HorizontalPadding;
 
             Buttons.Add(textButton);
         }

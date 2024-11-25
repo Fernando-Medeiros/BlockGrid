@@ -14,49 +14,56 @@ public sealed class DeveloperHUD : IView
     #region Build
     public void Build()
     {
-        var (width, _) = App.Configuration.WindowResolution;
+        Rect = new Rect()
+          .WithSize(width: 200f, height: 200f)
+          .WithPadding(vertical: 0f, horizontal: 20f)
+          .WithAlignment(EDirection.TopRight);
 
-        Rect = new(x: width - 200, y: 5f, width: 200f, height: 0f);
+        float posX = Rect.WidthLeft;
 
-        var (posX, space) = (Rect.X, 70f);
         foreach (var guide in Enum.GetValues<EGuide>())
         {
             Buttons.Add(guide, []);
 
-            Guides.Add(new TextButton(
+            TextButton textButton = new(
                 id: guide,
                 text: Enum.GetName(guide),
-                position: new(posX, Rect.Y))
+                position: new(posX, Rect.HeightTop))
             {
                 FontSize = 20,
-                Font = EFont.Romulus,
-            });
-            posX += space;
+            };
+
+            posX = textButton.GetPosition(EDirection.Right);
+
+            Guides.Add(textButton);
         }
 
-        var posY = Rect.Y + 30;
+        float posY = Rect.HeightTop + Rect.HorizontalPadding;
 
         foreach (var enemie in new List<ESprite> { ESprite.Aracne, ESprite.Spider })
         {
-            Buttons[EGuide.Enemies].Add(
-                new ImageButton(
-                    id: enemie,
-                    image: enemie,
-                    position: new(Rect.X, posY)));
+            ImageButton imageButton = new(
+                id: enemie,
+                image: enemie,
+                position: new(Rect.WidthLeft, posY));
 
-            posY += Global.RECT + 5;
+            posY = imageButton.GetPosition(EDirection.Bottom);
+
+            Buttons[EGuide.Enemies].Add(imageButton);
         }
 
-        posY = Rect.Y + 30;
+        posY = Rect.HeightTop + Rect.HorizontalPadding;
+
         foreach (var gameObject in new List<ESprite> { ESprite.Road })
         {
-            Buttons[EGuide.Objects].Add(
-                new ImageButton(
-                    id: gameObject,
-                    image: gameObject,
-                    position: new(Rect.X, posY)));
+            ImageButton imageButton = new(
+                 id: gameObject,
+                 image: gameObject,
+                 position: new(Rect.WidthLeft, posY));
 
-            posY += Global.RECT + 5;
+            posY = imageButton.GetPosition(EDirection.Bottom);
+
+            Buttons[EGuide.Objects].Add(imageButton);
         }
     }
 

@@ -17,7 +17,8 @@ public sealed class LoadGameHUD : IHud
     public void Build()
     {
         Rect = new Rect()
-          .WithSize(width: 500f, height: 700f, padding: 68f)
+          .WithSize(width: 500f, height: 500f)
+          .WithPadding(vertical: 10f, horizontal: 32f)
           .WithAlignment();
 
         var names = Directory.GetFiles($"{FileHandler.MainFolder}/{EFolder.Characters}")
@@ -45,7 +46,7 @@ public sealed class LoadGameHUD : IHud
             ImageButton imageButton = new(
                 id: (EIcon.Delete, schema.Token),
                 image: EIcon.Delete,
-                position: new(Rect.WidthRight - Rect.Padding, posY));
+                position: new(textButton.GetPosition(EDirection.Right), posY));
 
             posY = textButton.GetPosition(EDirection.Bottom);
 
