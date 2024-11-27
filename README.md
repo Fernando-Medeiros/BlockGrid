@@ -2,4 +2,4 @@
 
 #### SFML (27/11/24):
 
-![preview](.github/demo.mp4)
+![preview](.github/demo.gif)
